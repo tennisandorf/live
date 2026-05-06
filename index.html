@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tennis Spielstand</title>
+  <title>Tennis Spielstand - Live Rotation</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
 
     :root {
-      --primary:   #59728E;   /* Pantone 18-3922 TCX – Coronet Blue */
-      --deep:      #262934;   /* Pantone 19-3922 TCX – Sky Captain   */
-      --primary-l: #7a97b5;   /* helleres Coronet Blue für Akzente   */
-      --primary-d: #3d5368;   /* dunkleres Coronet Blue              */
-      --bg:        #1a1e28;   /* fast Sky Captain, minimal aufgehellt */
-      --surface:   #262934;   /* Sky Captain exakt                   */
-      --border:    #3a4257;   /* zwischen beiden Farben              */
-      --text:      #dce6f0;   /* helles Blau-Weiß                    */
-      --muted:     #7a8fa8;   /* gedämpftes Coronet Blue             */
-      --accent:    #a8c4dc;   /* sehr helles Blau                    */
-      --orange:    #c8a060;   /* warmer Akzent für Countdown-Warnung */
+      --primary:   #59728E;
+      --deep:      #262934;
+      --primary-l: #7a97b5;
+      --primary-d: #3d5368;
+      --bg:        #1a1e28;
+      --surface:   #262934;
+      --border:    #3a4257;
+      --text:      #dce6f0;
+      --muted:     #7a8fa8;
+      --accent:    #a8c4dc;
+      --orange:    #c8a060;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,7 +32,6 @@
       overflow: hidden;
     }
 
-    /* ── HEADER ── */
     #header {
       height: 70px;
       background: var(--surface);
@@ -53,203 +52,53 @@
       background: linear-gradient(90deg, transparent, var(--primary), transparent);
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
+    .logo { display: flex; align-items: center; gap: 14px; }
+    .logo img { height: 52px; width: auto; filter: invert(1) brightness(0.9); }
+    .logo-text { border-left: 1px solid var(--border); padding-left: 16px; margin-left: 16px; }
+    .logo-text h1 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 5px; color: var(--accent); }
+    .logo-text span { font-size: 0.6rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
 
-    .logo img {
-      height: 52px;
-      width: auto;
-      display: block;
-      filter: invert(1) brightness(0.9);
-    }
+    #status-bar { display: flex; align-items: center; gap: 24px; }
+    #last-update { font-size: 0.78rem; color: var(--muted); letter-spacing: 1px; text-align: right; }
+    #last-update strong { display: block; color: var(--text); font-size: 0.9rem; }
 
-    .logo-text {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      margin-left: 16px;
-      border-left: 1px solid var(--border);
-      padding-left: 16px;
-    }
-
-    .logo-text h1 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.4rem;
-      letter-spacing: 5px;
-      color: var(--accent);
-      line-height: 1;
-    }
-
-    .logo-text span {
-      font-size: 0.6rem;
-      letter-spacing: 3px;
-      color: var(--muted);
-      text-transform: uppercase;
-      display: block;
-      margin-top: 3px;
-    }
-
-    /* ── STATUS RECHTS ── */
-    #status-bar {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-    }
-
-    #last-update {
-      font-size: 0.78rem;
-      color: var(--muted);
-      letter-spacing: 1px;
-      text-align: right;
-      line-height: 1.6;
-    }
-
-    #last-update strong {
-      display: block;
-      color: var(--text);
-      font-size: 0.9rem;
-    }
-
-    /* ── COUNTDOWN RING ── */
-    #ring-wrap {
-      position: relative;
-      width: 48px; height: 48px;
-    }
-
+    #ring-wrap { position: relative; width: 48px; height: 48px; }
     #ring-wrap svg { transform: rotate(-90deg); }
-
-    #ring-wrap circle.bg {
-      fill: none; stroke: var(--border); stroke-width: 3.5;
-    }
-
+    #ring-wrap circle.bg { fill: none; stroke: var(--border); stroke-width: 3.5; }
     #ring-wrap circle.prog {
-      fill: none;
-      stroke: var(--primary);
-      stroke-width: 3.5;
-      stroke-linecap: round;
-      stroke-dasharray: 113.1;
-      stroke-dashoffset: 0;
+      fill: none; stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round;
+      stroke-dasharray: 113.1; stroke-dashoffset: 0;
       transition: stroke-dashoffset 1s linear, stroke 0.3s;
     }
+    #ring-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--primary); }
 
-    #ring-num {
-      position: absolute;
-      inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--primary);
-      transition: color 0.3s;
-    }
+    #pdf-wrap { height: calc(100vh - 70px); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    #pdf-canvas { display: block; max-width: 100%; max-height: 100%; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
+    #pdf-iframe { width: 100%; height: 100%; border: none; display: none; }
 
-    /* ── PDF BEREICH ── */
-    #pdf-wrap {
-      height: calc(100vh - 70px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      padding: 0;
-      background: var(--bg);
-    }
-
-    #pdf-wrap canvas {
-      display: block;
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-    }
-
-    /* iframe Fallback */
-    #pdf-iframe {
-      width: 100%; height: 100%;
-      border: none;
-      display: none;
-    }
-
-    /* ── LOADING OVERLAY ── */
-    #loading {
-      position: fixed; inset: 0;
-      background: var(--bg);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 16px;
-      z-index: 100;
-      transition: opacity 0.5s;
-    }
-
+    #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; transition: opacity 0.5s; }
     #loading.hidden { opacity: 0; pointer-events: none; }
-
-    .spinner {
-      width: 48px; height: 48px;
-      border: 3px solid var(--border);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
+    .spinner { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    #loading p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    /* ── REFRESH FLASH ── */
-    #flash {
-      position: fixed; inset: 0;
-      background: rgba(89, 114, 142, 0.15);
-      pointer-events: none;
-      opacity: 0;
-      z-index: 50;
-      transition: opacity 0.5s ease;
-    }
-
-    /* ── STATUS PILL ── */
-    #status-pill {
-      position: fixed;
-      bottom: 20px; right: 24px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 1px;
-    }
-
-    #status-pill.ok::before {
-      content: '●  ';
-      color: var(--primary);
-    }
-
-    #status-pill.err::before {
-      content: '●  ';
-      color: var(--orange);
-    }
+    #flash { position: fixed; inset: 0; background: rgba(89, 114, 142, 0.15); pointer-events: none; opacity: 0; z-index: 50; transition: opacity 0.5s ease; }
+    #status-pill { position: fixed; bottom: 20px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.72rem; color: var(--muted); }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div id="header">
   <div class="logo">
-    <img src="11_Logo_simpel_schwarz_2.jpg" alt="Tennis Andorf">
+    <img src="11_Logo_simpel_schwarz_2.jpg" alt="Logo">
     <div class="logo-text">
-      <h1>Spielstände</h1>
-      <span>Live Ergebnisse</span>
+      <h1 id="title-text">Spielstände</h1>
+      <span id="subtitle-text">Live Rotation</span>
     </div>
   </div>
   <div id="status-bar">
     <div id="last-update">
       <strong id="update-time">–</strong>
-      Letzte Aktualisierung
+      <span id="update-label">Aktualisierung</span>
     </div>
     <div id="ring-wrap">
       <svg viewBox="0 0 48 48" width="48" height="48">
@@ -261,141 +110,138 @@
   </div>
 </div>
 
-<!-- PDF ANZEIGE -->
 <div id="pdf-wrap">
   <canvas id="pdf-canvas"></canvas>
-  <iframe id="pdf-iframe" title="Spielbericht"></iframe>
+  <iframe id="pdf-iframe"></iframe>
 </div>
 
-<!-- LOADING -->
 <div id="loading">
   <div class="spinner"></div>
-  <p>Lade Spielbericht …</p>
+  <p>Lade Dokument ...</p>
 </div>
 
-<!-- FLASH -->
 <div id="flash"></div>
-
-<!-- STATUS PILL -->
-<div id="status-pill" class="ok">PDF.js aktiv</div>
+<div id="status-pill">Initialisiere...</div>
 
 <script>
 // ═══════════════════════════════════════════════
-//  KONFIGURATION — hier anpassen
+//  KONFIGURATION — PDFs hier eintragen
 // ═══════════════════════════════════════════════
-const PDF_URL          = "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78";
-const INTERVAL_SEK     = 60;   // Aktualisierungsintervall in Sekunden
-const RENDER_SCALE     = 2.2;  // Höher = schärfer (für 4K TV: 2.0–2.5)
+const PDF_LISTE = [
+  { datum: "2026-05-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },
+  { datum: "2026-05-08", url: "HIER_ZWEITE_URL_EINFÜGEN" },
+  { datum: "2026-05-08", url: "HIER_DRITTE_URL_EINFÜGEN" }
+];
+
+const INTERVAL_SEK = 60;   // Wechselt alle X Sekunden
+const RENDER_SCALE = 2.2;  // Qualität
 // ═══════════════════════════════════════════════
 
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-const canvas     = document.getElementById('pdf-canvas');
-const ctx        = canvas.getContext('2d');
-const loading    = document.getElementById('loading');
-const flash      = document.getElementById('flash');
-const prog       = document.getElementById('prog');
-const ringNum    = document.getElementById('ring-num');
+const canvas = document.getElementById('pdf-canvas');
+const ctx = canvas.getContext('2d');
+const loading = document.getElementById('loading');
+const flash = document.getElementById('flash');
+const prog = document.getElementById('prog');
+const ringNum = document.getElementById('ring-num');
 const updateTime = document.getElementById('update-time');
-const pill       = document.getElementById('status-pill');
-const iframe     = document.getElementById('pdf-iframe');
+const pill = document.getElementById('status-pill');
+const iframe = document.getElementById('pdf-iframe');
 
-const CIRCUMFERENCE = 2 * Math.PI * 18; // ≈ 113.1
+const CIRCUMFERENCE = 113.1;
 let secondsLeft = INTERVAL_SEK;
-let usePdfJs    = true;
+let currentRotationIndex = 0;
+let usePdfJs = true;
 
-// ── PDF mit PDF.js laden & rendern ──
-async function loadWithPdfJs() {
-  const url = PDF_URL + "&_t=" + Date.now();
+// Hilfsfunktion für heutiges Datum im Format YYYY-MM-DD
+function getTodayString() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+async function loadWithPdfJs(pdfUrl) {
   try {
-    const pdf  = await pdfjsLib.getDocument({ url, cMapUrl: null }).promise;
+    const url = pdfUrl + "&_t=" + Date.now();
+    const pdf = await pdfjsLib.getDocument({ url }).promise;
     const page = await pdf.getPage(1);
-
-    // Verfügbare Fläche (Bildschirm minus Header)
     const availW = window.innerWidth;
     const availH = window.innerHeight - 70;
-
-    // Erst bei Scale=1 die natürliche Seitengröße ermitteln
     const vpBase = page.getViewport({ scale: 1 });
-
-    // Scale so wählen dass die Seite in Breite UND Höhe passt
-    const scaleByW = availW / vpBase.width;
-    const scaleByH = availH / vpBase.height;
-    const scale    = Math.min(scaleByW, scaleByH) * RENDER_SCALE;
-
-    const vp       = page.getViewport({ scale });
-    canvas.width   = vp.width;
-    canvas.height  = vp.height;
-
-    // CSS-Größe auf verfügbaren Bereich begrenzen
-    canvas.style.width  = Math.min(vp.width  / RENDER_SCALE, availW) + 'px';
-    canvas.style.height = Math.min(vp.height / RENDER_SCALE, availH) + 'px';
+    const scale = Math.min(availW / vpBase.width, availH / vpBase.height) * RENDER_SCALE;
+    const vp = page.getViewport({ scale });
+    
+    canvas.width = vp.width;
+    canvas.height = vp.height;
+    canvas.style.width = (vp.width / RENDER_SCALE) + 'px';
+    canvas.style.height = (vp.height / RENDER_SCALE) + 'px';
 
     await page.render({ canvasContext: ctx, viewport: vp }).promise;
-
     canvas.style.display = 'block';
     iframe.style.display = 'none';
-
-    pill.textContent = 'PDF.js aktiv';
-    pill.className   = 'ok';
+    pill.textContent = 'Modus: PDF.js';
     return true;
   } catch (e) {
-    console.warn('PDF.js fehlgeschlagen:', e);
+    console.warn("PDF.js Error:", e);
     return false;
   }
 }
 
-// ── Fallback: iframe ──
-function loadWithIframe() {
-  const url = PDF_URL + "&_t=" + Date.now() + "#toolbar=0&navpanes=0&scrollbar=0&view=FitH";
+function loadWithIframe(pdfUrl) {
+  const url = pdfUrl + "&_t=" + Date.now() + "#toolbar=0&navpanes=0";
   iframe.src = url;
   canvas.style.display = 'none';
   iframe.style.display = 'block';
-  document.getElementById('pdf-wrap').style.padding = '0';
-  pill.textContent = 'iframe Modus';
-  pill.className   = 'err';
+  pill.textContent = 'Modus: Iframe Fallback';
 }
 
-// ── Haupt-Ladefunktion ──
 async function refresh() {
-  loading.classList.remove('hidden');
+  const heute = getTodayString();
+  const heutePDFs = PDF_LISTE.filter(item => item.datum === heute);
 
-  const ok = usePdfJs ? await loadWithPdfJs() : false;
-
-  if (!ok) {
-    usePdfJs = false;
-    loadWithIframe();
+  if (heutePDFs.length === 0) {
+    updateTime.textContent = "Kein Plan";
+    document.getElementById('subtitle-text').textContent = "Keine Berichte für heute (" + heute + ")";
+    loading.classList.add('hidden');
+    return;
   }
 
-  // Uhrzeit setzen
-  const now = new Date();
-  updateTime.textContent = now.toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  loading.classList.remove('hidden');
+  
+  // Rotation Logik
+  if (currentRotationIndex >= heutePDFs.length) currentRotationIndex = 0;
+  const targetPDF = heutePDFs[currentRotationIndex];
+  
+  // Untertitel anpassen bei mehreren Files
+  document.getElementById('subtitle-text').textContent = 
+    heutePDFs.length > 1 ? `Bericht ${currentRotationIndex + 1} von ${heutePDFs.length}` : "Live Ergebnisse";
 
-  // Flash
+  const success = usePdfJs ? await loadWithPdfJs(targetPDF.url) : false;
+  if (!success) loadWithIframe(targetPDF.url);
+
+  updateTime.textContent = new Date().toLocaleTimeString('de-AT');
   flash.style.opacity = '1';
   setTimeout(() => flash.style.opacity = '0', 600);
-
+  
   loading.classList.add('hidden');
   secondsLeft = INTERVAL_SEK;
+  currentRotationIndex++;
 }
 
-// ── Countdown ──
 function tick() {
   ringNum.textContent = secondsLeft;
-
-  const fraction = secondsLeft / INTERVAL_SEK;
-  prog.style.strokeDashoffset = CIRCUMFERENCE * (1 - fraction);
-
+  prog.style.strokeDashoffset = CIRCUMFERENCE * (1 - (secondsLeft / INTERVAL_SEK));
   const isLow = secondsLeft <= 10;
-  prog.style.stroke    = isLow ? 'var(--orange)' : 'var(--primary)';
-  ringNum.style.color  = isLow ? 'var(--orange)' : 'var(--primary)';
+  prog.style.stroke = isLow ? 'var(--orange)' : 'var(--primary)';
+  ringNum.style.color = isLow ? 'var(--orange)' : 'var(--primary)';
 
-  secondsLeft--;
-  if (secondsLeft < 0) refresh();
+  if (secondsLeft <= 0) {
+    refresh();
+  } else {
+    secondsLeft--;
+  }
 }
 
-// ── Start ──
 refresh();
 setInterval(tick, 1000);
 </script>
