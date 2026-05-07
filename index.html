@@ -128,11 +128,10 @@
 //  KONFIGURATION — PDFs hier eintragen
 // ═══════════════════════════════════════════════
 const PDF_LISTE = [
-
   { datum: "2026-05-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },  
   { datum: "2026-05-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" },
   { datum: "2026-05-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },  
-  { datum: "2026-05-09", url: "hhttps://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" },
+  { datum: "2026-05-09", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" },
   { datum: "2026-05-15", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866859&etag=64bada8e-99fe-43f6-8a66-c6d8656e4f70" },
   { datum: "2026-05-16", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860681&etag=333a27b4-5a40-4986-8696-a0c9b992c879" },
   { datum: "2026-05-17", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863373&etag=66e26ba4-8e83-43c5-ae67-d2eef83f7dca" },
@@ -153,7 +152,6 @@ const PDF_LISTE = [
   { datum: "2026-06-21", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863914&etag=1e43b08b-26ed-4cd1-84d9-2be97faba4f7" },
   { datum: "2026-06-24", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867129&etag=f4c9bd6b-bee8-48bb-9d12-3a9f3fe16f3a" },
   { datum: "2026-06-26", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866925&etag=f0a5dc27-bc80-45b4-8b11-82de47fc994a" },
-  { datum: "2026-06-27", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860973&etag=09f1eb76-5f1e-49f9-bdb5-66e41084f81a" },
   { datum: "2026-06-27", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860973&etag=09f1eb76-5f1e-49f9-bdb5-66e41084f81a" },
   { datum: "2026-07-03", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866408&etag=a3753e8f-4afa-467b-be9d-feecf58a5712" },
   { datum: "2026-07-04", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860517&etag=b959b87a-98ae-4cac-bafa-b4c50949672b" },
@@ -220,11 +218,12 @@ async function loadWithPdfJs(pdfUrl) {
 }
 
 function loadWithIframe(pdfUrl) {
-  const url = pdfUrl + "&_t=" + Date.now() + "#toolbar=0&navpanes=0";
-  iframe.src = url;
+  // Fix für Samsung TV: Google Docs Viewer als Bridge nutzen
+  const googleViewerUrl = "https://docs.google.com/viewer?url=" + encodeURIComponent(pdfUrl) + "&embedded=true&_t=" + Date.now();
+  iframe.src = googleViewerUrl;
   canvas.style.display = 'none';
   iframe.style.display = 'block';
-  pill.textContent = 'Modus: Iframe Fallback';
+  pill.textContent = 'Modus: Google Viewer';
 }
 
 async function refresh() {
