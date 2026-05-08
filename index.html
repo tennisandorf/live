@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tennis Live Monitor - High Quality</title>
+  <title>Tennis Live Monitor - Seamless HQ</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap');
 
@@ -17,90 +17,48 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body { 
-      background: var(--bg); 
-      color: var(--text); 
-      font-family: 'DM Sans', sans-serif; 
-      overflow: hidden; 
-      height: 100vh; 
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow: hidden; height: 100vh; }
 
     #header {
-      height: 70px;
-      background: var(--surface);
-      border-bottom: 2px solid var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      z-index: 10;
+      height: 70px; background: var(--surface); border-bottom: 2px solid var(--primary);
+      display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+      z-index: 10; position: relative;
     }
 
-    .logo-text h1 { 
-      font-family: 'Bebas Neue', sans-serif; 
-      font-size: 1.6rem; 
-      letter-spacing: 2px; 
-      color: var(--accent); 
-    }
+    .logo-text h1 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--accent); }
 
-    #status-bar { 
-      text-align: right; 
-      display: flex; 
-      align-items: center; 
-      gap: 20px;
-    }
-
+    #status-bar { text-align: right; display: flex; align-items: center; gap: 20px; }
     #clock { font-weight: bold; font-size: 1.2rem; }
-    #timer-wrap { font-size: 0.7rem; color: var(--muted); opacity: 0.8; }
+    #timer-wrap { font-size: 0.7rem; opacity: 0.8; line-height: 1.2; }
 
     #content-wrap { 
-      height: calc(100vh - 70px); 
-      width: 100%; 
-      display: flex; 
-      justify-content: center; 
-      background: #ffffff; /* Weißer Hintergrund für besseren Kontrast des Berichts */
-      overflow: hidden; 
+      height: calc(100vh - 70px); width: 100%; 
+      display: flex; justify-content: center; 
+      background: #ffffff; overflow: hidden; position: relative;
     }
 
     #pdf-img { 
-      height: 100%; 
-      width: auto; 
-      display: block;
-      /* Verhindert Unschärfe beim Skalieren im Browser */
-      image-rendering: -webkit-optimize-contrast; 
+      height: 100%; width: auto; display: block;
+      image-rendering: -webkit-optimize-contrast;
+      transition: opacity 0.5s ease-in-out; /* Weicher Übergang */
     }
 
+    /* Initialer Lade-Bildschirm (nur beim ersten Mal) */
     #loading { 
-      position: fixed; 
-      inset: 0; 
-      background: var(--bg); 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: center; 
-      z-index: 100; 
+      position: fixed; inset: 0; background: var(--bg); 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; 
     }
-
-    .spinner { 
-      width: 50px; 
-      height: 50px; 
-      border: 5px solid var(--border); 
-      border-top-color: var(--primary); 
-      border-radius: 50%; 
-      animation: spin 1s linear infinite; 
-    }
-
+    .spinner { width: 50px; height: 50px; border: 5px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .hidden { display: none !important; }
+    .hidden { opacity: 0; pointer-events: none; transition: opacity 0.8s; }
   </style>
 </head>
 <body>
 
 <div id="header">
   <div class="logo-text">
-    <h1 id="title-text">Tennis Andorf Live</h1>
-    <span id="subtitle" style="font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;">Initialisiere HD-Modus...</span>
+    <h1>Tennis Andorf Live</h1>
+    <span id="subtitle" style="font-size: 0.75rem; color: var(--accent); text-transform: uppercase;">Initialisiere...</span>
   </div>
   <div id="status-bar">
     <div id="timer-wrap">Nächster Wechsel<br>in <span id="timer">60</span> Sek.</div>
@@ -114,7 +72,7 @@
 
 <div id="loading">
   <div class="spinner"></div>
-  <p style="margin-top:20px; letter-spacing: 1px; font-size: 0.9rem;">OPTIMIERE BILDQUALITÄT FÜR TV...</p>
+  <p style="margin-top:20px;">Lade Live-Daten...</p>
 </div>
 
 <script>
@@ -158,66 +116,63 @@ const PDF_LISTE = [
   { datum: "2026-07-11", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863275&etag=ed825869-6014-4bb2-8d2b-824b1c4940cf" }
 ];
 
-const RELOAD_EVERY = 60; // Sekunden pro Bericht
+const RELOAD_EVERY = 60; 
 // ═══════════════════════════════════════════════
 
 let timeLeft = RELOAD_EVERY;
 let currentIndex = 0;
+let isFirstLoad = true;
 
 function refresh() {
   const today = new Date().toISOString().split('T')[0];
   const activeList = PDF_LISTE.filter(p => p.datum === today);
 
   if (activeList.length === 0) {
-    document.getElementById('subtitle').textContent = "Keine Spiele für heute (" + today + ")";
+    document.getElementById('subtitle').textContent = "Keine Spiele heute (" + today + ")";
     document.getElementById('loading').classList.add('hidden');
     return;
   }
 
-  document.getElementById('loading').classList.remove('hidden');
-  
   if (currentIndex >= activeList.length) currentIndex = 0;
   const target = activeList[currentIndex];
 
-  // --- HIGH QUALITY RENDERING LOGIC ---
-  // Wir nutzen Google als Basis mit 2400px Breite (HQ)
+  // HQ-URL wie zuvor
   const googleBase = "https://docs.google.com/viewer?url=" + encodeURIComponent(target.url) + "&embedded=true&a=bi&pagenumber=1&w=2400";
-  
-  // Wir jagen das durch weserv.nl für zusätzliche Schärfe und JPG-Qualität (95%)
   const finalHqUrl = "https://images.weserv.nl/?url=" + encodeURIComponent(googleBase) + "&q=95&sharp=1&nocache=" + Date.now();
 
-  const img = document.getElementById('pdf-img');
-  img.src = finalHqUrl;
+  // --- BACKGROUND LOADING LOGIC ---
+  const tempImg = new Image(); // Unsichtbares Bild-Objekt im Speicher
+  tempImg.src = finalHqUrl;
 
-  img.onload = () => {
+  tempImg.onload = () => {
+    const mainImg = document.getElementById('pdf-img');
+    
+    // Erst wenn das Bild geladen ist, tauschen wir es aus
+    mainImg.src = tempImg.src;
+
+    // UI Updates
     document.getElementById('loading').classList.add('hidden');
-    document.getElementById('clock').textContent = new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
     document.getElementById('subtitle').textContent = activeList.length > 1 ? `Bericht ${currentIndex + 1} von ${activeList.length}` : "Live Ergebnisse";
-  };
-
-  img.onerror = () => {
-    // Fallback falls der HQ-Dienst hakt
-    img.src = "https://image.thum.io/get/width/2000/pdf/noanimate/" + target.url;
+    
+    isFirstLoad = false;
   };
 
   currentIndex++;
   timeLeft = RELOAD_EVERY;
 }
 
-// Timer Funktion
+// Timer & Uhrzeit
 setInterval(() => {
   timeLeft--;
   document.getElementById('timer').textContent = timeLeft;
   if (timeLeft <= 0) refresh();
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
 }, 1000);
 
-// Uhrzeit-Update (sekündlich für das Gefühl von "Live")
-setInterval(() => {
-    document.getElementById('clock').textContent = new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
-}, 1000);
-
-// Erster Aufruf
 refresh();
 </script>
 </body>
 </html>
+
+
+
