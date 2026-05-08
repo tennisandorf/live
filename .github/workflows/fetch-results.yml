@@ -1,1 +1,38 @@
+name: Tennis Live Results
+
+on:
+  schedule:
+    # Alle 5 Minuten (GitHub-Minimum)
+    - cron: '*/5 * * * *'
+  workflow_dispatch:  # Manueller Start jederzeit möglich
+
+jobs:
+  fetch-results:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Python Setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Abhängigkeiten installieren
+        run: pip install pdfminer.six
+
+      - name: Ergebnisse abrufen
+        run: python fetch_results.py
+
+      - name: results.json committen & pushen
+        run: |
+          git config user.name "tennis-bot"
+          git config user.email "bot@tennisandorf.github.io"
+          git add results.json
+          # Nur committen wenn sich etwas geändert hat
+          git diff --staged --quiet || git commit -m "update: tennis results $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push
 
