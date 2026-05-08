@@ -3,17 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tennis Live Monitor</title>
+  <title>Tennis Live Monitor - High Quality</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap');
-    :root { --primary: #59728E; --bg: #1a1e28; --text: #dce6f0; --accent: #a8c4dc; }
+
+    :root {
+      --primary:   #59728E;
+      --bg:        #1a1e28;
+      --surface:   #262934;
+      --border:    #3a4257;
+      --text:      #dce6f0;
+      --accent:    #a8c4dc;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow: hidden; height: 100vh; }
-    #header { height: 70px; background: #262934; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 2px solid var(--primary); }
-    #content-wrap { height: calc(100vh - 70px); width: 100%; display: flex; justify-content: center; background: #fff; overflow: hidden; }
-    #pdf-img { height: 100%; width: auto; display: block; }
-    #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
-    .spinner { width: 40px; height: 40px; border: 4px solid #3a4257; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: 'DM Sans', sans-serif; 
+      overflow: hidden; 
+      height: 100vh; 
+    }
+
+    #header {
+      height: 70px;
+      background: var(--surface);
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 10;
+    }
+
+    .logo-text h1 { 
+      font-family: 'Bebas Neue', sans-serif; 
+      font-size: 1.6rem; 
+      letter-spacing: 2px; 
+      color: var(--accent); 
+    }
+
+    #status-bar { 
+      text-align: right; 
+      display: flex; 
+      align-items: center; 
+      gap: 20px;
+    }
+
+    #clock { font-weight: bold; font-size: 1.2rem; }
+    #timer-wrap { font-size: 0.7rem; color: var(--muted); opacity: 0.8; }
+
+    #content-wrap { 
+      height: calc(100vh - 70px); 
+      width: 100%; 
+      display: flex; 
+      justify-content: center; 
+      background: #ffffff; /* Weißer Hintergrund für besseren Kontrast des Berichts */
+      overflow: hidden; 
+    }
+
+    #pdf-img { 
+      height: 100%; 
+      width: auto; 
+      display: block;
+      /* Verhindert Unschärfe beim Skalieren im Browser */
+      image-rendering: -webkit-optimize-contrast; 
+    }
+
+    #loading { 
+      position: fixed; 
+      inset: 0; 
+      background: var(--bg); 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      z-index: 100; 
+    }
+
+    .spinner { 
+      width: 50px; 
+      height: 50px; 
+      border: 5px solid var(--border); 
+      border-top-color: var(--primary); 
+      border-radius: 50%; 
+      animation: spin 1s linear infinite; 
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
     .hidden { display: none !important; }
   </style>
@@ -21,13 +98,13 @@
 <body>
 
 <div id="header">
-  <div>
-    <h1 style="font-family: 'Bebas Neue'; letter-spacing: 2px;">Spielstand Live</h1>
-    <span id="subtitle" style="font-size: 0.8rem; color: var(--accent);">Lade Daten...</span>
+  <div class="logo-text">
+    <h1 id="title-text">Tennis Andorf Live</h1>
+    <span id="subtitle" style="font-size: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 1px;">Initialisiere HD-Modus...</span>
   </div>
-  <div style="text-align: right;">
-    <div id="clock" style="font-weight: bold; font-size: 1.2rem;">--:--</div>
-    <div style="font-size: 0.7rem; opacity: 0.7;">Wechsel in: <span id="timer">60</span>s</div>
+  <div id="status-bar">
+    <div id="timer-wrap">Nächster Wechsel<br>in <span id="timer">60</span> Sek.</div>
+    <div id="clock">--:--</div>
   </div>
 </div>
 
@@ -37,15 +114,14 @@
 
 <div id="loading">
   <div class="spinner"></div>
-  <p style="margin-top:15px; font-size: 0.9rem;">TV-Kompatibilitätsmodus aktiv...</p>
+  <p style="margin-top:20px; letter-spacing: 1px; font-size: 0.9rem;">OPTIMIERE BILDQUALITÄT FÜR TV...</p>
 </div>
 
 <script>
 // ═══════════════════════════════════════════════
-// HIER DEINE PDF-LISTE PFLEGEN
+// KONFIGURATION
 // ═══════════════════════════════════════════════
 const PDF_LISTE = [
-
   { datum: "2026-05-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },  
   { datum: "2026-05-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" },
   { datum: "2026-05-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },  
@@ -82,60 +158,66 @@ const PDF_LISTE = [
   { datum: "2026-07-11", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863275&etag=ed825869-6014-4bb2-8d2b-824b1c4940cf" }
 ];
 
-
-];
-const RELOAD_EVERY = 60; 
+const RELOAD_EVERY = 60; // Sekunden pro Bericht
 // ═══════════════════════════════════════════════
 
 let timeLeft = RELOAD_EVERY;
-let index = 0;
+let currentIndex = 0;
 
-function update() {
+function refresh() {
   const today = new Date().toISOString().split('T')[0];
-  const list = PDF_LISTE.filter(p => p.datum === today);
+  const activeList = PDF_LISTE.filter(p => p.datum === today);
 
-  if (list.length === 0) {
-    document.getElementById('subtitle').textContent = "Keine Berichte für heute gefunden.";
+  if (activeList.length === 0) {
+    document.getElementById('subtitle').textContent = "Keine Spiele für heute (" + today + ")";
     document.getElementById('loading').classList.add('hidden');
     return;
   }
 
   document.getElementById('loading').classList.remove('hidden');
-  if (index >= list.length) index = 0;
   
-  const target = list[index];
+  if (currentIndex >= activeList.length) currentIndex = 0;
+  const target = activeList[currentIndex];
 
-  // Wir nutzen einen "Flash-Screenshot" Dienst (kostenfrei ohne Key für einfache Zwecke)
-  // Dieser Dienst lädt das PDF und macht ein Bild davon.
-  const proxyUrl = "https://api.apiflash.com/v1/validate?access_key=FREE_KEY&url="; 
-  // Da wir keinen Key kaufen wollen, nutzen wir den Google-Vorschaudienst als Bild-Generator
-  const finalUrl = "https://docs.google.com/viewer?url=" + encodeURIComponent(target.url) + "&embedded=true&a=bi&pagenumber=1&w=1000";
+  // --- HIGH QUALITY RENDERING LOGIC ---
+  // Wir nutzen Google als Basis mit 2400px Breite (HQ)
+  const googleBase = "https://docs.google.com/viewer?url=" + encodeURIComponent(target.url) + "&embedded=true&a=bi&pagenumber=1&w=2400";
+  
+  // Wir jagen das durch weserv.nl für zusätzliche Schärfe und JPG-Qualität (95%)
+  const finalHqUrl = "https://images.weserv.nl/?url=" + encodeURIComponent(googleBase) + "&q=95&sharp=1&nocache=" + Date.now();
 
   const img = document.getElementById('pdf-img');
-  img.src = finalUrl;
+  img.src = finalHqUrl;
 
   img.onload = () => {
     document.getElementById('loading').classList.add('hidden');
     document.getElementById('clock').textContent = new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
-    document.getElementById('subtitle').textContent = `Bericht ${index + 1} von ${list.length}`;
+    document.getElementById('subtitle').textContent = activeList.length > 1 ? `Bericht ${currentIndex + 1} von ${activeList.length}` : "Live Ergebnisse";
   };
 
   img.onerror = () => {
-    // Falls Google blockt, versuchen wir einen zweiten Dienst
-    img.src = "https://image.thum.io/get/width/1200/pdf/noanimate/" + target.url;
+    // Fallback falls der HQ-Dienst hakt
+    img.src = "https://image.thum.io/get/width/2000/pdf/noanimate/" + target.url;
   };
 
-  index++;
+  currentIndex++;
   timeLeft = RELOAD_EVERY;
 }
 
+// Timer Funktion
 setInterval(() => {
   timeLeft--;
   document.getElementById('timer').textContent = timeLeft;
-  if (timeLeft <= 0) update();
+  if (timeLeft <= 0) refresh();
 }, 1000);
 
-update();
+// Uhrzeit-Update (sekündlich für das Gefühl von "Live")
+setInterval(() => {
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
+}, 1000);
+
+// Erster Aufruf
+refresh();
 </script>
 </body>
 </html>
