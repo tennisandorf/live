@@ -16,7 +16,7 @@ MATCHES = [
     {
         "id": "1866397",
         "label": "TV Andorf 1 vs SPG Prambachki/Waizenki 1",
-        "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78"
+        "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=19b20e39-6a97-4bb5-b706-8d4584a6c96d"
     },
     # Weitere Spiele einfach hier hinzufügen:
     # {
