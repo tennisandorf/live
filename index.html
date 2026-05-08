@@ -1,138 +1,227 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tennis Live Monitor - Ultra HQ</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tennis Live – TV Andorf vs UTC Wernstein</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap');
-    :root { --primary: #59728E; --bg: #1a1e28; --surface: #262934; --text: #dce6f0; --accent: #a8c4dc; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow: hidden; height: 100vh; }
-    #header { height: 70px; background: var(--surface); border-bottom: 2px solid var(--primary); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 10; position: relative; }
-    .logo-text h1 { font-family: 'Bebas Neue'; font-size: 1.6rem; color: var(--accent); letter-spacing: 2px; }
-    #status-bar { text-align: right; display: flex; align-items: center; gap: 20px; }
-    #content-wrap { height: calc(100vh - 70px); width: 100%; display: flex; justify-content: center; background: #fff; overflow: hidden; }
-    #pdf-img { height: 100%; width: auto; display: block; image-rendering: -webkit-optimize-contrast; }
-    #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; transition: opacity 0.5s; }
-    .spinner { width: 50px; height: 50px; border: 5px solid #3a4257; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .hidden { opacity: 0; pointer-events: none; }
+    :root {
+      --clay:   #c8572a;
+      --clay-lt:#e8734a;
+      --court:  #1a2e1a;
+      --net:    #2e4a2e;
+      --lime:   #b8e04a;
+      --white:  #f5f0e8;
+      --muted:  #8a9a7a;
+      --border: #3a5a3a;
+    }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      background:var(--court); color:var(--white);
+      font-family:'DM Sans',sans-serif; min-height:100vh;
+      padding:2rem 1.5rem 4rem;
+      background-image:
+        repeating-linear-gradient(0deg,transparent,transparent 59px,rgba(255,255,255,.03) 59px,rgba(255,255,255,.03) 60px),
+        repeating-linear-gradient(90deg,transparent,transparent 59px,rgba(255,255,255,.03) 59px,rgba(255,255,255,.03) 60px);
+    }
+    header {
+      max-width:860px; margin:0 auto 2.5rem;
+      display:flex; align-items:flex-end; justify-content:space-between; gap:1rem;
+      border-bottom:2px solid var(--border); padding-bottom:1rem;
+    }
+    .header-left h1 { font-family:'Bebas Neue',sans-serif; font-size:clamp(2rem,6vw,3.5rem); letter-spacing:.04em; color:var(--lime); line-height:1; }
+    .header-left p   { font-size:.8rem; color:var(--muted); margin-top:.35rem; font-family:'DM Mono',monospace; }
+    .status-badge    { display:flex; flex-direction:column; align-items:flex-end; gap:.4rem; }
+    .pulse-dot       { width:10px; height:10px; border-radius:50%; background:var(--lime); box-shadow:0 0 8px var(--lime); animation:pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+    #next-refresh { font-family:'DM Mono',monospace; font-size:.72rem; color:var(--muted); }
+    #last-updated { font-family:'DM Mono',monospace; font-size:.68rem; color:var(--muted); }
+    .container { max-width:860px; margin:0 auto; }
+    .score-banner {
+      background:var(--clay); border-radius:4px; padding:1.5rem 2rem; margin-bottom:1.8rem;
+      display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:1rem;
+      position:relative; overflow:hidden;
+    }
+    .score-banner::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.07) 0%,transparent 60%); pointer-events:none; }
+    .team-name { font-family:'Bebas Neue',sans-serif; font-size:clamp(1.1rem,3vw,1.6rem); letter-spacing:.05em; line-height:1.1; position:relative; }
+    .team-name.home { text-align:left; }
+    .team-name.away { text-align:right; }
+    .score-digits { font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,8vw,5rem); letter-spacing:.1em; color:var(--lime); text-align:center; white-space:nowrap; position:relative; }
+    .meta-strip { display:flex; gap:1.2rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .meta-chip  { background:var(--net); border:1px solid var(--border); border-radius:2px; padding:.3rem .75rem; font-size:.72rem; font-family:'DM Mono',monospace; color:var(--muted); }
+    .meta-chip span { color:var(--white); }
+    .section-title { font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:.08em; color:var(--lime); margin-bottom:.8rem; display:flex; align-items:center; gap:.6rem; }
+    .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+    .match-table { width:100%; border-collapse:collapse; margin-bottom:2.2rem; font-size:.82rem; }
+    .match-table thead th { background:var(--net); color:var(--muted); font-family:'DM Mono',monospace; font-weight:400; font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; padding:.5rem .75rem; text-align:left; border-bottom:1px solid var(--border); }
+    .match-table thead th.c { text-align:center; }
+    .match-table tbody tr   { border-bottom:1px solid var(--border); transition:background .15s; }
+    .match-table tbody tr:hover { background:rgba(255,255,255,.04); }
+    .match-table tbody td   { padding:.65rem .75rem; vertical-align:middle; }
+    .match-table tbody td.c { text-align:center; }
+    .player-name { font-weight:600; }
+    .player-itn  { font-family:'DM Mono',monospace; font-size:.68rem; color:var(--muted); margin-top:.1rem; }
+    .set-score   { font-family:'DM Mono',monospace; font-size:.82rem; white-space:nowrap; }
+    .wb   { display:inline-block; padding:.15rem .55rem; border-radius:2px; font-family:'DM Mono',monospace; font-size:.68rem; font-weight:500; letter-spacing:.05em; }
+    .wb-h { background:var(--lime); color:#111; }
+    .wb-g { background:var(--clay); color:var(--white); }
+    .totals-row td   { background:var(--net)!important; font-family:'DM Mono',monospace; font-size:.75rem; color:var(--muted); border-top:2px solid var(--border)!important; }
+    .totals-row td b { color:var(--white); }
+    .gesamt-bar { background:var(--net); border:1px solid var(--border); border-radius:3px; padding:.9rem 1.2rem; display:flex; flex-wrap:wrap; gap:1.5rem; font-family:'DM Mono',monospace; font-size:.78rem; color:var(--muted); margin-bottom:2rem; }
+    .gesamt-bar b { color:var(--white); }
+    #status-bar { max-width:860px; margin:0 auto 1.5rem; padding:.8rem 1.2rem; border-radius:3px; font-family:'DM Mono',monospace; font-size:.8rem; display:none; }
+    footer { max-width:860px; margin:3rem auto 0; font-size:.7rem; color:var(--muted); font-family:'DM Mono',monospace; text-align:center; border-top:1px solid var(--border); padding-top:1rem; }
+    @media(max-width:600px) {
+      .match-table { font-size:.75rem; }
+      .match-table tbody td { padding:.5rem .4rem; }
+      .score-banner { padding:1rem; gap:.5rem; }
+    }
   </style>
 </head>
 <body>
 
-<div id="header">
-  <div class="logo-text">
-    <h1>Tennis Andorf Live</h1>
-    <span id="subtitle" style="font-size: 0.75rem; color: var(--accent);">Initialisiere HQ-Ansicht...</span>
+<header>
+  <div class="header-left">
+    <h1>Tennis Live</h1>
+    <p id="liga-label">OÖ. Wintermeisterschaft 2025/2026 · Ried Herren 1</p>
   </div>
-  <div id="status-bar">
-    <div style="font-size: 0.7rem; opacity: 0.8;">Wechsel in: <span id="timer">60</span>s</div>
-    <div id="clock" style="font-weight: bold; font-size: 1.2rem;">--:--</div>
+  <div class="status-badge">
+    <div class="pulse-dot"></div>
+    <div id="next-refresh">Lade…</div>
+    <div id="last-updated"></div>
   </div>
-</div>
+</header>
 
-<div id="content-wrap">
-  <img id="pdf-img" src="" alt="Spielbericht">
-</div>
+<div id="status-bar"></div>
+<div class="container" id="main-content"></div>
 
-<div id="loading">
-  <div class="spinner"></div>
-  <p style="margin-top:20px;">Lade hochauflösenden Spielbericht...</p>
-</div>
+<footer>Daten werden jede Minute von GitHub Actions aktualisiert · Quelle: oetv-austria.liga.nu</footer>
 
 <script>
-// ═══════════════════════════════════════════════
-const PDF_LISTE = [
+const DATA_URL    = "https://tennisandorf.github.io/live/data.json";
+const REFRESH_SEC = 60;
+let countdown     = REFRESH_SEC;
+let timerInterval = null;
+let lastGoodData  = null;
 
-  { datum: "2026-05-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },  
-  { datum: "2026-05-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" },
-  { datum: "2026-05-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },  
-  { datum: "2026-05-09", url: "hhttps://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" },
-  { datum: "2026-05-15", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866859&etag=64bada8e-99fe-43f6-8a66-c6d8656e4f70" },
-  { datum: "2026-05-16", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860681&etag=333a27b4-5a40-4986-8696-a0c9b992c879" },
-  { datum: "2026-05-17", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863373&etag=66e26ba4-8e83-43c5-ae67-d2eef83f7dca" },
-  { datum: "2026-05-17", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863909&etag=9da4be0a-8484-44c8-af7f-b976707806fc" }, 
-  { datum: "2026-05-20", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867090&etag=fb651a06-9db7-4c2f-8072-e1d998d0a8e7" },
-  { datum: "2026-05-29", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866167&etag=ea47cfdf-845e-4b81-bbe1-255466a4f5fa" },
-  { datum: "2026-05-30", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861028&etag=46c1d4ff-4e82-4b6b-900f-d94cb8ae9ebd" },
-  { datum: "2026-06-03", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867134&etag=95a18852-57c5-4ee9-946c-caa68c6dc1b8" },
-  { datum: "2026-06-05", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866988&etag=aa3dd698-8277-4318-ba4b-360fd556074f" },
-  { datum: "2026-06-06", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860465&etag=16e12546-730b-4cea-92d2-0f45b231d5e9" },
-  { datum: "2026-06-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454&etag=2abc0b9e-19ef-42a1-aca8-ac17ff233f43" },
-  { datum: "2026-06-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1864022&etag=8e927bb5-2b2f-4f32-9c37-c051694663b8" },
-  { datum: "2026-06-13", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860786&etag=e52a0f70-4c8a-4f81-b0e1-736b5a8f35bb" },
-  { datum: "2026-06-13", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863290&etag=ec057680-9375-481f-94f0-5579cc8ef572" },
-  { datum: "2026-06-19", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866146&etag=b91304ca-72f6-4e1f-adc8-dd646423024c" },
-  { datum: "2026-06-20", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860453&etag=2cf1c5ef-8c0b-455e-b6af-f89f282dcfb6" },
-  { datum: "2026-06-21", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861626&etag=25bbb349-a2b1-4ac3-800d-2d608b77b20c" },
-  { datum: "2026-06-21", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863914&etag=1e43b08b-26ed-4cd1-84d9-2be97faba4f7" },
-  { datum: "2026-06-24", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867129&etag=f4c9bd6b-bee8-48bb-9d12-3a9f3fe16f3a" },
-  { datum: "2026-06-26", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866925&etag=f0a5dc27-bc80-45b4-8b11-82de47fc994a" },
-  { datum: "2026-06-27", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860973&etag=09f1eb76-5f1e-49f9-bdb5-66e41084f81a" },
-  { datum: "2026-06-27", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860973&etag=09f1eb76-5f1e-49f9-bdb5-66e41084f81a" },
-  { datum: "2026-07-03", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866408&etag=a3753e8f-4afa-467b-be9d-feecf58a5712" },
-  { datum: "2026-07-04", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860517&etag=b959b87a-98ae-4cac-bafa-b4c50949672b" },
-  { datum: "2026-07-05", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861580&etag=33eb3d5e-861a-402b-96be-a4796ff29c36" },
-  { datum: "2026-07-05", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863861&etag=0497d264-4c50-401f-af70-0b3062502c70" },
-  { datum: "2026-07-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867264&etag=74bfeac1-e8ef-475f-b81c-024243109a0a" },
-  { datum: "2026-07-10", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866916&etag=6306780b-3c36-49d7-9ad1-3e8ba711275c" },
-  { datum: "2026-07-11", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861040&etag=7186e12a-7513-46ac-bafb-1be27d48e579" },
-  { datum: "2026-07-11", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863275&etag=ed825869-6014-4bb2-8d2b-824b1c4940cf" }
-];
-
-
-const RELOAD_EVERY = 60;
-// ═══════════════════════════════════════════════
-
-let timeLeft = RELOAD_EVERY;
-let currentIndex = 0;
-
-function refresh() {
-  const today = new Date().toISOString().split('T')[0];
-  const list = PDF_LISTE.filter(p => p.datum === today);
-
-  if (list.length === 0) {
-    document.getElementById('subtitle').textContent = "Keine Spiele heute";
-    document.getElementById('loading').classList.add('hidden');
-    return;
-  }
-
-  if (currentIndex >= list.length) currentIndex = 0;
-  const target = list[currentIndex];
-
-  // Methode: thum.io (Spezialisierter HD-Dienst)
-  // Wir erzwingen eine Breite von 2000px und warten 2 Sek, bis das PDF geladen ist.
-  const hqUrl = "https://image.thum.io/get/width/2000/crop/800/pdf/noanimate/wait/2/" + target.url + "?t=" + Date.now();
-
-  const tempImg = new Image();
-  tempImg.src = hqUrl;
-
-  tempImg.onload = () => {
-    document.getElementById('pdf-img').src = tempImg.src;
-    document.getElementById('loading').classList.add('hidden');
-    document.getElementById('subtitle').textContent = `Bericht ${currentIndex + 1} von ${list.length}`;
-    currentIndex++;
-  };
-
-  tempImg.onerror = () => {
-    // Zweitversuch mit Google, falls thum.io hakt
-    document.getElementById('pdf-img').src = "https://docs.google.com/viewer?url=" + encodeURIComponent(target.url) + "&embedded=true&a=bi&pagenumber=1&w=1500";
-    document.getElementById('loading').classList.add('hidden');
-  };
-
-  timeLeft = RELOAD_EVERY;
+// ── Fetch data.json (kein CORS-Problem, gleiche Origin) ───────────────────
+async function fetchData() {
+  const res = await fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  return await res.json();
 }
 
-setInterval(() => {
-  timeLeft--;
-  document.getElementById('timer').textContent = timeLeft;
-  if (timeLeft <= 0) refresh();
-  document.getElementById('clock').textContent = new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
-}, 1000);
+// ── Render ────────────────────────────────────────────────────────────────
+function render(d) {
+  const wb = w => w === "heim"
+    ? `<span class="wb wb-h">HEIM</span>`
+    : `<span class="wb wb-g">GAST</span>`;
+
+  const thead = `<thead><tr>
+    <th class="c">#</th><th>Heim</th><th>Gast</th>
+    <th class="c">Satz 1</th><th class="c">Satz 2</th><th class="c">Satz 3</th>
+    <th class="c">Sieger</th>
+  </tr></thead>`;
+
+  const einzelRows = (d.einzel || []).map(e => `<tr>
+    <td class="c" style="color:var(--muted);font-family:'DM Mono',monospace">${e.nr}</td>
+    <td><div class="player-name">${e.heimSpieler}</div><div class="player-itn">ITN ${e.heimITN}</div></td>
+    <td><div class="player-name">${e.gastSpieler}</div><div class="player-itn">ITN ${e.gastITN}</div></td>
+    <td class="c set-score">${e.satz1}</td>
+    <td class="c set-score">${e.satz2}</td>
+    <td class="c set-score" style="color:var(--muted)">${e.satz3}</td>
+    <td class="c">${wb(e.winner)}</td>
+  </tr>`).join("") + (d.einzelSum ? `<tr class="totals-row">
+    <td colspan="3" style="padding-left:.75rem">Einzel-Summe</td>
+    <td class="c"><b>${d.einzelSum.mH}</b>:${d.einzelSum.mG}&nbsp;M</td>
+    <td class="c"><b>${d.einzelSum.sH}</b>:${d.einzelSum.sG}&nbsp;S</td>
+    <td class="c"><b>${d.einzelSum.gH}</b>:${d.einzelSum.gG}&nbsp;G</td>
+    <td></td>
+  </tr>` : "");
+
+  const doppelRows = (d.doppel || []).map(e => `<tr>
+    <td class="c" style="color:var(--muted);font-family:'DM Mono',monospace">${e.nr}</td>
+    <td><div class="player-name">${e.heimPaar}</div></td>
+    <td><div class="player-name">${e.gastPaar}</div></td>
+    <td class="c set-score">${e.satz1}</td>
+    <td class="c set-score">${e.satz2}</td>
+    <td class="c set-score" style="color:var(--muted)">${e.satz3}</td>
+    <td class="c">${wb(e.winner)}</td>
+  </tr>`).join("") + (d.doppelSum ? `<tr class="totals-row">
+    <td colspan="3" style="padding-left:.75rem">Doppel-Summe</td>
+    <td class="c"><b>${d.doppelSum.mH}</b>:${d.doppelSum.mG}&nbsp;M</td>
+    <td class="c"><b>${d.doppelSum.sH}</b>:${d.doppelSum.sG}&nbsp;S</td>
+    <td class="c"><b>${d.doppelSum.gH}</b>:${d.doppelSum.gG}&nbsp;G</td>
+    <td></td>
+  </tr>` : "");
+
+  document.getElementById("main-content").innerHTML = `
+    <div class="score-banner">
+      <div class="team-name home">${d.heimTeam}</div>
+      <div class="score-digits">${d.gesamtHeim}&nbsp;:&nbsp;${d.gesamtGast}</div>
+      <div class="team-name away">${d.gastTeam}</div>
+    </div>
+    <div class="meta-strip">
+      <div class="meta-chip">Liga <span>${d.liga || "OÖ. Wintermeisterschaft 2025/26"}</span></div>
+      <div class="meta-chip">Runde <span>${d.runde || "—"}</span></div>
+      <div class="meta-chip">Datum <span>${d.termin || "—"}</span></div>
+    </div>
+    <div class="section-title">Einzel</div>
+    <table class="match-table">${thead}<tbody>${einzelRows}</tbody></table>
+    <div class="section-title">Doppel</div>
+    <table class="match-table">${thead}<tbody>${doppelRows}</tbody></table>
+    ${d.gesamtSum ? `<div class="gesamt-bar">
+      <span>Matches <b>${d.gesamtSum.mH} : ${d.gesamtSum.mG}</b></span>
+      <span>Sätze <b>${d.gesamtSum.sH} : ${d.gesamtSum.sG}</b></span>
+      <span>Games <b>${d.gesamtSum.gH} : ${d.gesamtSum.gG}</b></span>
+    </div>` : ""}`;
+
+  document.getElementById("liga-label").textContent =
+    (d.liga || "OÖ. Wintermeisterschaft 2025/26") + " · Ried Herren 1";
+}
+
+// ── Status ────────────────────────────────────────────────────────────────
+function showStatus(type, msg) {
+  const el = document.getElementById("status-bar");
+  Object.assign(el.style, {
+    display:    "block",
+    background: type === "error" ? "rgba(200,87,42,.15)" : "var(--net)",
+    border:     "1px solid " + (type === "error" ? "var(--clay)" : "var(--border)"),
+    color:      type === "error" ? "var(--clay-lt)" : "var(--muted)"
+  });
+  el.textContent = msg;
+}
+function hideStatus() { document.getElementById("status-bar").style.display = "none"; }
+
+// ── Haupt-Loop ────────────────────────────────────────────────────────────
+async function refresh() {
+  showStatus("loading", "⏳ Daten werden geladen…");
+  try {
+    const data = await fetchData();
+    lastGoodData = data;
+    render(data);
+    hideStatus();
+    document.getElementById("last-updated").textContent =
+      "PDF-Stand: " + (data.updated || "—");
+  } catch (e) {
+    if (lastGoodData) render(lastGoodData);
+    showStatus("error", "⚠ Laden fehlgeschlagen – zeige letzte bekannte Daten (" + e.message + ")");
+  }
+}
+
+function startCountdown() {
+  countdown = REFRESH_SEC;
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    countdown--;
+    document.getElementById("next-refresh").textContent = `Aktualisierung in ${countdown}s`;
+    if (countdown <= 0) { refresh(); countdown = REFRESH_SEC; }
+  }, 1000);
+}
 
 refresh();
+startCountdown();
 </script>
 </body>
 </html>
