@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-05-08T16:57:52.798021+00:00",
+  "generated_at": "2026-05-08T20:37:22.912737+00:00",
   "matches": [
     {
       "id": "1866397",
       "label": "TV Andorf 1 vs SPG Prambachki/Waizenki 1",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=19b20e39-6a97-4bb5-b706-8d4584a6c96d",
-      "status": "upcoming",
-      "last_updated": "2026-05-08T16:57:52.798044+00:00",
+      "status": "finished",
+      "last_updated": "2026-05-08T20:37:22.912757+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren45 Bezirksklasse Mitte B",
@@ -15,24 +15,24 @@
         "runde": "1. Runde",
         "heim": "TV McDonald's Andorf 1",
         "gast": "SPG Prambachki/Waizenki 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 6,
+        "ergebnis_gast": 0
       },
       "singles": [],
       "doubles": [
         {
           "nr": 1,
-          "satz1": "0:0",
-          "satz2": "0:0",
+          "satz1": "6:1",
+          "satz2": "6:1",
           "satz3": "",
-          "winner": "gast"
+          "winner": "heim"
         },
         {
           "nr": 2,
-          "satz1": "0:0",
-          "satz2": "0:0",
+          "satz1": "6:3",
+          "satz2": "6:1",
           "satz3": "",
-          "winner": "gast"
+          "winner": "heim"
         }
       ]
     }
