@@ -3,129 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tennis Spielstand - Live Rotation</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <title>Tennis Spielstand - TV Mode</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
-
-    :root {
-      --primary:   #59728E;
-      --deep:      #262934;
-      --primary-l: #7a97b5;
-      --primary-d: #3d5368;
-      --bg:        #1a1e28;
-      --surface:   #262934;
-      --border:    #3a4257;
-      --text:      #dce6f0;
-      --muted:     #7a8fa8;
-      --accent:    #a8c4dc;
-      --orange:    #c8a060;
-    }
-
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap');
+    :root { --primary: #59728E; --bg: #1a1e28; --surface: #262934; --border: #3a4257; --text: #dce6f0; --accent: #a8c4dc; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow: hidden; height: 100vh; }
+    #header { height: 70px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+    .logo-text h1 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; color: var(--accent); letter-spacing: 2px; }
+    #status { text-align: right; font-size: 0.8rem; }
+    #content-wrap { height: calc(100vh - 70px); width: 100%; display: flex; justify-content: center; align-items: flex-start; overflow-y: auto; background: #f0f0f0; }
+    
+    /* Das Bild des PDFs */
+    #pdf-img { max-width: 100%; height: auto; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
 
-    html, body {
-      width: 100%; height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      overflow: hidden;
-    }
-
-    #header {
-      height: 70px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    #header::after {
-      content: '';
-      position: absolute;
-      bottom: -3px; left: 0;
-      width: 100%; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary), transparent);
-    }
-
-    .logo { display: flex; align-items: center; gap: 14px; }
-    .logo img { height: 52px; width: auto; filter: invert(1) brightness(0.9); }
-    .logo-text { border-left: 1px solid var(--border); padding-left: 16px; margin-left: 16px; }
-    .logo-text h1 { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 5px; color: var(--accent); }
-    .logo-text span { font-size: 0.6rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
-
-    #status-bar { display: flex; align-items: center; gap: 24px; }
-    #last-update { font-size: 0.78rem; color: var(--muted); letter-spacing: 1px; text-align: right; }
-    #last-update strong { display: block; color: var(--text); font-size: 0.9rem; }
-
-    #ring-wrap { position: relative; width: 48px; height: 48px; }
-    #ring-wrap svg { transform: rotate(-90deg); }
-    #ring-wrap circle.bg { fill: none; stroke: var(--border); stroke-width: 3.5; }
-    #ring-wrap circle.prog {
-      fill: none; stroke: var(--primary); stroke-width: 3.5; stroke-linecap: round;
-      stroke-dasharray: 113.1; stroke-dashoffset: 0;
-      transition: stroke-dashoffset 1s linear, stroke 0.3s;
-    }
-    #ring-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--primary); }
-
-    #pdf-wrap { height: calc(100vh - 70px); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    #pdf-canvas { display: block; max-width: 100%; max-height: 100%; box-shadow: 0 8px 40px rgba(0,0,0,0.6); }
-    #pdf-iframe { width: 100%; height: 100%; border: none; display: none; }
-
-    #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 100; transition: opacity 0.5s; }
-    #loading.hidden { opacity: 0; pointer-events: none; }
-    .spinner { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    #loading { position: fixed; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    #flash { position: fixed; inset: 0; background: rgba(89, 114, 142, 0.15); pointer-events: none; opacity: 0; z-index: 50; transition: opacity 0.5s ease; }
-    #status-pill { position: fixed; bottom: 20px; right: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.72rem; color: var(--muted); }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
 <div id="header">
-  <div class="logo">
-    <img src="11_Logo_simpel_schwarz_2.jpg" alt="Logo">
-    <div class="logo-text">
-      <h1 id="title-text">Spielstände Heimspiele heute</h1>
-      <span id="subtitle-text">Live Rotation</span>
-    </div>
+  <div class="logo-text">
+    <h1>Spielstände</h1>
+    <span id="subtitle" style="font-size: 0.7rem; color: var(--accent);">Initialisiere...</span>
   </div>
-  <div id="status-bar">
-    <div id="last-update">
-      <strong id="update-time">–</strong>
-      <span id="update-label">Aktualisierung</span>
-    </div>
-    <div id="ring-wrap">
-      <svg viewBox="0 0 48 48" width="48" height="48">
-        <circle class="bg" cx="24" cy="24" r="18"/>
-        <circle class="prog" cx="24" cy="24" r="18" id="prog"/>
-      </svg>
-      <div id="ring-num">60</div>
-    </div>
+  <div id="status">
+    <div id="update-time" style="font-weight: bold;">--:--</div>
+    <div>Nächster Wechsel in: <span id="timer">60</span>s</div>
   </div>
 </div>
 
-<div id="pdf-wrap">
-  <canvas id="pdf-canvas"></canvas>
-  <iframe id="pdf-iframe"></iframe>
+<div id="content-wrap">
+  <img id="pdf-img" src="" alt="Spielbericht">
 </div>
 
 <div id="loading">
   <div class="spinner"></div>
-  <p>Lade Dokument ...</p>
+  <p style="margin-top:15px;">TV-MODUS: Wandle PDF in Bild um...</p>
 </div>
 
-<div id="flash"></div>
-<div id="status-pill">Initialisiere...</div>
-
 <script>
-// ═══════════════════════════════════════════════
-//  KONFIGURATION — PDFs hier eintragen
 // ═══════════════════════════════════════════════
 const PDF_LISTE = [
 
@@ -164,114 +84,60 @@ const PDF_LISTE = [
   { datum: "2026-07-11", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861040&etag=7186e12a-7513-46ac-bafb-1be27d48e579" },
   { datum: "2026-07-11", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863275&etag=ed825869-6014-4bb2-8d2b-824b1c4940cf" }
 ];
-
-const INTERVAL_SEK = 60;   // Wechselt alle X Sekunden
-const RENDER_SCALE = 2.2;  // Qualität
+const WECHSEL_SEK = 60;
 // ═══════════════════════════════════════════════
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let secondsLeft = WECHSEL_SEK;
+let currentIndex = 0;
 
-const canvas = document.getElementById('pdf-canvas');
-const ctx = canvas.getContext('2d');
-const loading = document.getElementById('loading');
-const flash = document.getElementById('flash');
-const prog = document.getElementById('prog');
-const ringNum = document.getElementById('ring-num');
-const updateTime = document.getElementById('update-time');
-const pill = document.getElementById('status-pill');
-const iframe = document.getElementById('pdf-iframe');
-
-const CIRCUMFERENCE = 113.1;
-let secondsLeft = INTERVAL_SEK;
-let currentRotationIndex = 0;
-let usePdfJs = true;
-
-// Hilfsfunktion für heutiges Datum im Format YYYY-MM-DD
-function getTodayString() {
-  const d = new Date();
-  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-}
-
-async function loadWithPdfJs(pdfUrl) {
-  try {
-    const url = pdfUrl + "&_t=" + Date.now();
-    const pdf = await pdfjsLib.getDocument({ url }).promise;
-    const page = await pdf.getPage(1);
-    const availW = window.innerWidth;
-    const availH = window.innerHeight - 70;
-    const vpBase = page.getViewport({ scale: 1 });
-    const scale = Math.min(availW / vpBase.width, availH / vpBase.height) * RENDER_SCALE;
-    const vp = page.getViewport({ scale });
-    
-    canvas.width = vp.width;
-    canvas.height = vp.height;
-    canvas.style.width = (vp.width / RENDER_SCALE) + 'px';
-    canvas.style.height = (vp.height / RENDER_SCALE) + 'px';
-
-    await page.render({ canvasContext: ctx, viewport: vp }).promise;
-    canvas.style.display = 'block';
-    iframe.style.display = 'none';
-    pill.textContent = 'Modus: PDF.js';
-    return true;
-  } catch (e) {
-    console.warn("PDF.js Error:", e);
-    return false;
-  }
-}
-
-function loadWithIframe(pdfUrl) {
-  const url = pdfUrl + "&_t=" + Date.now() + "#toolbar=0&navpanes=0";
-  iframe.src = url;
-  canvas.style.display = 'none';
-  iframe.style.display = 'block';
-  pill.textContent = 'Modus: Iframe Fallback';
-}
-
-async function refresh() {
-  const heute = getTodayString();
-  const heutePDFs = PDF_LISTE.filter(item => item.datum === heute);
+function refresh() {
+  const heute = new Date().toISOString().split('T')[0];
+  const heutePDFs = PDF_LISTE.filter(p => p.datum === heute);
 
   if (heutePDFs.length === 0) {
-    updateTime.textContent = "Kein Plan";
-    document.getElementById('subtitle-text').textContent = "Keine Berichte für heute (" + heute + ")";
-    loading.classList.add('hidden');
+    document.getElementById('subtitle').textContent = "Keine Spiele für heute (" + heute + ")";
+    document.getElementById('loading').classList.add('hidden');
     return;
   }
 
-  loading.classList.remove('hidden');
+  document.getElementById('loading').classList.remove('hidden');
   
-  // Rotation Logik
-  if (currentRotationIndex >= heutePDFs.length) currentRotationIndex = 0;
-  const targetPDF = heutePDFs[currentRotationIndex];
-  
-  // Untertitel anpassen bei mehreren Files
-  document.getElementById('subtitle-text').textContent = 
-    heutePDFs.length > 1 ? `Bericht ${currentRotationIndex + 1} von ${heutePDFs.length}` : "Live Ergebnisse";
+  if (currentIndex >= heutePDFs.length) currentIndex = 0;
+  const target = heutePDFs[currentIndex];
 
-  const success = usePdfJs ? await loadWithPdfJs(targetPDF.url) : false;
-  if (!success) loadWithIframe(targetPDF.url);
-
-  updateTime.textContent = new Date().toLocaleTimeString('de-AT');
-  flash.style.opacity = '1';
-  setTimeout(() => flash.style.opacity = '0', 600);
+  // TRICK: Wir nutzen den "Cloudflare PDF-to-Img" Service von "ApyHub" oder ähnlichen freien Proxies
+  // Für diesen Test nutzen wir den Google-Vorschaubild-Dienst, der oft Bilder liefert:
+  const proxyUrl = "https://images.weserv.nl/?url=" + encodeURIComponent(target.url) + "&output=jpg&n=-1";
   
-  loading.classList.add('hidden');
-  secondsLeft = INTERVAL_SEK;
-  currentRotationIndex++;
+  // Alternative: Da liga.nu PDFs oft blockiert, ist der sicherste Weg für den TV, 
+  // das PDF über einen freien Redirector als Bild zu laden:
+  const imgElement = document.getElementById('pdf-img');
+  
+  // Wir versuchen es mit dem Google-Drive-Viewer Export-Link (funktioniert oft als Bild-Proxy)
+  const finalImgUrl = "https://docs.google.com/viewer?url=" + encodeURIComponent(target.url) + "&embedded=true&a=bi&pagenumber=1&w=1200";
+
+  imgElement.src = finalImgUrl;
+
+  imgElement.onload = () => {
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('update-time').textContent = new Date().toLocaleTimeString('de-AT');
+    document.getElementById('subtitle').textContent = `Bericht ${currentIndex + 1} von ${heutePDFs.length}`;
+  };
+
+  imgElement.onerror = () => {
+    // Falls der Bild-Dienst blockiert wird:
+    document.getElementById('subtitle').textContent = "Fehler beim Laden des Bildes";
+    document.getElementById('loading').classList.add('hidden');
+  };
+
+  currentIndex++;
+  secondsLeft = WECHSEL_SEK;
 }
 
 function tick() {
-  ringNum.textContent = secondsLeft;
-  prog.style.strokeDashoffset = CIRCUMFERENCE * (1 - (secondsLeft / INTERVAL_SEK));
-  const isLow = secondsLeft <= 10;
-  prog.style.stroke = isLow ? 'var(--orange)' : 'var(--primary)';
-  ringNum.style.color = isLow ? 'var(--orange)' : 'var(--primary)';
-
-  if (secondsLeft <= 0) {
-    refresh();
-  } else {
-    secondsLeft--;
-  }
+  document.getElementById('timer').textContent = secondsLeft;
+  if (secondsLeft <= 0) refresh();
+  else secondsLeft--;
 }
 
 refresh();
