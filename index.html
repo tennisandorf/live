@@ -45,9 +45,44 @@
 <script>
 // ═══════════════════════════════════════════════
 const PDF_LISTE = [
-  { datum: "2026-05-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },
-  { datum: "2026-05-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" }
+
+  { datum: "2026-05-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },  
+  { datum: "2026-05-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" },
+  { datum: "2026-05-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=7d2f969c-5eae-4c42-a487-2d2da6cc1a78" },  
+  { datum: "2026-05-09", url: "hhttps://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376&etag=299da4e5-dab8-47ab-ba2d-4c9581bc3d2f" },
+  { datum: "2026-05-15", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866859&etag=64bada8e-99fe-43f6-8a66-c6d8656e4f70" },
+  { datum: "2026-05-16", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860681&etag=333a27b4-5a40-4986-8696-a0c9b992c879" },
+  { datum: "2026-05-17", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863373&etag=66e26ba4-8e83-43c5-ae67-d2eef83f7dca" },
+  { datum: "2026-05-17", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863909&etag=9da4be0a-8484-44c8-af7f-b976707806fc" }, 
+  { datum: "2026-05-20", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867090&etag=fb651a06-9db7-4c2f-8072-e1d998d0a8e7" },
+  { datum: "2026-05-29", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866167&etag=ea47cfdf-845e-4b81-bbe1-255466a4f5fa" },
+  { datum: "2026-05-30", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861028&etag=46c1d4ff-4e82-4b6b-900f-d94cb8ae9ebd" },
+  { datum: "2026-06-03", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867134&etag=95a18852-57c5-4ee9-946c-caa68c6dc1b8" },
+  { datum: "2026-06-05", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866988&etag=aa3dd698-8277-4318-ba4b-360fd556074f" },
+  { datum: "2026-06-06", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860465&etag=16e12546-730b-4cea-92d2-0f45b231d5e9" },
+  { datum: "2026-06-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454&etag=2abc0b9e-19ef-42a1-aca8-ac17ff233f43" },
+  { datum: "2026-06-07", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1864022&etag=8e927bb5-2b2f-4f32-9c37-c051694663b8" },
+  { datum: "2026-06-13", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860786&etag=e52a0f70-4c8a-4f81-b0e1-736b5a8f35bb" },
+  { datum: "2026-06-13", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863290&etag=ec057680-9375-481f-94f0-5579cc8ef572" },
+  { datum: "2026-06-19", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866146&etag=b91304ca-72f6-4e1f-adc8-dd646423024c" },
+  { datum: "2026-06-20", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860453&etag=2cf1c5ef-8c0b-455e-b6af-f89f282dcfb6" },
+  { datum: "2026-06-21", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861626&etag=25bbb349-a2b1-4ac3-800d-2d608b77b20c" },
+  { datum: "2026-06-21", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863914&etag=1e43b08b-26ed-4cd1-84d9-2be97faba4f7" },
+  { datum: "2026-06-24", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867129&etag=f4c9bd6b-bee8-48bb-9d12-3a9f3fe16f3a" },
+  { datum: "2026-06-26", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866925&etag=f0a5dc27-bc80-45b4-8b11-82de47fc994a" },
+  { datum: "2026-06-27", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860973&etag=09f1eb76-5f1e-49f9-bdb5-66e41084f81a" },
+  { datum: "2026-06-27", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860973&etag=09f1eb76-5f1e-49f9-bdb5-66e41084f81a" },
+  { datum: "2026-07-03", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866408&etag=a3753e8f-4afa-467b-be9d-feecf58a5712" },
+  { datum: "2026-07-04", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860517&etag=b959b87a-98ae-4cac-bafa-b4c50949672b" },
+  { datum: "2026-07-05", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861580&etag=33eb3d5e-861a-402b-96be-a4796ff29c36" },
+  { datum: "2026-07-05", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863861&etag=0497d264-4c50-401f-af70-0b3062502c70" },
+  { datum: "2026-07-08", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867264&etag=74bfeac1-e8ef-475f-b81c-024243109a0a" },
+  { datum: "2026-07-10", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866916&etag=6306780b-3c36-49d7-9ad1-3e8ba711275c" },
+  { datum: "2026-07-11", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861040&etag=7186e12a-7513-46ac-bafb-1be27d48e579" },
+  { datum: "2026-07-11", url: "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863275&etag=ed825869-6014-4bb2-8d2b-824b1c4940cf" }
 ];
+
+
 const RELOAD_EVERY = 60;
 // ═══════════════════════════════════════════════
 
