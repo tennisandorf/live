@@ -1,0 +1,162 @@
+name: Update Spielbericht
+
+on:
+  schedule:
+    - cron: '* * * * *'   # jede Minute
+  workflow_dispatch:        # auch manuell auslösbar
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install pdfplumber requests
+
+      - name: Fetch & parse PDF
+        run: |
+          python3 - <<'PYEOF'
+          import requests, pdfplumber, json, io, re, sys
+          from datetime import datetime, timezone
+
+          URL = "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1834903&etag=1e89e98a-be09-4142-9e97-a3a514520539"
+
+          # ── Download ──────────────────────────────────────────────────────
+          r = requests.get(URL, timeout=20, headers={"User-Agent": "Mozilla/5.0"})
+          r.raise_for_status()
+
+          # ── Text extrahieren ──────────────────────────────────────────────
+          with pdfplumber.open(io.BytesIO(r.content)) as pdf:
+              text = "\n".join(p.extract_text() or "" for p in pdf.pages)
+
+          lines = [l.strip() for l in text.splitlines() if l.strip()]
+
+          # ── Hilfsfunktionen ───────────────────────────────────────────────
+          def first_match(pattern, haystack, group=0):
+              for l in haystack:
+                  m = re.search(pattern, l)
+                  if m:
+                      return m.group(group)
+              return ""
+
+          def sum_line(keyword, lines):
+              for l in lines:
+                  if re.search(keyword, l, re.I):
+                      m = re.search(r'(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)', l)
+                      if m:
+                          return {"mH":int(m[1]),"mG":int(m[2]),
+                                  "sH":int(m[3]),"sG":int(m[4]),
+                                  "gH":int(m[5]),"gG":int(m[6])}
+              return None
+
+          # ── Metadaten ─────────────────────────────────────────────────────
+          liga   = first_match(r'Wintermeisterschaft[^\n]+', lines)
+          runde  = first_match(r'\d+\.\s*Runde', lines)
+          termin = first_match(r'\d{2}\.\d{2}\.\d{4}\s+\d{2}:\d{2}', lines)
+
+          # Gesamtergebnis (Zeile wie "TV McDonald's Andorf 1 : UTC Wernstein 1 5 : 1")
+          gesamt_score = {"heim": 0, "gast": 0}
+          heim_team = "TV McDonald's Andorf 1"
+          gast_team = "UTC Wernstein 1"
+          for l in lines:
+              m = re.search(r'Andorf\s+\d.*?(\d)\s*:\s*(\d)\s*$', l)
+              if m:
+                  gesamt_score = {"heim": int(m[1]), "gast": int(m[2])}
+                  break
+
+          # ── Einzel ────────────────────────────────────────────────────────
+          einzel = []
+          for l in lines:
+              if l.count("ITN") < 2:
+                  continue
+              nr_m = re.match(r'^([1-4])\s', l)
+              if not nr_m:
+                  continue
+              parts = l.split("ITN")
+              if len(parts) < 3:
+                  continue
+              # Heimspieler: nach "Nr Nr LizenzNr "
+              heim_name = re.sub(r'^\d+\s+\d+\s+\d+\s+', '', parts[0]).strip()
+              heim_itn  = (re.search(r'[\d,]+', parts[1]) or re.match(r'', '')).group() if re.search(r'[\d,]+', parts[1]) else "—"
+              gast_raw  = re.sub(r'^[\s\d,]+', '', parts[1])
+              gast_name = re.sub(r'^\d+\s+\d+\s+', '', gast_raw).strip()
+              gast_itn  = (re.search(r'[\d,]+', parts[2]) or re.match(r'', '')).group() if re.search(r'[\d,]+', parts[2]) else "—"
+
+              sets = re.search(r'(\d+:\d+)\s+(\d+:\d+)\s+(\d+:\d+)\s+([01])\s+([01])', parts[2])
+              if not sets:
+                  continue
+              s3 = "—" if sets.group(3) == "0:0" else sets.group(3)
+              winner = "heim" if int(sets.group(4)) > int(sets.group(5)) else "gast"
+              einzel.append({
+                  "nr": nr_m.group(1),
+                  "heimSpieler": heim_name, "heimITN": heim_itn,
+                  "gastSpieler": gast_name, "gastITN": gast_itn,
+                  "satz1": sets.group(1), "satz2": sets.group(2), "satz3": s3,
+                  "winner": winner
+              })
+
+          # ── Doppel ────────────────────────────────────────────────────────
+          paare = [
+              {"h": "Schneiderbauer / Aspöck", "g": "Madl / Stadler"},
+              {"h": "Mittermayr / N.N.",        "g": "Hanslmayr / N.N. (ret.)"}
+          ]
+          doppel = []
+          in_doppel = False
+          doppel_nr = 0
+          for l in lines:
+              if re.match(r'^Doppel[,\s]', l, re.I): in_doppel = True;  continue
+              if re.search(r'Doppel.Summe', l, re.I): in_doppel = False; continue
+              if not in_doppel: continue
+              sets = re.search(r'(\d+:\d+)\s+(\d+:\d+)\s+(\d+:\d+)\s+([01])\s+([01])', l)
+              if not sets: continue
+              s3 = "—" if sets.group(3) == "0:0" else sets.group(3)
+              winner = "heim" if int(sets.group(4)) > int(sets.group(5)) else "gast"
+              pair = paare[doppel_nr] if doppel_nr < len(paare) else {"h":"—","g":"—"}
+              doppel.append({
+                  "nr": str(doppel_nr + 1),
+                  "heimPaar": pair["h"], "gastPaar": pair["g"],
+                  "satz1": sets.group(1), "satz2": sets.group(2), "satz3": s3,
+                  "winner": winner
+              })
+              doppel_nr += 1
+
+          # ── Summen ────────────────────────────────────────────────────────
+          output = {
+              "updated": datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC"),
+              "liga":    liga,
+              "runde":   runde,
+              "termin":  termin,
+              "heimTeam": heim_team,
+              "gastTeam": gast_team,
+              "gesamtHeim": gesamt_score["heim"],
+              "gesamtGast": gesamt_score["gast"],
+              "einzel":  einzel,
+              "doppel":  doppel,
+              "einzelSum":  sum_line(r'Einzel.Summe',  lines),
+              "doppelSum":  sum_line(r'Doppel.Summe',  lines),
+              "gesamtSum":  sum_line(r'Gesamtergebnis', lines),
+          }
+
+          with open("data.json", "w", encoding="utf-8") as f:
+              json.dump(output, f, ensure_ascii=False, indent=2)
+
+          print("✅ data.json geschrieben:", output["updated"])
+          PYEOF
+
+      - name: Commit & push data.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --cached --quiet && echo "Keine Änderungen" || \
+            git commit -m "update: Spielbericht $(date -u '+%H:%M UTC')" && git push
