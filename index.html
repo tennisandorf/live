@@ -469,6 +469,7 @@ function renderMatches() {
     return;
   }
   container.className = filtered.length === 1 ? 'cards-grid' : filtered.length === 2 ? 'cards-grid two-up' : 'cards-grid';
+  if (currentTab !== 'today') container.className = 'cards-grid single';
   if (currentTab === 'today') {
     container.innerHTML = filtered.map(m => renderCard(m, true)).join('');
   } else {
