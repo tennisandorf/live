@@ -12,6 +12,9 @@ jobs:
     permissions:
       contents: write
 
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -20,9 +23,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Abhängigkeiten installieren
-        run: pip install pdfminer.six
 
       - name: Ergebnisse abrufen
         run: python fetch_results.py
@@ -35,4 +35,3 @@ jobs:
           # Nur committen wenn sich etwas geändert hat
           git diff --staged --quiet || git commit -m "update: tennis results $(date -u +'%Y-%m-%d %H:%M UTC')"
           git push
-
