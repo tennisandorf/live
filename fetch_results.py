@@ -163,7 +163,84 @@ def parse_doubles(text):
     return doubles
 
 
-def process_match(meeting_id, datum_override=None):
+def get_matches_to_fetch():
+    """
+    Gibt nur die relevanten Spiele zurück die tatsächlich abgerufen werden sollen:
+    - Heute: alle (ab 1h vor Spielbeginn)
+    - Nächste 7 Tage: alle (Vorschau)
+    - Weiter in der Zukunft: nur einmal täglich (zur vollen Stunde ±5 Min)
+    - Vergangen + finished: nie mehr
+    - Vergangen + nicht finished: noch heute bis Mitternacht
+    """
+    import datetime as dt
+    now_utc = datetime.now(timezone.utc)
+    now_at = now_utc.replace(tzinfo=None) + dt.timedelta(hours=2)
+    today = now_at.date()
+    zur_vollen_stunde = now_at.minute < 5  # erste 5 Min jeder Stunde
+
+    cached_matches = {}
+    try:
+        with open("results.json", encoding="utf-8") as f:
+            cached = json.load(f)
+        for cm in cached.get("matches", []):
+            cached_matches[cm["meeting_id"]] = cm
+    except Exception:
+        pass
+
+    to_fetch = []
+    seen = set()
+    for m in MATCHES:
+        mid = m["meeting_id"]
+        if mid in seen:
+            continue
+        seen.add(mid)
+
+        datum_str = m.get("datum_override") or cached_matches.get(mid, {}).get("header", {}).get("datum")
+        status = cached_matches.get(mid, {}).get("status")
+
+        # Datum unbekannt → immer abrufen
+        if not datum_str:
+            to_fetch.append(m)
+            continue
+
+        try:
+            d, mo, y = datum_str.split(".")
+            spiel_date = dt.date(int(y), int(mo), int(d))
+        except Exception:
+            to_fetch.append(m)
+            continue
+
+        diff = (spiel_date - today).days
+
+        if diff == 0:
+            # Heute: ab 1h vor Spielbeginn abrufen
+            uhrzeit = cached_matches.get(mid, {}).get("header", {}).get("uhrzeit")
+            if uhrzeit:
+                try:
+                    h, mi2 = map(int, uhrzeit.split(":"))
+                    spielbeginn = now_at.replace(hour=h, minute=mi2, second=0, microsecond=0)
+                    if now_at >= spielbeginn - dt.timedelta(hours=1):
+                        to_fetch.append(m)
+                except Exception:
+                    to_fetch.append(m)
+            else:
+                to_fetch.append(m)
+
+        elif 0 < diff <= 7:
+            # Nächste 7 Tage: alle 12 Stunden (0:00 und 12:00)
+            if now_at.hour in (0, 12) and zur_vollen_stunde:
+                to_fetch.append(m)
+
+        elif diff > 7:
+            # Weiter in der Zukunft: alle 24 Stunden (0:00)
+            if now_at.hour == 0 and zur_vollen_stunde:
+                to_fetch.append(m)
+
+        elif diff < 0:
+            # Vergangen → nie mehr abrufen (aus Cache)
+            pass
+
+    return to_fetch
     result = {
         "meeting_id": meeting_id,
         "url": BASE_URL.format(meeting_id=meeting_id),
@@ -195,10 +272,10 @@ def process_match(meeting_id, datum_override=None):
 
 def should_run():
     """
-    Läuft wenn:
-    - Heute ein Spiel stattfindet (ab 1h vor Spielbeginn bis Mitternacht)
-    - ODER ein Spiel in den nächsten 7 Tagen ansteht (alle 5 Min für Vorschau)
-    - Nicht mehr wenn Spiel vergangen (diff < 0)
+    Läuft immer, außer:
+    - Alle Spiele sind 'finished' UND kein Spiel in den nächsten 60 Tagen
+    An Spieltagen: ab 1h vor Spielbeginn bis Mitternacht (alle 5 Min)
+    Sonst: läuft durch für Vorschau-Updates
     """
     import datetime as dt
     now_utc = datetime.now(timezone.utc)
@@ -215,12 +292,14 @@ def should_run():
     except Exception:
         return True  # Kein Cache → immer laufen
 
+    has_future = False
     for m in MATCHES:
         mid = m["meeting_id"]
         datum_str = m.get("datum_override") or cached_matches.get(mid, {}).get("header", {}).get("datum")
 
+        # Datum noch unbekannt (neues Spiel ohne Cache) → laufen lassen
         if not datum_str:
-            return True  # Datum unbekannt → laufen lassen
+            return True
 
         try:
             d, mo, y = datum_str.split(".")
@@ -230,7 +309,7 @@ def should_run():
 
         diff = (spiel_date - today).days
 
-        # Spiel heute → ab 1h vor Spielbeginn bis Mitternacht
+        # Spiel heute → ab 1h vor Spielbeginn
         if diff == 0:
             uhrzeit = cached_matches.get(mid, {}).get("header", {}).get("uhrzeit")
             if uhrzeit:
@@ -245,34 +324,66 @@ def should_run():
             else:
                 return True
 
-        # Spiel in den nächsten 7 Tagen → immer laufen
-        elif 0 < diff <= 7:
-            return True
+        # Spiel in der Zukunft → merken
+        elif diff > 0:
+            has_future = True
 
-        # Spiel vergangen → kein Update mehr
-        elif diff < 0:
-            continue
+    # Keine heutigen Spiele aktiv, aber zukünftige vorhanden → laufen
+    if has_future:
+        return True
 
+    # Alle Spiele vergangen → nicht mehr laufen
     return False
 
 
 def main():
     if not should_run():
-        print("Kein aktives Spiel heute – kein Update nötig.")
+        print("Kein aktives Spiel und keine zukünftigen Spiele – kein Update nötig.")
         return
+
+    # Nur relevante Spiele abrufen
+    to_fetch = get_matches_to_fetch()
+    to_fetch_ids = {m["meeting_id"] for m in to_fetch}
+    print(f"Rufe {len(to_fetch_ids)} von {len(MATCHES)} Spielen ab.")
+
+    # Gecachte Daten für nicht abgerufene Spiele laden
+    cached_matches = {}
+    try:
+        with open("results.json", encoding="utf-8") as f:
+            cached = json.load(f)
+        for cm in cached.get("matches", []):
+            cached_matches[cm["meeting_id"]] = cm
+    except Exception:
+        pass
 
     output = {"generated_at": datetime.now(timezone.utc).isoformat(), "matches": []}
     seen = set()
+
     for m in MATCHES:
         mid = m["meeting_id"]
         if mid in seen:
             continue
         seen.add(mid)
-        print(f"  Lade meeting={mid} ...", end=" ", flush=True)
-        data = process_match(mid, m.get("datum_override"))
-        h = data.get("header", {})
-        print(f"{data['status']} | {h.get('datum', '')} | {h.get('heim', '')} vs {h.get('gast', '')}")
+
+        if mid in to_fetch_ids:
+            # Frisch abrufen
+            print(f"  Lade meeting={mid} ...", end=" ", flush=True)
+            data = process_match(mid, m.get("datum_override"))
+            h = data.get("header", {})
+            print(f"{data['status']} | {h.get('datum', '')} | {h.get('heim', '')} vs {h.get('gast', '')}")
+        else:
+            # Aus Cache nehmen
+            if mid in cached_matches:
+                data = cached_matches[mid]
+                print(f"  Cache   meeting={mid} | {data.get('header', {}).get('datum', '')} | {data.get('status', '')}")
+            else:
+                # Noch nie abgerufen → trotzdem holen
+                print(f"  Lade meeting={mid} (kein Cache) ...", end=" ", flush=True)
+                data = process_match(mid, m.get("datum_override"))
+                print(f"{data['status']}")
+
         output["matches"].append(data)
+
     output["matches"].sort(key=lambda x: x.get("header", {}).get("datum_iso", "9999"))
     with open("results.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
