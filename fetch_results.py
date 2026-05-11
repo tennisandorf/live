@@ -47,6 +47,7 @@ MATCHES = [
     # {"meeting_id": "1860681"},
 ]
 
+ 
 def fetch_text(meeting_id):
     url = BASE_URL.format(meeting_id=meeting_id)
     req = urllib.request.Request(url, headers={
@@ -200,57 +201,66 @@ def process_match(meeting_id, datum_override=None):
  
 def should_run():
     """
-    Gibt True zurück wenn mindestens ein Spiel heute stattfindet
-    UND die aktuelle Zeit innerhalb des aktiven Fensters liegt:
-    1 Stunde vor Spielbeginn bis Mitternacht.
+    Läuft wenn:
+    - Heute ein Spiel stattfindet (ab 1h vor Spielbeginn)
+    - ODER ein Spiel in den nächsten 7 Tagen ist (tägliches Update für Vorschau)
+    - ODER die results.json noch nicht alle heutigen/vergangenen Spiele als 'finished' hat
     """
+    import datetime as dt
     now_utc = datetime.now(timezone.utc)
-    # Österreich = UTC+2 (Sommerzeit)
-    now_at = now_utc.replace(tzinfo=None) + __import__('datetime').timedelta(hours=2)
-    today_str = now_at.strftime("%d.%m.%Y")
+    now_at = now_utc.replace(tzinfo=None) + dt.timedelta(hours=2)
+    today = now_at.date()
+    today_str = today.strftime("%d.%m.%Y")
+ 
+    # Gecachte results.json laden
+    cached_matches = {}
+    try:
+        with open("results.json", encoding="utf-8") as f:
+            cached = json.load(f)
+        for cm in cached.get("matches", []):
+            cached_matches[cm["meeting_id"]] = cm
+    except Exception:
+        return True  # Kein Cache → immer laufen
  
     for m in MATCHES:
-        # Datum bestimmen (Override hat Vorrang)
-        datum = m.get("datum_override")
-        if not datum:
-            # Datum aus gecachtem Header lesen falls vorhanden
-            try:
-                with open("results.json", encoding="utf-8") as f:
-                    cached = json.load(f)
-                for cm in cached.get("matches", []):
-                    if cm["meeting_id"] == m["meeting_id"]:
-                        datum = cm.get("header", {}).get("datum")
-                        break
-            except Exception:
-                pass
+        mid = m["meeting_id"]
+        datum_str = m.get("datum_override") or cached_matches.get(mid, {}).get("header", {}).get("datum")
  
-        if datum != today_str:
-            continue
+        if not datum_str:
+            return True  # Datum unbekannt → laufen lassen
  
-        # Uhrzeit aus Cache lesen
-        uhrzeit = None
         try:
-            with open("results.json", encoding="utf-8") as f:
-                cached = json.load(f)
-            for cm in cached.get("matches", []):
-                if cm["meeting_id"] == m["meeting_id"]:
-                    uhrzeit = cm.get("header", {}).get("uhrzeit")
-                    break
+            d, mo, y = datum_str.split(".")
+            spiel_date = dt.date(int(y), int(mo), int(d))
         except Exception:
-            pass
+            return True
  
-        if uhrzeit:
-            try:
-                h, mi = map(int, uhrzeit.split(":"))
-                import datetime as dt
-                spielbeginn = now_at.replace(hour=h, minute=mi, second=0, microsecond=0)
-                fenster_start = spielbeginn - dt.timedelta(hours=1)
-                if now_at >= fenster_start:
+        diff = (spiel_date - today).days
+ 
+        # Spiel heute → ab 1h vor Spielbeginn bis Mitternacht laufen
+        if diff == 0:
+            # Nach 23:59 nicht mehr updaten (wird durch diff==0 am nächsten Tag zu diff==-1)
+            uhrzeit = cached_matches.get(mid, {}).get("header", {}).get("uhrzeit")
+            if uhrzeit:
+                try:
+                    h, mi2 = map(int, uhrzeit.split(":"))
+                    spielbeginn = now_at.replace(hour=h, minute=mi2, second=0, microsecond=0)
+                    fenster_start = spielbeginn - dt.timedelta(hours=1)
+                    if now_at >= fenster_start:
+                        return True
+                except Exception:
                     return True
-            except Exception:
-                return True  # Im Zweifel laufen lassen
-        else:
-            return True  # Keine Uhrzeit bekannt → laufen lassen
+            else:
+                return True
+ 
+        # Spiel in den nächsten 7 Tagen → einmal täglich aktualisieren (nur zur vollen Stunde)
+        elif 0 < diff <= 7:
+            if now_at.minute < 5:  # nur in den ersten 5 Minuten jeder Stunde
+                return True
+ 
+        # Spiel war gestern oder früher → nicht mehr updaten
+        elif diff < 0:
+            continue
  
     return False
  
