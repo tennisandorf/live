@@ -605,9 +605,13 @@ function renderMatches() {
 
 async function loadData() {
   try {
-    const res = await fetch(RESULTS_URL + '?t=' + Date.now());
+    const url = RESULTS_URL + '?t=' + Date.now();
+    console.log('Lade:', url);
+    const res = await fetch(url);
+    console.log('Status:', res.status, res.statusText);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    console.log('Daten geladen:', data.matches?.length, 'Spiele');
 
     allMatches = data.matches || [];
     updateCounts(allMatches);
@@ -616,8 +620,9 @@ async function loadData() {
     document.getElementById('last-refresh').textContent = fmtTime(data.generated_at);
     document.getElementById('footer-ts').textContent    = `Stand: ${fmtTime(data.generated_at)}`;
   } catch (e) {
+    console.error('Fehler:', e);
     document.getElementById('container').innerHTML =
-      `<div class="empty-state">Fehler beim Laden – nächster Versuch in ${countdownSec}s</div>`;
+      `<div class="empty-state">Fehler: ${e.message} – nächster Versuch in ${countdownSec}s</div>`;
   }
 }
 
