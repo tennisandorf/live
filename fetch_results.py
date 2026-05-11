@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json, re, io, urllib.request
 from datetime import datetime, timezone
- 
+
 BASE_URL = (
     "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa"
     "/wa/nuDokument?dokument=MeetingReportFOP&meeting={meeting_id}"
@@ -10,7 +10,7 @@ BASE_URL = (
 MATCHES = [
     {"meeting_id": "1866397"},
     {"meeting_id": "1861376"},
-    {"meeting_id": "1863373"},
+    {"meeting_id": "1863373", "datum_override": "14.05.2026"},  # ursprünglich 17.05., vorverlegt
     {"meeting_id": "1866859"},
     {"meeting_id": "1860681"},
     {"meeting_id": "1863909"},
@@ -20,7 +20,6 @@ MATCHES = [
     {"meeting_id": "1867134"},
     {"meeting_id": "1866988"},
     {"meeting_id": "1860465"},
-    {"meeting_id": "1861454"},
     {"meeting_id": "1861454"},
     {"meeting_id": "1864022"},
     {"meeting_id": "1860786"},
@@ -41,11 +40,8 @@ MATCHES = [
     {"meeting_id": "1866916"},
     {"meeting_id": "1861040"},
     {"meeting_id": "1863275"},
-
-    
-    # Weitere IDs hier ergänzen:
-    # {"meeting_id": "1860681"},
 ]
+
 
 def fetch_text(meeting_id):
     url = BASE_URL.format(meeting_id=meeting_id)
@@ -73,8 +69,8 @@ def fetch_text(meeting_id):
         return raw.decode("utf-8")
     except UnicodeDecodeError:
         return raw.decode("latin-1")
- 
- 
+
+
 def parse_header(text):
     h = {}
     m = re.search(r"(OÖ\..+?)[\r\n]", text)
@@ -106,8 +102,8 @@ def parse_header(text):
         h["ergebnis_heim"] = None
         h["ergebnis_gast"] = None
     return h
- 
- 
+
+
 def parse_singles(text):
     singles = []
     m = re.search(r"Einzel.*?[\r\n](.*?)Doppel", text, re.DOTALL | re.IGNORECASE)
@@ -123,24 +119,24 @@ def parse_singles(text):
         re.MULTILINE
     )
     for match in pattern.finditer(block):
-        s1h,s1g = int(match.group(6)),int(match.group(7))
-        s2h,s2g = int(match.group(8)),int(match.group(9))
-        s3h,s3g = int(match.group(10)),int(match.group(11))
-        sets_heim = (1 if s1h>s1g else 0)+(1 if s2h>s2g else 0)+(1 if s3h>s3g else 0)
+        s1h, s1g = int(match.group(6)),  int(match.group(7))
+        s2h, s2g = int(match.group(8)),  int(match.group(9))
+        s3h, s3g = int(match.group(10)), int(match.group(11))
+        sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if s3h > s3g else 0)
         singles.append({
             "nr": int(match.group(1)),
             "heim": match.group(2).strip().rstrip(","),
-            "heim_itn": match.group(3).replace(",","."),
+            "heim_itn": match.group(3).replace(",", "."),
             "gast": match.group(4).strip().rstrip(","),
-            "gast_itn": match.group(5).replace(",","."),
+            "gast_itn": match.group(5).replace(",", "."),
             "satz1": f"{s1h}:{s1g}",
             "satz2": f"{s2h}:{s2g}",
-            "satz3": f"{s3h}:{s3g}" if not (s3h==0 and s3g==0) else "",
-            "winner": "heim" if sets_heim>=2 else "gast",
+            "satz3": f"{s3h}:{s3g}" if not (s3h == 0 and s3g == 0) else "",
+            "winner": "heim" if sets_heim >= 2 else "gast",
         })
     return singles
- 
- 
+
+
 def parse_doubles(text):
     doubles = []
     m = re.search(r"Doppel.*?erfasst.*?[\r\n](.*?)Doppel-Summe", text, re.DOTALL | re.IGNORECASE)
@@ -151,22 +147,22 @@ def parse_doubles(text):
     all_names = [n.strip() for n in name_pat.findall(block)]
     sat_pat = re.compile(r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)\s+(\d)\s+\d")
     for i, sm in enumerate(sat_pat.finditer(block), 1):
-        s1h,s1g = int(sm.group(1)),int(sm.group(2))
-        s2h,s2g = int(sm.group(3)),int(sm.group(4))
-        s3h,s3g = int(sm.group(5)),int(sm.group(6))
-        winner = "heim" if int(sm.group(7))==1 else "gast"
-        offset = (i-1)*4
-        heim = " / ".join(all_names[offset:offset+2]) if len(all_names)>=offset+2 else ""
-        gast = " / ".join(all_names[offset+2:offset+4]) if len(all_names)>=offset+4 else ""
+        s1h, s1g = int(sm.group(1)), int(sm.group(2))
+        s2h, s2g = int(sm.group(3)), int(sm.group(4))
+        s3h, s3g = int(sm.group(5)), int(sm.group(6))
+        winner = "heim" if int(sm.group(7)) == 1 else "gast"
+        offset = (i - 1) * 4
+        heim = " / ".join(all_names[offset:offset+2])   if len(all_names) >= offset+2 else ""
+        gast = " / ".join(all_names[offset+2:offset+4]) if len(all_names) >= offset+4 else ""
         doubles.append({
             "nr": i, "heim": heim, "gast": gast,
             "satz1": f"{s1h}:{s1g}", "satz2": f"{s2h}:{s2g}",
-            "satz3": f"{s3h}:{s3g}" if not (s3h==0 and s3g==0) else "",
+            "satz3": f"{s3h}:{s3g}" if not (s3h == 0 and s3g == 0) else "",
             "winner": winner,
         })
     return doubles
- 
- 
+
+
 def process_match(meeting_id, datum_override=None):
     result = {
         "meeting_id": meeting_id,
@@ -180,7 +176,6 @@ def process_match(meeting_id, datum_override=None):
         result["header"] = parse_header(text)
         result["singles"] = parse_singles(text)
         result["doubles"] = parse_doubles(text)
-        # Datum überschreiben falls vorverlegt/nachverlegt
         if datum_override:
             d = datum_override.split(".")
             result["header"]["datum"] = datum_override
@@ -196,21 +191,20 @@ def process_match(meeting_id, datum_override=None):
     except Exception as e:
         result["error"] = str(e)
     return result
- 
- 
+
+
 def should_run():
     """
     Läuft wenn:
-    - Heute ein Spiel stattfindet (ab 1h vor Spielbeginn)
-    - ODER ein Spiel in den nächsten 7 Tagen ist (tägliches Update für Vorschau)
-    - ODER die results.json noch nicht alle heutigen/vergangenen Spiele als 'finished' hat
+    - Heute ein Spiel stattfindet (ab 1h vor Spielbeginn bis Mitternacht)
+    - ODER ein Spiel in den nächsten 7 Tagen ansteht (alle 5 Min für Vorschau)
+    - Nicht mehr wenn Spiel vergangen (diff < 0)
     """
     import datetime as dt
     now_utc = datetime.now(timezone.utc)
     now_at = now_utc.replace(tzinfo=None) + dt.timedelta(hours=2)
     today = now_at.date()
-    today_str = today.strftime("%d.%m.%Y")
- 
+
     # Gecachte results.json laden
     cached_matches = {}
     try:
@@ -220,25 +214,24 @@ def should_run():
             cached_matches[cm["meeting_id"]] = cm
     except Exception:
         return True  # Kein Cache → immer laufen
- 
+
     for m in MATCHES:
         mid = m["meeting_id"]
         datum_str = m.get("datum_override") or cached_matches.get(mid, {}).get("header", {}).get("datum")
- 
+
         if not datum_str:
             return True  # Datum unbekannt → laufen lassen
- 
+
         try:
             d, mo, y = datum_str.split(".")
             spiel_date = dt.date(int(y), int(mo), int(d))
         except Exception:
             return True
- 
+
         diff = (spiel_date - today).days
- 
-        # Spiel heute → ab 1h vor Spielbeginn bis Mitternacht laufen
+
+        # Spiel heute → ab 1h vor Spielbeginn bis Mitternacht
         if diff == 0:
-            # Nach 23:59 nicht mehr updaten (wird durch diff==0 am nächsten Tag zu diff==-1)
             uhrzeit = cached_matches.get(mid, {}).get("header", {}).get("uhrzeit")
             if uhrzeit:
                 try:
@@ -251,24 +244,23 @@ def should_run():
                     return True
             else:
                 return True
- 
-        # Spiel in den nächsten 7 Tagen → einmal täglich aktualisieren (nur zur vollen Stunde)
+
+        # Spiel in den nächsten 7 Tagen → immer laufen
         elif 0 < diff <= 7:
-            if now_at.minute < 5:  # nur in den ersten 5 Minuten jeder Stunde
-                return True
- 
-        # Spiel war gestern oder früher → nicht mehr updaten
+            return True
+
+        # Spiel vergangen → kein Update mehr
         elif diff < 0:
             continue
- 
+
     return False
- 
- 
+
+
 def main():
     if not should_run():
         print("Kein aktives Spiel heute – kein Update nötig.")
         return
- 
+
     output = {"generated_at": datetime.now(timezone.utc).isoformat(), "matches": []}
     seen = set()
     for m in MATCHES:
@@ -279,14 +271,13 @@ def main():
         print(f"  Lade meeting={mid} ...", end=" ", flush=True)
         data = process_match(mid, m.get("datum_override"))
         h = data.get("header", {})
-        print(f"{data['status']} | {h.get('datum','')} | {h.get('heim','')} vs {h.get('gast','')}")
+        print(f"{data['status']} | {h.get('datum', '')} | {h.get('heim', '')} vs {h.get('gast', '')}")
         output["matches"].append(data)
     output["matches"].sort(key=lambda x: x.get("header", {}).get("datum_iso", "9999"))
     with open("results.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     print(f"\nresults.json gespeichert – {len(output['matches'])} Spiele ✓")
- 
- 
+
+
 if __name__ == "__main__":
     main()
- 
