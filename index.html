@@ -2,236 +2,280 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=1920, initial-scale=1.0" />
   <title>TV McDonald's Andorf – Live Ergebnisse</title>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
       --blue:     #59728E;
-      --navy:     #262934;
       --blue-lt:  #7a97b5;
       --blue-dim: #3d5470;
-      --dark:     #181c24;
-      --dark2:    #1e2330;
-      --surface:  #242b3a;
-      --card:     #2a3347;
-      --border:   #354160;
-      --text:     #dce6f0;
+      --dark:     #0f1318;
+      --dark2:    #161b24;
+      --surface:  #1e2535;
+      --card:     #252f42;
+      --border:   #2e3d5c;
+      --text:     #e0eaf5;
       --muted:    #7a90aa;
-      --win:      #4a9e6e;
+      --win:      #3d9e62;
       --lose:     #b84040;
-      --live:     #7eb8e8;
-      --upcoming: #a0b8d0;
+      --live:     #5baee0;
+      --upcoming: #8aaec8;
+      --fs-base:  22px;
+      --fs-sm:    18px;
+      --fs-xs:    15px;
+      --fs-label: 13px;
+      --fs-score: 72px;
+      --fs-team:  28px;
+      --fs-h1:    38px;
+      --pad:      28px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 1920px; min-height: 1080px; overflow-x: hidden; }
     body {
       background: var(--dark);
       color: var(--text);
-      font-family: 'Barlow', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
+      font-family: 'Inter', sans-serif;
+      font-size: var(--fs-base);
     }
     body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background-image:
-        linear-gradient(rgba(89,114,142,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(89,114,142,.04) 1px, transparent 1px);
-      background-size: 40px 40px;
+        linear-gradient(rgba(89,114,142,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(89,114,142,.03) 1px, transparent 1px);
+      background-size: 60px 60px;
     }
     body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse at 10% 0%, rgba(89,114,142,.18) 0%, transparent 55%),
-        radial-gradient(ellipse at 90% 100%, rgba(38,41,52,.5) 0%, transparent 55%);
+        radial-gradient(ellipse at 5% 0%, rgba(89,114,142,.15) 0%, transparent 45%),
+        radial-gradient(ellipse at 95% 100%, rgba(15,19,24,.8) 0%, transparent 45%);
     }
-    .wrapper { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
 
+    .page {
+      position: relative; z-index: 1;
+      width: 1920px; padding: 36px 60px 40px;
+      display: flex; flex-direction: column;
+      min-height: 1080px;
+    }
+
+    /* HEADER */
     header {
-      display: flex; align-items: center; gap: 18px;
-      padding: 28px 0 22px;
+      display: flex; align-items: center; gap: 32px;
+      padding-bottom: 28px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 36px;
+      margin-bottom: 36px; flex-shrink: 0;
     }
     .logo-wrap {
-      flex-shrink: 0; width: 60px; height: 60px;
-      background: #fff; border-radius: 10px;
-      display: grid; place-items: center; padding: 6px;
-      box-shadow: 0 4px 20px rgba(0,0,0,.4), 0 0 0 1px rgba(89,114,142,.3);
+      flex-shrink: 0; width: 240px; height: 120px;
+      background: #fff; border-radius: 14px;
+      display: grid; place-items: center; padding: 10px;
+      box-shadow: 0 6px 30px rgba(0,0,0,.5), 0 0 0 1px rgba(89,114,142,.3);
     }
     .logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
     .header-text h1 {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900;
-      letter-spacing: .03em; line-height: 1; color: #fff;
+      font-size: var(--fs-h1); font-weight: 700;
+      letter-spacing: -.02em; line-height: 1; color: #fff;
     }
     .header-text h1 em { color: var(--blue-lt); font-style: normal; }
     .header-sub {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .72rem; letter-spacing: .14em;
-      text-transform: uppercase; color: var(--blue); margin-top: 4px;
+      font-size: var(--fs-sm); letter-spacing: .1em;
+      text-transform: uppercase; color: var(--blue);
+      margin-top: 8px; font-weight: 500;
     }
-    .header-meta {
-      margin-left: auto; text-align: right;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .72rem; letter-spacing: .06em;
-      text-transform: uppercase; color: var(--muted); line-height: 1.7;
+    .header-right { margin-left: auto; text-align: right; }
+    .header-right .time-now {
+      font-family: 'DM Mono', monospace;
+      font-size: 48px; font-weight: 500;
+      color: #fff; line-height: 1; letter-spacing: .02em;
     }
-    .header-meta strong { color: var(--blue-lt); font-weight: 700; }
+    .header-right .refresh-info {
+      font-size: var(--fs-xs); color: var(--muted);
+      margin-top: 8px; letter-spacing: .04em;
+    }
+    .header-right .refresh-info strong { color: var(--blue-lt); }
 
+    /* TABS */
     .tabs {
-      display: flex; gap: 4px; margin-bottom: 28px;
+      display: flex; gap: 6px; margin-bottom: 32px;
       background: var(--dark2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 4px;
+      border-radius: 12px; padding: 6px; flex-shrink: 0;
     }
     .tab {
-      flex: 1; padding: 8px 12px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .8rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase;
+      flex: 1; padding: 14px 20px;
+      font-size: var(--fs-sm); font-weight: 600;
+      letter-spacing: .05em; text-transform: uppercase;
       color: var(--muted); background: none; border: none;
-      cursor: pointer; border-radius: 7px; transition: all .2s;
+      cursor: pointer; border-radius: 8px; transition: background .2s, color .2s;
     }
-    .tab.active { background: var(--blue); color: #fff; box-shadow: 0 2px 10px rgba(89,114,142,.4); }
-    .tab:hover:not(.active) { color: var(--text); background: rgba(89,114,142,.1); }
+    .tab.active { background: var(--blue); color: #fff; box-shadow: 0 2px 16px rgba(89,114,142,.4); }
     .tab .count {
       display: inline-block; background: rgba(255,255,255,.15);
-      border-radius: 10px; padding: 0 6px; margin-left: 4px; font-size: .65rem;
+      border-radius: 20px; padding: 2px 10px;
+      margin-left: 6px; font-size: var(--fs-xs);
     }
 
+    /* SECTION LABEL */
     .section-label {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .68rem; font-weight: 700;
-      letter-spacing: .12em; text-transform: uppercase;
-      color: var(--blue-dim); margin-bottom: 12px; padding-left: 2px;
-      display: flex; align-items: center; gap: 8px;
+      font-size: var(--fs-label); font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--blue-dim); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 12px;
     }
     .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-    .match-card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 12px; margin-bottom: 14px; overflow: hidden;
-      transition: transform .15s, box-shadow .15s;
+    /* 2-Spalten Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-content: start;
     }
-    .match-card:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(0,0,0,.35); }
-    .match-card.featured { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue), 0 8px 40px rgba(89,114,142,.2); }
-    .match-card.featured .card-top { background: var(--card); }
+    .cards-grid.single {
+      grid-template-columns: minmax(0, 860px);
+      justify-content: center;
+    }
 
-    .card-top {
-      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-      padding: 11px 18px; background: rgba(0,0,0,.2);
+    /* MATCH CARD */
+    .match-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+    }
+    .match-card.featured {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue), 0 8px 50px rgba(89,114,142,.2);
+    }
+
+    /* Card Banner */
+    .card-banner {
+      padding: 16px var(--pad) 14px;
+      background: linear-gradient(135deg, rgba(89,114,142,.25) 0%, rgba(22,27,36,.7) 100%);
       border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
     }
-    .tag {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .65rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase;
-      border-radius: 4px; padding: 2px 8px;
+    .card-banner::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 4px; background: var(--blue);
     }
-    .tag.bewerb { background: rgba(89,114,142,.18); color: var(--blue-lt); border: 1px solid rgba(89,114,142,.3); }
-    .tag.runde  { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .card-banner.live-banner::before     { background: var(--live); }
+    .card-banner.finished-banner::before { background: var(--win); }
+
+    .banner-liga {
+      font-size: var(--fs-sm); font-weight: 600;
+      color: #fff; margin-bottom: 8px; letter-spacing: -.01em;
+    }
+    .banner-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .banner-chip {
+      font-size: var(--fs-xs); font-weight: 500;
+      letter-spacing: .03em; padding: 4px 12px; border-radius: 20px;
+    }
+    .banner-chip.datum { background: rgba(89,114,142,.2); color: var(--blue-lt); border: 1px solid rgba(89,114,142,.3); }
+    .banner-chip.runde { background: rgba(255,255,255,.06); color: var(--muted); border: 1px solid rgba(255,255,255,.1); }
     .status-pill {
       margin-left: auto;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .65rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase;
-      border-radius: 20px; padding: 3px 11px;
+      font-size: var(--fs-xs); font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      border-radius: 20px; padding: 5px 14px;
     }
     .status-pill.upcoming { background: rgba(160,184,208,.1); color: var(--upcoming); border: 1px solid rgba(160,184,208,.2); }
-    .status-pill.live     { background: rgba(126,184,232,.15); color: var(--live); border: 1px solid rgba(126,184,232,.3); animation: blink 1.6s infinite; }
-    .status-pill.finished { background: rgba(74,158,110,.12); color: var(--win); border: 1px solid rgba(74,158,110,.25); }
+    .status-pill.live     { background: rgba(91,174,224,.15); color: var(--live); border: 1px solid rgba(91,174,224,.3); animation: blink 1.6s infinite; }
+    .status-pill.finished { background: rgba(61,158,98,.12); color: var(--win); border: 1px solid rgba(61,158,98,.3); }
     .status-pill.error    { background: rgba(184,64,64,.12); color: #e07070; border: 1px solid rgba(184,64,64,.25); }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.55} }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.5} }
 
+    /* Scoreboard */
     .scoreboard {
       display: grid; grid-template-columns: 1fr auto 1fr;
-      gap: 16px; align-items: center; padding: 18px 18px 14px;
+      gap: 20px; align-items: center;
+      padding: 28px var(--pad) 22px;
     }
     .team { display: flex; flex-direction: column; }
     .team.away { align-items: flex-end; text-align: right; }
     .team-name {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(.95rem, 2.8vw, 1.25rem);
-      font-weight: 800; line-height: 1.1; color: #fff;
+      font-size: var(--fs-team); font-weight: 700;
+      line-height: 1.2; color: #fff; letter-spacing: -.01em;
     }
     .team-name.andorf { color: var(--blue-lt); }
-    .team-meta { font-family: 'Barlow Condensed', sans-serif; font-size: .7rem; color: var(--muted); letter-spacing: .04em; margin-top: 3px; }
+    .team-meta { font-size: var(--fs-xs); color: var(--muted); margin-top: 4px; }
     .score-center { text-align: center; }
     .score-big {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(2rem, 6vw, 3rem);
-      font-weight: 900; letter-spacing: .02em; line-height: 1; color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: var(--fs-score); font-weight: 500;
+      line-height: 1; color: #fff; letter-spacing: .02em;
     }
-    .score-big.pending { color: var(--muted); font-size: 1rem; letter-spacing: .06em; }
-    .score-sep { color: var(--border); margin: 0 3px; }
-    .score-date { font-family: 'Barlow Condensed', sans-serif; font-size: .72rem; color: var(--muted); letter-spacing: .05em; margin-top: 2px; }
+    .score-big.pending {
+      font-family: 'Inter', sans-serif;
+      font-size: var(--fs-sm); color: var(--muted); font-weight: 400;
+    }
+    .score-sep { color: var(--border); margin: 0 6px; }
 
+    /* Details */
     .details-toggle {
       display: flex; align-items: center; justify-content: center;
-      gap: 6px; padding: 8px 18px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .7rem; font-weight: 700;
-      letter-spacing: .08em; text-transform: uppercase;
+      gap: 8px; padding: 14px var(--pad);
+      font-size: var(--fs-xs); font-weight: 500;
+      letter-spacing: .05em; text-transform: uppercase;
       color: var(--muted); cursor: pointer;
       background: none; width: 100%; border: none;
       border-top: 1px solid var(--border);
-      transition: color .15s, background .15s;
     }
-    .details-toggle:hover { color: var(--text); background: rgba(89,114,142,.06); }
     .details-panel { display: none; border-top: 1px solid var(--border); }
     .details-panel.open { display: block; }
-
     .sub-section {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .65rem; font-weight: 700;
-      letter-spacing: .12em; text-transform: uppercase;
-      color: var(--blue-dim); padding: 8px 18px 4px;
-      border-top: 1px solid var(--border); background: rgba(0,0,0,.15);
+      font-size: var(--fs-label); font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--blue-dim); padding: 10px var(--pad) 6px;
+      border-top: 1px solid var(--border); background: rgba(0,0,0,.2);
     }
     .sub-section:first-child { border-top: none; }
 
     table { width: 100%; border-collapse: collapse; }
     thead th {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: .62rem; font-weight: 700; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--muted); padding: 5px 18px;
-      text-align: left; background: rgba(0,0,0,.12);
+      font-size: var(--fs-label); font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
+      color: var(--muted); padding: 8px var(--pad);
+      text-align: left; background: rgba(0,0,0,.15);
     }
     thead th.c { text-align: center; }
-    tbody tr { border-top: 1px solid rgba(53,65,96,.5); transition: background .12s; }
-    tbody tr:hover { background: rgba(89,114,142,.06); }
-    td { padding: 9px 18px; font-size: .84rem; vertical-align: middle; }
-    .player { font-weight: 600; }
+    tbody tr { border-top: 1px solid rgba(46,61,92,.6); }
+    td { padding: 12px var(--pad); font-size: var(--fs-sm); vertical-align: middle; }
+    .player { font-weight: 500; }
     .itn {
-      display: inline-block; font-size: .62rem;
+      display: inline-block; font-size: var(--fs-xs);
       background: rgba(89,114,142,.12); color: var(--muted);
-      border-radius: 3px; padding: 1px 5px; margin-left: 5px;
-      font-family: 'Barlow Condensed', sans-serif; vertical-align: middle;
+      border-radius: 4px; padding: 2px 7px; margin-left: 8px;
+      font-family: 'DM Mono', monospace; vertical-align: middle;
     }
-    .sets { text-align: center; font-family: 'Barlow Condensed', sans-serif; }
-    .set { display: inline-block; min-width: 32px; text-align: center; font-size: .88rem; }
-    .set.w { font-weight: 700; color: #fff; }
+    .sets { text-align: center; font-family: 'DM Mono', monospace; }
+    .set { display: inline-block; min-width: 44px; text-align: center; font-size: var(--fs-sm); }
+    .set.w { font-weight: 500; color: #fff; }
     .set.l { color: var(--muted); }
-    .dot-w { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--win); box-shadow:0 0 5px var(--win); margin-left:6px; vertical-align:middle; }
+    .dot-w {
+      display: inline-block; width: 10px; height: 10px;
+      border-radius: 50%; background: var(--win);
+      box-shadow: 0 0 6px var(--win); margin-left: 8px; vertical-align: middle;
+    }
+    .no-data { padding: 20px var(--pad); text-align: center; color: var(--muted); font-size: var(--fs-sm); }
+    .error-bar { padding: 16px var(--pad); color: #e07070; font-size: var(--fs-sm); background: rgba(184,64,64,.08); border-top: 1px solid rgba(184,64,64,.18); }
+    .empty-state { padding: 80px 20px; text-align: center; color: var(--muted); font-size: var(--fs-base); grid-column: 1/-1; }
 
-    .no-data { padding:16px 18px; text-align:center; color:var(--muted); font-size:.82rem; font-family:'Barlow Condensed',sans-serif; letter-spacing:.05em; }
-    .error-bar { padding:12px 18px; color:#e07070; font-size:.82rem; background:rgba(184,64,64,.08); border-top:1px solid rgba(184,64,64,.18); }
-    .empty-state { padding: 48px 20px; text-align: center; color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-size: .9rem; letter-spacing: .06em; }
-
-    .skel { background: linear-gradient(90deg, var(--surface) 25%, var(--card) 50%, var(--surface) 75%); background-size:200% 100%; animation: shimmer 1.4s infinite; border-radius:6px; height:16px; margin:5px 0; }
+    .skel { background: linear-gradient(90deg, var(--surface) 25%, var(--card) 50%, var(--surface) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; height: 22px; margin: 8px 0; }
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
     footer {
-      margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--border);
-      text-align: center; font-family: 'Barlow Condensed', sans-serif;
-      font-size: .68rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted);
+      margin-top: auto; padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: var(--fs-xs); letter-spacing: .06em;
+      text-transform: uppercase; color: var(--muted);
     }
     footer a { color: var(--muted); }
   </style>
 </head>
 <body>
-<div class="wrapper">
+<div class="page">
+
   <header>
     <div class="logo-wrap">
       <img src="11_Logo_simpel_schwarz_2.jpg" alt="TV McDonald's Andorf" />
@@ -240,9 +284,12 @@
       <h1>TV <em>McDonald's</em> Andorf</h1>
       <div class="header-sub">Mannschaftsmeisterschaft 2026</div>
     </div>
-    <div class="header-meta">
-      <div>Aktualisiert <strong id="last-refresh">–</strong></div>
-      <div>Nächste Abfrage in <strong id="countdown">60s</strong></div>
+    <div class="header-right">
+      <div class="time-now" id="clock">--:--</div>
+      <div class="refresh-info">
+        Aktualisiert <strong id="last-refresh">–</strong>
+        &nbsp;·&nbsp; Nächste Abfrage in <strong id="countdown">60s</strong>
+      </div>
     </div>
   </header>
 
@@ -253,26 +300,34 @@
     <button class="tab" onclick="switchTab('all')" id="tab-all">Alle <span class="count" id="cnt-all">0</span></button>
   </div>
 
-  <div id="container">
-    <div class="match-card"><div class="card-top"><div class="skel" style="width:130px"></div></div><div style="padding:18px"><div class="skel" style="width:75%"></div><div class="skel" style="width:45%;margin-top:8px"></div></div></div>
-    <div class="match-card"><div class="card-top"><div class="skel" style="width:110px"></div></div><div style="padding:18px"><div class="skel" style="width:80%"></div><div class="skel" style="width:50%;margin-top:8px"></div></div></div>
+  <div id="container" class="cards-grid">
+    <div class="match-card"><div class="card-banner"><div class="skel" style="width:240px"></div><div class="skel" style="width:160px;margin-top:10px"></div></div><div style="padding:28px"><div class="skel" style="width:75%"></div><div class="skel" style="width:45%;margin-top:12px"></div></div></div>
+    <div class="match-card"><div class="card-banner"><div class="skel" style="width:200px"></div><div class="skel" style="width:140px;margin-top:10px"></div></div><div style="padding:28px"><div class="skel" style="width:80%"></div><div class="skel" style="width:50%;margin-top:12px"></div></div></div>
   </div>
 
   <footer>
     Datenquelle: <a href="https://oetv-austria.liga.nu" target="_blank">ÖTVAT Austria Liga</a>
-    &nbsp;·&nbsp; TV McDonald's Andorf &nbsp;·&nbsp; <span id="footer-ts"></span>
+    &nbsp;·&nbsp; TV McDonald's Andorf
+    &nbsp;·&nbsp; <span id="footer-ts"></span>
   </footer>
 </div>
 
 <script>
 const RESULTS_URL = 'results.json';
-const REFRESH_MS  = 60_000;
 let allMatches = [], currentTab = 'today', countdownSec = 60, countdownTimer;
 
 function todayISO() { return new Date().toLocaleDateString('sv-SE'); }
 function fmtTime(iso) { if (!iso) return '–'; return new Date(iso).toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
 function isAndorf(name) { return name && name.toLowerCase().includes('andorf'); }
 function statusLabel(s) { return {upcoming:'Ausstehend',live:'● Live',finished:'Beendet',error:'Fehler'}[s]||s; }
+
+// Live-Uhr
+function updateClock() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
+}
+updateClock();
+setInterval(updateClock, 1000);
 
 function switchTab(tab) {
   currentTab = tab;
@@ -308,7 +363,7 @@ function renderSingles(singles) {
     singles.map(s => {
       const hw = s.winner==='heim';
       return `<tr>
-        <td style="width:24px;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${s.nr}</td>
+        <td style="width:36px;color:var(--muted);font-family:'DM Mono',monospace">${s.nr}</td>
         <td class="player">${s.heim}<span class="itn">${s.heim_itn}</span>${hw?'<span class="dot-w"></span>':''}</td>
         <td class="player">${s.gast}<span class="itn">${s.gast_itn}</span>${!hw?'<span class="dot-w"></span>':''}</td>
         <td class="sets">${renderSet(s.satz1,hw)} ${renderSet(s.satz2,hw)} ${s.satz3?renderSet(s.satz3,hw):''}</td>
@@ -322,7 +377,7 @@ function renderDoubles(doubles) {
     doubles.map(d => {
       const hw = d.winner==='heim';
       return `<tr>
-        <td style="width:24px;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${d.nr}</td>
+        <td style="width:36px;color:var(--muted);font-family:'DM Mono',monospace">${d.nr}</td>
         <td class="player">${d.heim||'–'}${hw?'<span class="dot-w"></span>':''}</td>
         <td class="player">${d.gast||'–'}${!hw?'<span class="dot-w"></span>':''}</td>
         <td class="sets">${renderSet(d.satz1,hw)} ${renderSet(d.satz2,hw)} ${d.satz3?renderSet(d.satz3,hw):''}</td>
@@ -336,15 +391,19 @@ function renderCard(m, featured) {
   const hS = h.ergebnis_heim ?? '–', gS = h.ergebnis_gast ?? '–';
   const scoreHtml = (m.status==='finished'||m.status==='live')
     ? `<div class="score-big">${hS}<span class="score-sep">:</span>${gS}</div>`
-    : `<div class="score-big pending">${h.datum||'?'}<br><span style="font-size:.8rem">${h.uhrzeit||''}</span></div>`;
+    : `<div class="score-big pending">${h.datum||'?'} · ${h.uhrzeit||''} Uhr</div>`;
   const hasDetails = m.singles?.length || m.doubles?.length;
   const did = `d-${m.meeting_id}`, bid = `b-${m.meeting_id}`;
+  const bannerClass = m.status==='live' ? 'live-banner' : m.status==='finished' ? 'finished-banner' : '';
   return `<div class="match-card ${feat?'featured':''}">
-    <div class="card-top">
-      <span class="tag bewerb">${h.gruppe||h.bewerb||'Tennis'}</span>
-      <span class="tag runde">${h.runde||''}</span>
-      <span class="tag runde">${h.datum||''}</span>
-      <span class="status-pill ${m.status}">${statusLabel(m.status)}</span>
+    <div class="card-banner ${bannerClass}">
+      <div class="banner-liga">${h.gruppe || h.bewerb || 'Tennis'}</div>
+      <div class="banner-meta">
+        ${h.datum   ? `<span class="banner-chip datum">📅 ${h.datum}</span>` : ''}
+        ${h.uhrzeit ? `<span class="banner-chip runde">🕐 ${h.uhrzeit} Uhr</span>` : ''}
+        ${h.runde   ? `<span class="banner-chip runde">${h.runde}</span>` : ''}
+        <span class="status-pill ${m.status}">${statusLabel(m.status)}</span>
+      </div>
     </div>
     <div class="scoreboard">
       <div class="team home">
@@ -359,7 +418,7 @@ function renderCard(m, featured) {
     </div>
     ${m.status==='error'?`<div class="error-bar">⚠ ${m.error||'Fehler'}</div>`:''}
     ${hasDetails?`
-      <button class="details-toggle" id="${bid}" onclick="toggleDetails('${did}','${bid}')">Details anzeigen <span>▾</span></button>
+      <button class="details-toggle" id="${bid}" onclick="toggleDetails('${did}','${bid}')">Details anzeigen ▾</button>
       <div class="details-panel ${feat?'open':''}" id="${did}">
         <div class="sub-section">Einzel</div>${renderSingles(m.singles)}
         <div class="sub-section">Doppel</div>${renderDoubles(m.doubles)}
@@ -370,7 +429,7 @@ function renderCard(m, featured) {
 function toggleDetails(did, bid) {
   const panel = document.getElementById(did);
   const open = panel.classList.toggle('open');
-  document.getElementById(bid).innerHTML = `${open?'Details ausblenden':'Details anzeigen'} <span style="display:inline-block;transform:rotate(${open?180:0}deg);transition:transform .2s">▾</span>`;
+  document.getElementById(bid).innerHTML = `${open?'Details ausblenden':'Details anzeigen'} ${open?'▴':'▾'}`;
 }
 
 function renderMatches() {
@@ -379,9 +438,11 @@ function renderMatches() {
   const today = todayISO();
   if (!filtered.length) {
     const msgs = {today:'Heute keine Spiele geplant.',upcoming:'Keine ausstehenden Spiele.',finished:'Noch keine abgeschlossenen Spiele.',all:'Keine Spiele geladen.'};
+    container.className = 'cards-grid';
     container.innerHTML = `<div class="empty-state">${msgs[currentTab]||'Keine Daten.'}</div>`;
     return;
   }
+  container.className = filtered.length === 1 ? 'cards-grid single' : 'cards-grid';
   if (currentTab === 'today') {
     container.innerHTML = filtered.map(m => renderCard(m, true)).join('');
   } else {
@@ -390,7 +451,7 @@ function renderMatches() {
     let html = '';
     Object.keys(groups).sort().forEach(k => {
       const label = k===today ? 'Heute' : new Date(k).toLocaleDateString('de-AT',{weekday:'long',day:'2-digit',month:'long'});
-      html += `<div class="section-label">${label}</div>`;
+      html += `<div class="section-label" style="grid-column:1/-1">${label}</div>`;
       groups[k].forEach(m => html += renderCard(m, false));
     });
     container.innerHTML = html;
