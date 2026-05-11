@@ -1,40 +1,41 @@
 {
-  "generated_at": "2026-05-10T22:32:18.515318+00:00",
+  "generated_at": "2026-05-11T05:42:59.195475+00:00",
   "matches": [
     {
-      "id": "1866397",
-      "label": "TV Andorf 1 vs SPG Prambachki/Waizenki 1",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=19b20e39-6a97-4bb5-b706-8d4584a6c96d",
-      "status": "finished",
-      "last_updated": "2026-05-10T22:32:18.515335+00:00",
+      "meeting_id": "1866397",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397",
+      "status": "upcoming",
+      "last_updated": "2026-05-11T05:42:59.195517+00:00",
       "header": {
-        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
-        "gruppe": "Herren45 Bezirksklasse Mitte B",
-        "datum": "08.05.2026",
-        "uhrzeit": "15:00",
-        "runde": "1. Runde",
-        "heim": "TV McDonald's Andorf 1",
-        "gast": "SPG Prambachki/Waizenki 1",
-        "ergebnis_heim": 6,
-        "ergebnis_gast": 0
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
       },
       "singles": [],
-      "doubles": [
-        {
-          "nr": 1,
-          "satz1": "6:1",
-          "satz2": "6:1",
-          "satz3": "",
-          "winner": "heim"
-        },
-        {
-          "nr": 2,
-          "satz1": "6:3",
-          "satz2": "6:1",
-          "satz3": "",
-          "winner": "heim"
-        }
-      ]
+      "doubles": []
+    },
+    {
+      "meeting_id": "1861376",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376",
+      "status": "upcoming",
+      "last_updated": "2026-05-11T05:43:00.693321+00:00",
+      "header": {
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
+      "singles": [],
+      "doubles": []
+    },
+    {
+      "meeting_id": "1866859",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866859",
+      "status": "upcoming",
+      "last_updated": "2026-05-11T05:43:02.123373+00:00",
+      "header": {
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
+      "singles": [],
+      "doubles": []
     }
   ]
 }
