@@ -199,7 +199,68 @@ def process_match(meeting_id, datum_override=None):
     return result
  
  
+def should_run():
+    """
+    Gibt True zurück wenn mindestens ein Spiel heute stattfindet
+    UND die aktuelle Zeit innerhalb des aktiven Fensters liegt:
+    1 Stunde vor Spielbeginn bis Mitternacht.
+    """
+    now_utc = datetime.now(timezone.utc)
+    # Österreich = UTC+2 (Sommerzeit)
+    now_at = now_utc.replace(tzinfo=None) + __import__('datetime').timedelta(hours=2)
+    today_str = now_at.strftime("%d.%m.%Y")
+ 
+    for m in MATCHES:
+        # Datum bestimmen (Override hat Vorrang)
+        datum = m.get("datum_override")
+        if not datum:
+            # Datum aus gecachtem Header lesen falls vorhanden
+            try:
+                with open("results.json", encoding="utf-8") as f:
+                    cached = json.load(f)
+                for cm in cached.get("matches", []):
+                    if cm["meeting_id"] == m["meeting_id"]:
+                        datum = cm.get("header", {}).get("datum")
+                        break
+            except Exception:
+                pass
+ 
+        if datum != today_str:
+            continue
+ 
+        # Uhrzeit aus Cache lesen
+        uhrzeit = None
+        try:
+            with open("results.json", encoding="utf-8") as f:
+                cached = json.load(f)
+            for cm in cached.get("matches", []):
+                if cm["meeting_id"] == m["meeting_id"]:
+                    uhrzeit = cm.get("header", {}).get("uhrzeit")
+                    break
+        except Exception:
+            pass
+ 
+        if uhrzeit:
+            try:
+                h, mi = map(int, uhrzeit.split(":"))
+                import datetime as dt
+                spielbeginn = now_at.replace(hour=h, minute=mi, second=0, microsecond=0)
+                fenster_start = spielbeginn - dt.timedelta(hours=1)
+                if now_at >= fenster_start:
+                    return True
+            except Exception:
+                return True  # Im Zweifel laufen lassen
+        else:
+            return True  # Keine Uhrzeit bekannt → laufen lassen
+ 
+    return False
+ 
+ 
 def main():
+    if not should_run():
+        print("Kein aktives Spiel heute – kein Update nötig.")
+        return
+ 
     output = {"generated_at": datetime.now(timezone.utc).isoformat(), "matches": []}
     seen = set()
     for m in MATCHES:
@@ -220,6 +281,4 @@ def main():
  
 if __name__ == "__main__":
     main()
-
-if __name__ == "__main__":
-    main()
+ 
