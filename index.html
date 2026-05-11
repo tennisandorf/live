@@ -122,8 +122,10 @@
       letter-spacing: .1em; text-transform: uppercase;
       color: var(--blue-dim); margin-bottom: 16px;
       display: flex; align-items: center; gap: 12px;
+      justify-content: center;
     }
-    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .section-label::before { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .section-label::after  { content: ''; flex: 1; height: 1px; background: var(--border); }
 
     /* 2-Spalten Grid */
     .cards-grid {
@@ -131,9 +133,13 @@
       grid-template-columns: 1fr 1fr;
       gap: 20px;
       align-content: start;
+      justify-content: center;
     }
     .cards-grid.single {
       grid-template-columns: 1fr;
+    }
+    .cards-grid.two-up {
+      grid-template-columns: 1fr 1fr;
     }
 
     /* MATCH CARD */
