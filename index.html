@@ -57,14 +57,15 @@
       width: 1920px; padding: 36px 60px 40px;
       display: flex; flex-direction: column;
       min-height: 1080px;
+      max-width: 1920px;
     }
 
     /* HEADER */
     header {
-      display: flex; align-items: center; gap: 32px;
-      padding-bottom: 28px;
+      display: flex; align-items: center; gap: 28px;
+      padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 36px; flex-shrink: 0;
+      margin-bottom: 24px; flex-shrink: 0;
     }
     .logo-wrap {
       flex-shrink: 0; width: 240px; height: 120px;
@@ -97,16 +98,16 @@
 
     /* TABS */
     .tabs {
-      display: flex; gap: 6px; margin-bottom: 32px;
+      display: flex; gap: 4px; margin-bottom: 20px;
       background: var(--dark2); border: 1px solid var(--border);
-      border-radius: 12px; padding: 6px; flex-shrink: 0;
+      border-radius: 10px; padding: 4px; flex-shrink: 0;
     }
     .tab {
-      flex: 1; padding: 14px 20px;
-      font-size: var(--fs-sm); font-weight: 600;
+      flex: 1; padding: 10px 16px;
+      font-size: 16px; font-weight: 600;
       letter-spacing: .05em; text-transform: uppercase;
       color: var(--muted); background: none; border: none;
-      cursor: pointer; border-radius: 8px; transition: background .2s, color .2s;
+      cursor: pointer; border-radius: 7px; transition: background .2s, color .2s;
     }
     .tab.active { background: var(--blue); color: #fff; box-shadow: 0 2px 16px rgba(89,114,142,.4); }
     .tab .count {
@@ -132,8 +133,7 @@
       align-content: start;
     }
     .cards-grid.single {
-      grid-template-columns: minmax(0, 860px);
-      justify-content: center;
+      grid-template-columns: 1fr;
     }
 
     /* MATCH CARD */
@@ -149,7 +149,7 @@
 
     /* Card Banner */
     .card-banner {
-      padding: 16px var(--pad) 14px;
+      padding: 12px var(--pad) 10px;
       background: linear-gradient(135deg, rgba(89,114,142,.25) 0%, rgba(22,27,36,.7) 100%);
       border-bottom: 1px solid var(--border);
       position: relative; overflow: hidden;
@@ -187,21 +187,21 @@
     /* Scoreboard */
     .scoreboard {
       display: grid; grid-template-columns: 1fr auto 1fr;
-      gap: 20px; align-items: center;
-      padding: 28px var(--pad) 22px;
+      gap: 16px; align-items: center;
+      padding: 18px var(--pad) 14px;
     }
     .team { display: flex; flex-direction: column; }
     .team.away { align-items: flex-end; text-align: right; }
     .team-name {
-      font-size: var(--fs-team); font-weight: 700;
+      font-size: 24px; font-weight: 700;
       line-height: 1.2; color: #fff; letter-spacing: -.01em;
     }
     .team-name.andorf { color: var(--blue-lt); }
-    .team-meta { font-size: var(--fs-xs); color: var(--muted); margin-top: 4px; }
+    .team-meta { font-size: 13px; color: var(--muted); margin-top: 3px; }
     .score-center { text-align: center; }
     .score-big {
       font-family: 'DM Mono', monospace;
-      font-size: var(--fs-score); font-weight: 500;
+      font-size: 60px; font-weight: 500;
       line-height: 1; color: #fff; letter-spacing: .02em;
     }
     .score-big.pending {
@@ -213,7 +213,7 @@
     /* Details */
     .details-toggle {
       display: flex; align-items: center; justify-content: center;
-      gap: 8px; padding: 14px var(--pad);
+      gap: 8px; padding: 10px var(--pad);
       font-size: var(--fs-xs); font-weight: 500;
       letter-spacing: .05em; text-transform: uppercase;
       color: var(--muted); cursor: pointer;
@@ -225,39 +225,53 @@
     .sub-section {
       font-size: var(--fs-label); font-weight: 600;
       letter-spacing: .1em; text-transform: uppercase;
-      color: var(--blue-dim); padding: 10px var(--pad) 6px;
+      color: var(--blue-dim); padding: 6px var(--pad) 4px;
       border-top: 1px solid var(--border); background: rgba(0,0,0,.2);
     }
     .sub-section:first-child { border-top: none; }
 
+    /* Einzel/Doppel Layout */
+    .details-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .cards-grid.two-up .details-cols {
+      grid-template-columns: 1fr;
+    }
+    .details-col { border-right: 1px solid var(--border); }
+    .details-col:last-child { border-right: none; }
+    .cards-grid.two-up .details-col { border-right: none; border-top: 1px solid var(--border); }
+    .cards-grid.two-up .details-col:first-child { border-top: none; }
+
     table { width: 100%; border-collapse: collapse; }
     thead th {
-      font-size: var(--fs-label); font-weight: 600;
+      font-size: 11px; font-weight: 600;
       letter-spacing: .07em; text-transform: uppercase;
-      color: var(--muted); padding: 8px var(--pad);
+      color: var(--muted); padding: 5px 14px;
       text-align: left; background: rgba(0,0,0,.15);
     }
     thead th.c { text-align: center; }
-    tbody tr { border-top: 1px solid rgba(46,61,92,.6); }
-    td { padding: 12px var(--pad); font-size: var(--fs-sm); vertical-align: middle; }
+    tbody tr { border-top: 1px solid rgba(46,61,92,.5); }
+    td { padding: 8px 14px; font-size: 16px; vertical-align: middle; }
     .player { font-weight: 500; }
     .itn {
-      display: inline-block; font-size: var(--fs-xs);
+      display: inline-block; font-size: 13px;
       background: rgba(89,114,142,.12); color: var(--muted);
-      border-radius: 4px; padding: 2px 7px; margin-left: 8px;
+      border-radius: 4px; padding: 1px 6px; margin-left: 6px;
       font-family: 'DM Mono', monospace; vertical-align: middle;
     }
     .sets { text-align: center; font-family: 'DM Mono', monospace; }
-    .set { display: inline-block; min-width: 44px; text-align: center; font-size: var(--fs-sm); }
+    .set { display: inline-block; min-width: 36px; text-align: center; font-size: 16px; }
     .set.w { font-weight: 500; color: #fff; }
     .set.l { color: var(--muted); }
     .dot-w {
-      display: inline-block; width: 10px; height: 10px;
+      display: inline-block; width: 8px; height: 8px;
       border-radius: 50%; background: var(--win);
-      box-shadow: 0 0 6px var(--win); margin-left: 8px; vertical-align: middle;
+      box-shadow: 0 0 5px var(--win); margin-left: 6px; vertical-align: middle;
     }
-    .no-data { padding: 20px var(--pad); text-align: center; color: var(--muted); font-size: var(--fs-sm); }
-    .error-bar { padding: 16px var(--pad); color: #e07070; font-size: var(--fs-sm); background: rgba(184,64,64,.08); border-top: 1px solid rgba(184,64,64,.18); }
+    .no-data { padding: 14px var(--pad); text-align: center; color: var(--muted); font-size: 16px; }
+    .error-bar { padding: 12px var(--pad); color: #e07070; font-size: 16px; background: rgba(184,64,64,.08); border-top: 1px solid rgba(184,64,64,.18); }
     .empty-state { padding: 80px 20px; text-align: center; color: var(--muted); font-size: var(--fs-base); grid-column: 1/-1; }
 
     .skel { background: linear-gradient(90deg, var(--surface) 25%, var(--card) 50%, var(--surface) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 8px; height: 22px; margin: 8px 0; }
@@ -420,8 +434,14 @@ function renderCard(m, featured) {
     ${hasDetails?`
       <button class="details-toggle" id="${bid}" onclick="toggleDetails('${did}','${bid}')">Details anzeigen ▾</button>
       <div class="details-panel ${feat?'open':''}" id="${did}">
-        <div class="sub-section">Einzel</div>${renderSingles(m.singles)}
-        <div class="sub-section">Doppel</div>${renderDoubles(m.doubles)}
+        <div class="details-cols">
+          <div class="details-col">
+            <div class="sub-section">Einzel</div>${renderSingles(m.singles)}
+          </div>
+          <div class="details-col">
+            <div class="sub-section">Doppel</div>${renderDoubles(m.doubles)}
+          </div>
+        </div>
       </div>`:''}
   </div>`;
 }
@@ -442,7 +462,7 @@ function renderMatches() {
     container.innerHTML = `<div class="empty-state">${msgs[currentTab]||'Keine Daten.'}</div>`;
     return;
   }
-  container.className = filtered.length === 1 ? 'cards-grid single' : 'cards-grid';
+  container.className = filtered.length === 1 ? 'cards-grid' : filtered.length === 2 ? 'cards-grid two-up' : 'cards-grid';
   if (currentTab === 'today') {
     container.innerHTML = filtered.map(m => renderCard(m, true)).join('');
   } else {
