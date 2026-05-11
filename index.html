@@ -1,28 +1,27 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TV McDonald's Andorf – Live Ergebnisse</title>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      /* Vereinsfarben TV McDonald's Andorf */
-      --blue:    #59728E;  /* Pantone 18-3922 TCX – Coronet Blue */
-      --navy:    #262934;  /* Pantone 19-3922 TCX – Sky Captain  */
-      --blue-lt: #7a97b5;  /* aufgehelltes Blau für Akzente      */
-      --dark:    #1a1d24;  /* tiefes Navy als Hintergrund        */
-      --dark2:   #20242e;
-      --surface: #252b38;
-      --card:    #2c3344;
-      --border:  #3a4560;
-      --text:    #dce6f0;
-      --muted:   #7a90aa;
-      --win:     #4a9e6e;
-      --lose:    #c0392b;
-      --live:    #7eb8e8;  /* helles Blau für Live-Indikator     */
-      --accent:  #59728E;
+      --blue:     #59728E;
+      --navy:     #262934;
+      --blue-lt:  #7a97b5;
+      --blue-dim: #3d5470;
+      --dark:     #181c24;
+      --dark2:    #1e2330;
+      --surface:  #242b3a;
+      --card:     #2a3347;
+      --border:   #354160;
+      --text:     #dce6f0;
+      --muted:    #7a90aa;
+      --win:      #4a9e6e;
+      --lose:     #b84040;
+      --live:     #7eb8e8;
+      --upcoming: #a0b8d0;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,272 +31,305 @@
       color: var(--text);
       font-family: 'Barlow', sans-serif;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* ── Noise overlay ── */
+    /* Subtle grid background */
     body::before {
       content: '';
-      position: fixed; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse at 20% 0%, rgba(89,114,142,.12) 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 100%, rgba(38,41,52,.6) 0%, transparent 60%);
-      pointer-events: none;
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(89,114,142,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(89,114,142,.04) 1px, transparent 1px);
+      background-size: 40px 40px;
     }
 
-    .wrapper { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 16px 60px; }
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 10% 0%, rgba(89,114,142,.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 90% 100%, rgba(38,41,52,.5) 0%, transparent 55%);
+    }
 
-    /* ── Header ── */
+    .wrapper {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── HEADER ── */
     header {
-      display: flex; align-items: center; gap: 20px;
-      padding: 28px 0 24px;
-      border-bottom: 2px solid var(--blue);
-      margin-bottom: 32px;
+      display: flex; align-items: center; gap: 18px;
+      padding: 28px 0 22px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 36px;
     }
-    .logo-ball {
-      width: 52px; height: 52px;
-      background: var(--yellow);
-      border-radius: 50%;
-      display: grid; place-items: center;
-      font-size: 26px;
+
+    .logo-wrap {
       flex-shrink: 0;
-      box-shadow: 0 0 24px rgba(245,200,0,.35);
+      width: 60px; height: 60px;
+      background: #fff;
+      border-radius: 10px;
+      display: grid; place-items: center;
+      padding: 6px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4), 0 0 0 1px rgba(89,114,142,.3);
     }
-    .logo-ball svg { width: 32px; height: 32px; }
-    header h1 {
+    .logo-wrap img { width: 100%; height: 100%; object-fit: contain; }
+
+    .header-text h1 {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: clamp(1.4rem, 4vw, 2rem);
-      font-weight: 800;
+      font-weight: 900;
+      letter-spacing: .03em;
       line-height: 1;
       color: #fff;
-      letter-spacing: .02em;
     }
-    header h1 span { color: var(--blue-lt); }
-    .header-right { margin-left: auto; text-align: right; }
-    .refresh-badge {
+    .header-text h1 em { color: var(--blue-lt); font-style: normal; }
+    .header-sub {
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: .72rem;
-      color: var(--muted);
-      font-family: 'Barlow Condensed', sans-serif;
-      letter-spacing: .05em;
+      letter-spacing: .14em;
       text-transform: uppercase;
+      color: var(--blue);
+      margin-top: 4px;
     }
-    #last-refresh { color: var(--blue-lt); font-weight: 600; }
 
-    /* ── Status bar ── */
-    #status-bar {
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 24px;
-      font-size: .8rem;
-      color: var(--muted);
+    .header-meta {
+      margin-left: auto;
+      text-align: right;
       font-family: 'Barlow Condensed', sans-serif;
+      font-size: .72rem;
       letter-spacing: .06em;
       text-transform: uppercase;
+      color: var(--muted);
+      line-height: 1.7;
     }
-    .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--muted);
-    }
-    .dot.live { background: var(--live); box-shadow: 0 0 8px var(--live); animation: pulse 1.4s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    .header-meta strong { color: var(--blue-lt); font-weight: 700; }
 
-    /* ── Match card ── */
+    /* ── TABS ── */
+    .tabs {
+      display: flex; gap: 4px;
+      margin-bottom: 28px;
+      background: var(--dark2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+    }
+    .tab {
+      flex: 1; padding: 8px 12px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .8rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted);
+      background: none; border: none; cursor: pointer;
+      border-radius: 7px;
+      transition: all .2s;
+    }
+    .tab.active {
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(89,114,142,.4);
+    }
+    .tab:hover:not(.active) { color: var(--text); background: rgba(89,114,142,.1); }
+    .tab .count {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border-radius: 10px;
+      padding: 0 6px;
+      margin-left: 4px;
+      font-size: .65rem;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--blue-dim);
+      margin-bottom: 12px;
+      padding-left: 2px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── MATCH CARD ── */
     .match-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       overflow: hidden;
-      transition: box-shadow .2s;
+      transition: transform .15s, box-shadow .15s;
+      cursor: default;
     }
-    .match-card:hover { box-shadow: 0 4px 24px rgba(0,0,0,.4); }
+    .match-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px rgba(0,0,0,.35);
+    }
 
-    /* Card Header */
-    .card-header {
-      padding: 16px 20px;
-      background: var(--card);
+    /* Featured (today's match) */
+    .match-card.featured {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 1px var(--blue), 0 8px 40px rgba(89,114,142,.2);
+    }
+    .match-card.featured .card-top { background: var(--card); }
+
+    /* Card top bar */
+    .card-top {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      padding: 11px 18px;
+      background: rgba(0,0,0,.2);
       border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
     }
-    .bewerb-tag {
+    .tag {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--blue-lt);
-      background: rgba(89,114,142,.15);
-      border: 1px solid rgba(89,114,142,.35);
-      border-radius: 4px;
-      padding: 2px 8px;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      border-radius: 4px; padding: 2px 8px;
     }
-    .runde-info {
-      font-size: .8rem;
-      color: var(--muted);
-      font-family: 'Barlow Condensed', sans-serif;
-      letter-spacing: .04em;
-    }
+    .tag.bewerb { background: rgba(89,114,142,.18); color: var(--blue-lt); border: 1px solid rgba(89,114,142,.3); }
+    .tag.runde  { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+
     .status-pill {
       margin-left: auto;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      border-radius: 20px;
-      padding: 3px 12px;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      border-radius: 20px; padding: 3px 11px;
     }
-    .status-pill.upcoming { background: rgba(89,114,142,.1); color: var(--muted); border: 1px solid var(--border); }
-    .status-pill.live     { background: rgba(126,184,232,.15); color: var(--live); border: 1px solid rgba(126,184,232,.3); animation: pulse 1.4s infinite; }
-    .status-pill.finished { background: rgba(74,158,110,.15); color: var(--win); border: 1px solid rgba(74,158,110,.3); }
-    .status-pill.error    { background: rgba(192,57,43,.15); color: #e74c3c; border: 1px solid rgba(192,57,43,.3); }
+    .status-pill.upcoming { background: rgba(160,184,208,.1); color: var(--upcoming); border: 1px solid rgba(160,184,208,.2); }
+    .status-pill.live     { background: rgba(126,184,232,.15); color: var(--live); border: 1px solid rgba(126,184,232,.3); animation: blink 1.6s infinite; }
+    .status-pill.finished { background: rgba(74,158,110,.12); color: var(--win); border: 1px solid rgba(74,158,110,.25); }
+    .status-pill.error    { background: rgba(184,64,64,.12); color: #e07070; border: 1px solid rgba(184,64,64,.25); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.55} }
 
     /* Scoreboard */
     .scoreboard {
-      padding: 20px;
       display: grid;
       grid-template-columns: 1fr auto 1fr;
-      gap: 12px;
-      align-items: center;
+      gap: 16px; align-items: center;
+      padding: 18px 18px 14px;
     }
     .team { display: flex; flex-direction: column; }
-    .team.home { text-align: left; }
-    .team.away { text-align: right; align-items: flex-end; }
+    .team.away { align-items: flex-end; text-align: right; }
+
     .team-name {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(1rem, 3vw, 1.3rem);
-      font-weight: 700;
-      line-height: 1.1;
-      color: #fff;
+      font-size: clamp(.95rem, 2.8vw, 1.25rem);
+      font-weight: 800; line-height: 1.1; color: #fff;
     }
     .team-name.andorf { color: var(--blue-lt); }
-    .date-info {
-      font-size: .75rem;
-      color: var(--muted);
-      margin-top: 4px;
+    .team-meta {
       font-family: 'Barlow Condensed', sans-serif;
-      letter-spacing: .03em;
+      font-size: .7rem; color: var(--muted);
+      letter-spacing: .04em; margin-top: 3px;
     }
-    .score-block { text-align: center; }
-    .score-main {
+
+    .score-center { text-align: center; }
+    .score-big {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(2rem, 7vw, 3.2rem);
-      font-weight: 800;
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 900; letter-spacing: .02em;
       line-height: 1;
-      letter-spacing: .02em;
+      color: #fff;
     }
-    .score-main.decided { color: #fff; }
-    .score-main.pending { color: var(--muted); }
-    .score-sep { color: var(--border); margin: 0 4px; }
-    .upcoming-time {
+    .score-big.pending { color: var(--muted); font-size: 1rem; letter-spacing: .06em; }
+    .score-sep { color: var(--border); margin: 0 3px; }
+    .score-date {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1rem;
-      color: var(--muted);
-      letter-spacing: .06em;
+      font-size: .72rem; color: var(--muted);
+      letter-spacing: .05em; margin-top: 2px;
     }
 
-    /* Singles / Doubles section */
-    .section-title {
+    /* Details toggle */
+    .details-toggle {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 8px 18px;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: .72rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 8px 20px;
-      background: var(--dark2);
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); cursor: pointer;
       border-top: 1px solid var(--border);
+      background: none; width: 100%; border: none;
+      border-top: 1px solid var(--border);
+      transition: color .15s, background .15s;
     }
+    .details-toggle:hover { color: var(--text); background: rgba(89,114,142,.06); }
+    .details-toggle .arrow { transition: transform .2s; font-size: .8rem; }
+    .details-toggle.open .arrow { transform: rotate(180deg); }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    /* Details panel */
+    .details-panel {
+      display: none; border-top: 1px solid var(--border);
     }
-    thead tr {
-      background: rgba(0,0,0,.2);
+    .details-panel.open { display: block; }
+
+    .sub-section {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--blue-dim);
+      padding: 8px 18px 4px;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,.15);
     }
+    .sub-section:first-child { border-top: none; }
+
+    table { width: 100%; border-collapse: collapse; }
     thead th {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: .68rem;
-      font-weight: 700;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 6px 20px;
-      text-align: left;
+      font-size: .62rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); padding: 5px 18px;
+      text-align: left; background: rgba(0,0,0,.12);
     }
-    thead th.center { text-align: center; }
+    thead th.c { text-align: center; }
+    tbody tr { border-top: 1px solid rgba(53,65,96,.5); transition: background .12s; }
+    tbody tr:hover { background: rgba(89,114,142,.06); }
+    td { padding: 9px 18px; font-size: .84rem; vertical-align: middle; }
 
-    tbody tr {
-      border-top: 1px solid var(--border);
-      transition: background .15s;
-    }
-    tbody tr:hover { background: rgba(255,255,255,.03); }
-
-    td {
-      padding: 10px 20px;
-      font-size: .88rem;
+    .player { font-weight: 600; }
+    .itn {
+      display: inline-block; font-size: .62rem;
+      background: rgba(89,114,142,.12); color: var(--muted);
+      border-radius: 3px; padding: 1px 5px;
+      margin-left: 5px; font-family: 'Barlow Condensed', sans-serif;
       vertical-align: middle;
     }
-    .player-cell { font-weight: 600; }
-    .itn-badge {
-      display: inline-block;
-      font-size: .65rem;
-      background: rgba(89,114,142,.15);
-      color: var(--muted);
-      border-radius: 3px;
-      padding: 1px 5px;
-      margin-left: 6px;
-      font-family: 'Barlow Condensed', sans-serif;
-      letter-spacing: .03em;
-      vertical-align: middle;
-    }
-    .sets-cell { text-align: center; font-family: 'Barlow Condensed', sans-serif; font-size: .9rem; }
-    .set { display: inline-block; min-width: 36px; text-align: center; }
-    .set.winner { font-weight: 700; color: #fff; }
-    .set.loser  { color: var(--muted); }
-    .result-dot {
-      display: inline-block;
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-    .result-dot.win  { background: var(--win); box-shadow: 0 0 6px var(--win); }
-    .result-dot.lose { background: var(--lose); }
+    .sets { text-align: center; font-family: 'Barlow Condensed', sans-serif; }
+    .set { display: inline-block; min-width: 32px; text-align: center; font-size: .88rem; }
+    .set.w { font-weight: 700; color: #fff; }
+    .set.l { color: var(--muted); }
+    .dot-w { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--win); box-shadow:0 0 5px var(--win); margin-left:6px; vertical-align:middle; }
+    .dot-l { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--lose); margin-left:6px; vertical-align:middle; }
 
-    /* No data yet */
-    .empty-note {
-      padding: 24px 20px;
-      text-align: center;
+    .no-data { padding:16px 18px; text-align:center; color:var(--muted); font-size:.82rem; font-family:'Barlow Condensed',sans-serif; letter-spacing:.05em; }
+
+    /* Error */
+    .error-bar { padding:12px 18px; color:#e07070; font-size:.82rem; background:rgba(184,64,64,.08); border-top:1px solid rgba(184,64,64,.18); }
+
+    /* Empty state */
+    .empty-state {
+      padding: 48px 20px; text-align: center;
       color: var(--muted);
-      font-size: .85rem;
       font-family: 'Barlow Condensed', sans-serif;
-      letter-spacing: .05em;
+      font-size: .9rem; letter-spacing: .06em;
     }
 
-    /* Skeleton loader */
-    .skeleton {
-      background: linear-gradient(90deg, var(--surface) 25%, var(--card) 50%, var(--surface) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-      border-radius: 6px;
-      height: 18px;
-      margin: 4px 0;
-    }
+    /* Skeleton */
+    .skel { background: linear-gradient(90deg, var(--surface) 25%, var(--card) 50%, var(--surface) 75%); background-size:200% 100%; animation: shimmer 1.4s infinite; border-radius:6px; height:16px; margin:5px 0; }
     @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
 
-    .error-msg {
-      padding: 20px;
-      color: #e74c3c;
-      font-size: .85rem;
-      background: rgba(192,57,43,.08);
-      border-top: 1px solid rgba(192,57,43,.2);
-    }
-
     footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: .72rem;
-      padding-top: 24px;
+      margin-top: 48px; padding-top: 20px;
       border-top: 1px solid var(--border);
+      text-align: center;
       font-family: 'Barlow Condensed', sans-serif;
-      letter-spacing: .06em;
+      font-size: .68rem; letter-spacing: .07em;
+      text-transform: uppercase; color: var(--muted);
     }
     footer a { color: var(--muted); }
   </style>
@@ -305,215 +337,306 @@
 <body>
 <div class="wrapper">
 
+  <!-- HEADER -->
   <header>
-    <img
-      src="11_Logo_simpel_schwarz_2.jpg"
-      alt="TV McDonald's Andorf Logo"
-      style="height:56px;width:auto;flex-shrink:0;border-radius:6px;background:#fff;padding:4px;box-shadow:0 2px 12px rgba(89,114,142,.3);"
-    />
-    <div>
-      <h1>TV <span>McDonald's</span> Andorf</h1>
-      <div style="font-size:.8rem;color:var(--blue-lt);margin-top:2px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;">LIVE ERGEBNISSE</div>
+    <div class="logo-wrap">
+      <img src="11_Logo_simpel_schwarz_2.jpg" alt="TV McDonald's Andorf" />
     </div>
-    <div class="header-right">
-      <div class="refresh-badge">Aktualisiert <span id="last-refresh">–</span></div>
-      <div class="refresh-badge" style="margin-top:4px;">Nächste Abfrage in <span id="countdown">60s</span></div>
+    <div class="header-text">
+      <h1>TV <em>McDonald's</em> Andorf</h1>
+      <div class="header-sub">Mannschaftsmeisterschaft 2026</div>
+    </div>
+    <div class="header-meta">
+      <div>Aktualisiert <strong id="last-refresh">–</strong></div>
+      <div>Nächste Abfrage in <strong id="countdown">60s</strong></div>
     </div>
   </header>
 
-  <div id="status-bar">
-    <div class="dot" id="status-dot"></div>
-    <span id="status-text">Lade Daten …</span>
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('today')" id="tab-today">
+      Heute <span class="count" id="cnt-today">0</span>
+    </button>
+    <button class="tab" onclick="switchTab('upcoming')" id="tab-upcoming">
+      Ausstehend <span class="count" id="cnt-upcoming">0</span>
+    </button>
+    <button class="tab" onclick="switchTab('finished')" id="tab-finished">
+      Ergebnisse <span class="count" id="cnt-finished">0</span>
+    </button>
+    <button class="tab" onclick="switchTab('all')" id="tab-all">
+      Alle <span class="count" id="cnt-all">0</span>
+    </button>
   </div>
 
-  <div id="matches-container">
-    <!-- Skeleton -->
+  <div id="container">
+    <!-- Skeleton loader -->
     <div class="match-card">
-      <div class="card-header"><div class="skeleton" style="width:120px"></div></div>
-      <div style="padding:20px"><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:50%;margin-top:8px"></div></div>
+      <div class="card-top"><div class="skel" style="width:130px"></div></div>
+      <div style="padding:18px"><div class="skel" style="width:75%"></div><div class="skel" style="width:45%;margin-top:8px"></div></div>
+    </div>
+    <div class="match-card">
+      <div class="card-top"><div class="skel" style="width:110px"></div></div>
+      <div style="padding:18px"><div class="skel" style="width:80%"></div><div class="skel" style="width:50%;margin-top:8px"></div></div>
     </div>
   </div>
 
   <footer>
-    Datenquelle: <a href="https://oetv-austria.liga.nu" target="_blank">ÖTV Austria Liga</a>
-    &nbsp;·&nbsp;
-    TV McDonald's Andorf &nbsp;·&nbsp;
-    <span id="footer-time"></span>
+    Datenquelle: <a href="https://oetv-austria.liga.nu" target="_blank">ÖTVAT Austria Liga</a>
+    &nbsp;·&nbsp; TV McDonald's Andorf
+    &nbsp;·&nbsp; <span id="footer-ts"></span>
   </footer>
 </div>
 
 <script>
 const RESULTS_URL = 'results.json';
-const REFRESH_MS  = 60_000; // 60 Sekunden
+const REFRESH_MS  = 60_000;
+let allMatches    = [];
+let currentTab    = 'today';
+let countdownSec  = 60;
+let countdownTimer;
 
-let countdown = 60;
-let timer;
+// ── Utilities ────────────────────────────────────────────────────────────────
 
-// ── Hilfsfunktionen ───────────────────────────────────────────────────────────
+function todayISO() {
+  return new Date().toLocaleDateString('sv-SE'); // YYYY-MM-DD
+}
 
-function fmt(iso) {
+function fmtTime(iso) {
   if (!iso) return '–';
-  const d = new Date(iso);
-  return d.toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  return new Date(iso).toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+function isAndorf(name) {
+  return name && name.toLowerCase().includes('andorf');
 }
 
 function statusLabel(s) {
-  const map = { upcoming: 'Ausstehend', live: 'Läuft', finished: 'Beendet', error: 'Fehler' };
-  return map[s] || s;
+  return { upcoming: 'Ausstehend', live: '● Live', finished: 'Beendet', error: 'Fehler' }[s] || s;
 }
 
-// ── Render-Funktionen ─────────────────────────────────────────────────────────
+// ── Tabs ─────────────────────────────────────────────────────────────────────
 
-function renderSet(val, isWinner) {
-  if (!val || val === '0:0') return `<span class="set" style="color:var(--border)">–</span>`;
-  return `<span class="set ${isWinner ? 'winner' : 'loser'}">${val}</span>`;
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  renderMatches();
 }
 
-function renderSingles(singles, heimName) {
-  if (!singles || singles.length === 0) {
-    return `<div class="empty-note">Noch keine Einzel-Ergebnisse</div>`;
+function filterMatches(matches) {
+  const today = todayISO();
+  switch (currentTab) {
+    case 'today':
+      return matches.filter(m => m.header?.datum_iso === today || m.status === 'live');
+    case 'upcoming':
+      return matches.filter(m => {
+        const d = m.header?.datum_iso;
+        return m.status === 'upcoming' && d && d > today;
+      });
+    case 'finished':
+      return matches.filter(m => m.status === 'finished');
+    default:
+      return matches;
   }
+}
+
+function updateCounts(matches) {
+  const today = todayISO();
+  const todayCount    = matches.filter(m => m.header?.datum_iso === today || m.status === 'live').length;
+  const upcomingCount = matches.filter(m => m.status === 'upcoming' && m.header?.datum_iso > today).length;
+  const finishedCount = matches.filter(m => m.status === 'finished').length;
+  document.getElementById('cnt-today').textContent    = todayCount;
+  document.getElementById('cnt-upcoming').textContent = upcomingCount;
+  document.getElementById('cnt-finished').textContent = finishedCount;
+  document.getElementById('cnt-all').textContent      = matches.length;
+}
+
+// ── Render helpers ────────────────────────────────────────────────────────────
+
+function renderSet(val, isWin) {
+  if (!val) return `<span class="set" style="color:var(--border)">–</span>`;
+  return `<span class="set ${isWin ? 'w' : 'l'}">${val}</span>`;
+}
+
+function renderSingles(singles) {
+  if (!singles?.length) return `<div class="no-data">Keine Einzel-Daten</div>`;
   const rows = singles.map(s => {
     const hw = s.winner === 'heim';
-    return `
-      <tr>
-        <td style="width:28px;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${s.nr}</td>
-        <td class="player-cell">
-          ${s.heim}<span class="itn-badge">ITN ${s.heim_itn}</span>
-          ${hw ? '<span class="result-dot win" style="margin-left:6px"></span>' : ''}
-        </td>
-        <td class="player-cell">
-          ${s.gast}<span class="itn-badge">ITN ${s.gast_itn}</span>
-          ${!hw ? '<span class="result-dot win" style="margin-left:6px"></span>' : ''}
-        </td>
-        <td class="sets-cell">${renderSet(s.satz1, hw)} ${renderSet(s.satz2, hw)} ${renderSet(s.satz3, hw)}</td>
-      </tr>`;
+    return `<tr>
+      <td style="width:24px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.8rem">${s.nr}</td>
+      <td class="player">${s.heim}<span class="itn">${s.heim_itn}</span>${hw ? '<span class="dot-w"></span>' : ''}</td>
+      <td class="player">${s.gast}<span class="itn">${s.gast_itn}</span>${!hw ? '<span class="dot-w"></span>' : ''}</td>
+      <td class="sets">${renderSet(s.satz1,hw)} ${renderSet(s.satz2,hw)} ${s.satz3 ? renderSet(s.satz3,hw) : ''}</td>
+    </tr>`;
   }).join('');
-  return `
-    <table>
-      <thead><tr>
-        <th>#</th><th>Heim</th><th>Gast</th><th class="center">Sätze</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+  return `<table>
+    <thead><tr><th>#</th><th>Heim</th><th>Gast</th><th class="c">Sätze</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
 }
 
 function renderDoubles(doubles) {
-  if (!doubles || doubles.length === 0) {
-    return `<div class="empty-note">Noch keine Doppel-Ergebnisse</div>`;
-  }
-  const rows = doubles.map((d, i) => {
+  if (!doubles?.length) return `<div class="no-data">Keine Doppel-Daten</div>`;
+  const rows = doubles.map(d => {
     const hw = d.winner === 'heim';
-    return `
-      <tr>
-        <td style="width:28px;color:var(--muted);font-family:'Barlow Condensed',sans-serif">${i+1}</td>
-        <td>${hw ? '<span class="result-dot win"></span>' : '<span class="result-dot lose"></span>'}</td>
-        <td class="sets-cell">${renderSet(d.satz1, hw)} ${renderSet(d.satz2, hw)} ${renderSet(d.satz3, hw)}</td>
-      </tr>`;
+    return `<tr>
+      <td style="width:24px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:.8rem">${d.nr}</td>
+      <td class="player">${d.heim || '–'}${hw ? '<span class="dot-w"></span>' : ''}</td>
+      <td class="player">${d.gast || '–'}${!hw ? '<span class="dot-w"></span>' : ''}</td>
+      <td class="sets">${renderSet(d.satz1,hw)} ${renderSet(d.satz2,hw)} ${d.satz3 ? renderSet(d.satz3,hw) : ''}</td>
+    </tr>`;
   }).join('');
-  return `
-    <table>
-      <thead><tr><th>#</th><th>Ergebnis</th><th class="center">Sätze</th></tr></thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+  return `<table>
+    <thead><tr><th>#</th><th>Heim</th><th>Gast</th><th class="c">Sätze</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
 }
 
-function renderMatch(m) {
+function renderCard(m, featured) {
   const h = m.header || {};
-  const isAndorf = name => name && name.toLowerCase().includes('andorf');
+  const today = todayISO();
+  const isToday = h.datum_iso === today;
+  const feat = featured || isToday;
 
   // Score
   let scoreHtml;
   if (m.status === 'finished' || m.status === 'live') {
-    const hScore = h.ergebnis_heim ?? '–';
-    const gScore = h.ergebnis_gast ?? '–';
-    scoreHtml = `<span class="score-main decided">
-      <span>${hScore}</span>
-      <span class="score-sep">:</span>
-      <span>${gScore}</span>
-    </span>`;
+    const hS = h.ergebnis_heim ?? '–';
+    const gS = h.ergebnis_gast ?? '–';
+    scoreHtml = `<div class="score-big">${hS}<span class="score-sep">:</span>${gS}</div>`;
   } else {
-    scoreHtml = `<div class="upcoming-time">${h.datum || ''} ${h.uhrzeit || ''}</div>`;
+    scoreHtml = `<div class="score-big pending">${h.datum || '?'}<br>${h.uhrzeit || ''}</div>`;
   }
 
+  const hasDetails = m.singles?.length || m.doubles?.length;
+  const detailsId = `details-${m.meeting_id}`;
+  const btnId     = `btn-${m.meeting_id}`;
+
   return `
-    <div class="match-card">
-      <div class="card-header">
-        <span class="bewerb-tag">${h.bewerb || 'Tennis'}</span>
-        <span class="runde-info">${h.runde || ''} &nbsp;·&nbsp; ${h.datum || ''} ${h.uhrzeit || ''}</span>
+    <div class="match-card ${feat ? 'featured' : ''}">
+      <div class="card-top">
+        <span class="tag bewerb">${h.gruppe || h.bewerb || 'Tennis'}</span>
+        <span class="tag runde">${h.runde || ''}</span>
+        <span class="tag runde" style="margin-left:0">${h.datum || ''}</span>
         <span class="status-pill ${m.status}">${statusLabel(m.status)}</span>
       </div>
 
       <div class="scoreboard">
         <div class="team home">
-          <div class="team-name ${isAndorf(h.heim) ? 'andorf' : ''}">${h.heim || m.label.split(' vs ')[0]}</div>
+          <div class="team-name ${isAndorf(h.heim) ? 'andorf' : ''}">${h.heim || '–'}</div>
+          ${isAndorf(h.heim) ? '<div class="team-meta">Heimmannschaft</div>' : ''}
         </div>
-        <div class="score-block">${scoreHtml}</div>
+        <div class="score-center">
+          ${scoreHtml}
+          <div class="score-date">${h.uhrzeit && m.status !== 'upcoming' ? h.uhrzeit + ' Uhr' : ''}</div>
+        </div>
         <div class="team away">
-          <div class="team-name ${isAndorf(h.gast) ? 'andorf' : ''}">${h.gast || m.label.split(' vs ')[1] || ''}</div>
+          <div class="team-name ${isAndorf(h.gast) ? 'andorf' : ''}">${h.gast || '–'}</div>
+          ${isAndorf(h.gast) ? '<div class="team-meta">Gastmannschaft</div>' : ''}
         </div>
       </div>
 
-      ${m.status === 'error' ? `<div class="error-msg">⚠ Fehler beim Laden: ${m.error || 'Unbekannt'}</div>` : ''}
+      ${m.status === 'error' ? `<div class="error-bar">⚠ ${m.error || 'Fehler beim Laden'}</div>` : ''}
 
-      ${m.singles && m.singles.length ? `
-        <div class="section-title">Einzel</div>
-        ${renderSingles(m.singles, h.heim)}
-      ` : ''}
-
-      ${m.doubles && m.doubles.length ? `
-        <div class="section-title">Doppel</div>
-        ${renderDoubles(m.doubles)}
+      ${hasDetails ? `
+        <button class="details-toggle" id="${btnId}" onclick="toggleDetails('${detailsId}','${btnId}')">
+          Details anzeigen <span class="arrow">▾</span>
+        </button>
+        <div class="details-panel ${feat ? 'open' : ''}" id="${detailsId}">
+          <div class="sub-section">Einzel</div>
+          ${renderSingles(m.singles)}
+          <div class="sub-section">Doppel</div>
+          ${renderDoubles(m.doubles)}
+        </div>
       ` : ''}
     </div>`;
 }
 
-// ── Daten laden ───────────────────────────────────────────────────────────────
+function toggleDetails(panelId, btnId) {
+  const panel = document.getElementById(panelId);
+  const btn   = document.getElementById(btnId);
+  const open  = panel.classList.toggle('open');
+  btn.classList.toggle('open', open);
+  btn.innerHTML = `${open ? 'Details ausblenden' : 'Details anzeigen'} <span class="arrow ${open ? 'open' : ''}">▾</span>`;
+  btn.querySelector('.arrow').style.transform = open ? 'rotate(180deg)' : '';
+}
+
+// ── Main render ───────────────────────────────────────────────────────────────
+
+function renderMatches() {
+  const container  = document.getElementById('container');
+  const filtered   = filterMatches(allMatches);
+  const today      = todayISO();
+
+  if (!filtered.length) {
+    const msgs = {
+      today:    'Heute keine Spiele geplant.',
+      upcoming: 'Keine ausstehenden Spiele.',
+      finished: 'Noch keine abgeschlossenen Spiele.',
+      all:      'Keine Spiele geladen.',
+    };
+    container.innerHTML = `<div class="empty-state">${msgs[currentTab] || 'Keine Daten.'}</div>`;
+    return;
+  }
+
+  // Gruppierung nach Datum für "all" und "finished"
+  if (currentTab === 'all' || currentTab === 'finished' || currentTab === 'upcoming') {
+    const groups = {};
+    filtered.forEach(m => {
+      const key = m.header?.datum_iso || '9999-99-99';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(m);
+    });
+    let html = '';
+    Object.keys(groups).sort().forEach(dateKey => {
+      const label = dateKey === today ? 'Heute' :
+                    new Date(dateKey).toLocaleDateString('de-AT', { weekday:'long', day:'2-digit', month:'long' });
+      html += `<div class="section-label">${label}</div>`;
+      groups[dateKey].forEach(m => { html += renderCard(m, false); });
+    });
+    container.innerHTML = html;
+  } else {
+    // Today tab
+    container.innerHTML = filtered.map(m => renderCard(m, true)).join('');
+  }
+}
+
+// ── Data loading ──────────────────────────────────────────────────────────────
 
 async function loadData() {
-  const dot  = document.getElementById('status-dot');
-  const txt  = document.getElementById('status-text');
-  dot.className = 'dot live';
-  txt.textContent = 'Lade …';
-
   try {
     const res = await fetch(RESULTS_URL + '?t=' + Date.now());
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
-    const container = document.getElementById('matches-container');
-    container.innerHTML = data.matches.map(renderMatch).join('');
+    allMatches = data.matches || [];
+    updateCounts(allMatches);
+    renderMatches();
 
-    document.getElementById('last-refresh').textContent = fmt(data.generated_at);
-    document.getElementById('footer-time').textContent = `Stand: ${fmt(data.generated_at)}`;
-
-    const anyLive = data.matches.some(m => m.status === 'live');
-    dot.className = anyLive ? 'dot live' : 'dot';
-    txt.textContent = anyLive
-      ? `${data.matches.filter(m=>m.status==='live').length} Spiel(e) live`
-      : `${data.matches.length} Begegnung(en) geladen`;
+    document.getElementById('last-refresh').textContent = fmtTime(data.generated_at);
+    document.getElementById('footer-ts').textContent    = `Stand: ${fmtTime(data.generated_at)}`;
   } catch (e) {
-    document.getElementById('status-text').textContent = 'Fehler beim Laden – nächster Versuch in 60s';
-    dot.className = 'dot';
+    document.getElementById('container').innerHTML =
+      `<div class="empty-state">Fehler beim Laden – nächster Versuch in ${countdownSec}s</div>`;
   }
 }
 
-// ── Countdown & Auto-Refresh ──────────────────────────────────────────────────
+// ── Countdown ─────────────────────────────────────────────────────────────────
 
 function startCountdown() {
-  countdown = 60;
-  clearInterval(timer);
-  timer = setInterval(() => {
-    countdown--;
-    document.getElementById('countdown').textContent = countdown + 's';
-    if (countdown <= 0) {
-      clearInterval(timer);
+  countdownSec = 60;
+  clearInterval(countdownTimer);
+  countdownTimer = setInterval(() => {
+    countdownSec--;
+    document.getElementById('countdown').textContent = countdownSec + 's';
+    if (countdownSec <= 0) {
+      clearInterval(countdownTimer);
       loadData().then(startCountdown);
     }
   }, 1000);
 }
 
-// Start
+// ── Init ──────────────────────────────────────────────────────────────────────
 loadData().then(startCountdown);
 </script>
 </body>
