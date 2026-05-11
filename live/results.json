@@ -1,35 +1,69 @@
 {
-  "generated_at": "2026-05-11T06:11:47.101351+00:00",
+  "generated_at": "2026-05-11T07:08:10.595836+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397",
-      "status": "error",
-      "last_updated": "2026-05-11T06:11:47.101406+00:00",
-      "header": {},
+      "status": "finished",
+      "last_updated": "2026-05-11T07:08:10.595882+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren45 Bezirksklasse Mitte B",
+        "datum": "08.05.2026",
+        "uhrzeit": "15:00",
+        "runde": "1. Runde",
+        "datum_iso": "2026-05-08",
+        "erfasst_datum": "08.05.2026",
+        "erfasst_uhrzeit": "17:30",
+        "heim": "TV McDonald's Andorf 1",
+        "gast": "SPG Prambachki/Waizenki 1",
+        "ergebnis_heim": 6,
+        "ergebnis_gast": 0
+      },
       "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
+      "doubles": []
     },
     {
       "meeting_id": "1861376",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861376",
-      "status": "error",
-      "last_updated": "2026-05-11T06:12:02.310906+00:00",
-      "header": {},
+      "status": "finished",
+      "last_updated": "2026-05-11T07:08:12.681175+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren 1. Klasse West A",
+        "datum": "09.05.2026",
+        "uhrzeit": "13:00",
+        "runde": "1. Runde",
+        "datum_iso": "2026-05-09",
+        "erfasst_datum": "09.05.2026",
+        "erfasst_uhrzeit": "17:45",
+        "heim": "TV McDonald's Andorf 3",
+        "gast": "UTC Schardenberg 1",
+        "ergebnis_heim": 0,
+        "ergebnis_gast": 9
+      },
       "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
+      "doubles": []
     },
     {
       "meeting_id": "1866859",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866859",
-      "status": "error",
-      "last_updated": "2026-05-11T06:12:17.367211+00:00",
-      "header": {},
+      "status": "upcoming",
+      "last_updated": "2026-05-11T07:08:14.608112+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren45 1. Klasse West A",
+        "datum": "15.05.2026",
+        "uhrzeit": "15:00",
+        "runde": "2. Runde",
+        "datum_iso": "2026-05-15",
+        "heim": "TV McDonald's Andorf 2",
+        "gast": "ESV Wels 4",
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
       "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
+      "doubles": []
     }
   ]
 }
