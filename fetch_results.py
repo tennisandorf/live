@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json, re, io, urllib.request
 from datetime import datetime, timezone
-
+ 
 BASE_URL = (
     "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa"
     "/wa/nuDokument?dokument=MeetingReportFOP&meeting={meeting_id}"
@@ -74,8 +74,8 @@ def fetch_text(meeting_id):
         return raw.decode("utf-8")
     except UnicodeDecodeError:
         return raw.decode("latin-1")
-
-
+ 
+ 
 def parse_header(text):
     h = {}
     m = re.search(r"(OÖ\..+?)[\r\n]", text)
@@ -107,8 +107,8 @@ def parse_header(text):
         h["ergebnis_heim"] = None
         h["ergebnis_gast"] = None
     return h
-
-
+ 
+ 
 def parse_singles(text):
     singles = []
     m = re.search(r"Einzel.*?[\r\n](.*?)Doppel", text, re.DOTALL | re.IGNORECASE)
@@ -140,8 +140,8 @@ def parse_singles(text):
             "winner": "heim" if sets_heim>=2 else "gast",
         })
     return singles
-
-
+ 
+ 
 def parse_doubles(text):
     doubles = []
     m = re.search(r"Doppel.*?erfasst.*?[\r\n](.*?)Doppel-Summe", text, re.DOTALL | re.IGNORECASE)
@@ -166,9 +166,9 @@ def parse_doubles(text):
             "winner": winner,
         })
     return doubles
-
-
-def process_match(meeting_id):
+ 
+ 
+def process_match(meeting_id, datum_override=None):
     result = {
         "meeting_id": meeting_id,
         "url": BASE_URL.format(meeting_id=meeting_id),
@@ -181,6 +181,12 @@ def process_match(meeting_id):
         result["header"] = parse_header(text)
         result["singles"] = parse_singles(text)
         result["doubles"] = parse_doubles(text)
+        # Datum überschreiben falls vorverlegt/nachverlegt
+        if datum_override:
+            d = datum_override.split(".")
+            result["header"]["datum"] = datum_override
+            result["header"]["datum_iso"] = f"{d[2]}-{d[1]}-{d[0]}"
+            print(f"    ⚠ Datum überschrieben: {datum_override}")
         h = result["header"]
         if h.get("erfasst_datum"):
             result["status"] = "finished"
@@ -191,8 +197,8 @@ def process_match(meeting_id):
     except Exception as e:
         result["error"] = str(e)
     return result
-
-
+ 
+ 
 def main():
     output = {"generated_at": datetime.now(timezone.utc).isoformat(), "matches": []}
     seen = set()
@@ -202,7 +208,7 @@ def main():
             continue
         seen.add(mid)
         print(f"  Lade meeting={mid} ...", end=" ", flush=True)
-        data = process_match(mid)
+        data = process_match(mid, m.get("datum_override"))
         h = data.get("header", {})
         print(f"{data['status']} | {h.get('datum','')} | {h.get('heim','')} vs {h.get('gast','')}")
         output["matches"].append(data)
@@ -210,7 +216,10 @@ def main():
     with open("results.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
     print(f"\nresults.json gespeichert – {len(output['matches'])} Spiele ✓")
-
+ 
+ 
+if __name__ == "__main__":
+    main()
 
 if __name__ == "__main__":
     main()
