@@ -1,165 +1,187 @@
 #!/usr/bin/env python3
 """
 fetch_results.py
-Ruft Tennis-Spielberichte vom ÖTVAT-Server ab, parst die Daten
-und speichert sie als results.json für die Live-Seite.
+Ruft Tennis-Spielberichte vom ÖTVAT-Server ab und speichert results.json.
+Domain: oetv-austria.liga.nu (kein etag nötig)
 """
 
 import json
 import re
 import urllib.request
-import urllib.error
 from datetime import datetime, timezone
 
-# ── Hier die Spiele eintragen ──────────────────────────────────────────────────
+BASE_URL = (
+    "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa"
+    "/wa/nuDokument?dokument=MeetingReportFOP&meeting={meeting_id}"
+)
+
+# ── Alle Spiele – einfach meeting_id ergänzen ─────────────────────────────────
 MATCHES = [
-    {
-        "id": "1866397",
-        "label": "TV Andorf 1 vs SPG Prambachki/Waizenki 1",
-        "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866397&etag=19b20e39-6a97-4bb5-b706-8d4584a6c96d"
-    },
-    # Weitere Spiele einfach hier hinzufügen:
-    # {
-    #     "id": "1234567",
-    #     "label": "Team A vs Team B",
-    #     "url": "https://oetv-austria.liga.nu/..."
-    # },
+    {"meeting_id": "1866397"},
+    {"meeting_id": "1861376"},
+    {"meeting_id": "1866859"},
+    # weitere IDs hier ergänzen:
+    # {"meeting_id": "1860681"},
+    # {"meeting_id": "1863373"},
+    # ...
 ]
-# ──────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
 
 
-def fetch_pdf_text(url: str) -> str:
-    """Lädt die URL und gibt den Textinhalt zurück."""
-    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+def fetch_text(meeting_id: str) -> str:
+    url = BASE_URL.format(meeting_id=meeting_id)
+    req = urllib.request.Request(url, headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
+    })
     with urllib.request.urlopen(req, timeout=15) as resp:
         raw = resp.read()
-    # pdfminer für echte PDFs, sonst plain-text / HTML
     try:
-        from pdfminer.high_level import extract_text_to_fp
-        from pdfminer.layout import LAParams
-        import io
-        out = io.StringIO()
-        extract_text_to_fp(io.BytesIO(raw), out, laparams=LAParams(), output_type="text", codec="utf-8")
-        return out.getvalue()
-    except Exception:
-        return raw.decode("utf-8", errors="replace")
+        return raw.decode("utf-8")
+    except UnicodeDecodeError:
+        return raw.decode("latin-1")
 
 
 def parse_header(text: str) -> dict:
-    """Liest Bewerb, Runde, Termin und Mannschaften aus."""
-    header = {}
-    # Bewerb
-    m = re.search(r"(OÖ\..+?)\n", text)
+    h = {}
+
+    m = re.search(r"(OÖ\..+?)[\r\n]", text)
+    if m: h["bewerb"] = m.group(1).strip()
+
+    m = re.search(r"OÖ\..+?[\r\n](.+?)[\r\n]", text)
+    if m: h["gruppe"] = m.group(1).strip()
+
+    m = re.search(r"Termin\s+(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})\s+-\s+(.+?)[\r\n]", text)
     if m:
-        header["bewerb"] = m.group(1).strip()
-    # Klasse / Gruppe
-    m = re.search(r"\n(.+?)\n.*?Spielbericht", text, re.DOTALL)
+        h["datum"]   = m.group(1)
+        h["uhrzeit"] = m.group(2)
+        h["runde"]   = m.group(3).strip()
+        # ISO-Datum für Sortierung
+        d = m.group(1).split(".")
+        h["datum_iso"] = f"{d[2]}-{d[1]}-{d[0]}"
+
+    m = re.search(r"vollständig erfasst am\s+(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})", text)
     if m:
-        header["gruppe"] = m.group(1).strip()
-    # Runde & Datum
-    m = re.search(r"Termin\s+(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})\s+-\s+(.+?)(?:\n|Spielbericht)", text)
+        h["erfasst_datum"]   = m.group(1)
+        h["erfasst_uhrzeit"] = m.group(2)
+
+    # Gesamtergebnis-Zeile: "Team A : Team B  X : Y"
+    m = re.search(r"^(.+?)\s+:\s+(.+?)\s+(\d+)\s*:\s*(\d+)\s*$", text, re.MULTILINE)
     if m:
-        header["datum"] = m.group(1)
-        header["uhrzeit"] = m.group(2)
-        header["runde"] = m.group(3).strip()
-    # Heimmannschaft & Gastmannschaft + Ergebnis
-    m = re.search(r"(TV .+?|UTC .+?|SPG .+?|TC .+?|ATSV .+?|USV .+?)\s+:\s+(.+?)\s+(\d+)\s*:\s*(\d+)", text)
-    if m:
-        header["heim"] = m.group(1).strip()
-        header["gast"] = m.group(2).strip()
-        header["ergebnis_heim"] = int(m.group(3))
-        header["ergebnis_gast"] = int(m.group(4))
+        h["heim"]          = m.group(1).strip()
+        h["gast"]          = m.group(2).strip()
+        h["ergebnis_heim"] = int(m.group(3))
+        h["ergebnis_gast"] = int(m.group(4))
     else:
-        # Spiel noch nicht begonnen – nur Mannschaftsnamen
-        m2 = re.search(r"(TV .+?|UTC .+?|SPG .+?|TC .+?|ATSV .+?|USV .+?)\s+:\s+(.+?)\s+Ergebnis", text)
+        # Noch kein Ergebnis – leeres Formular
+        m2 = re.search(r"^(.+?)\s+:\s+(.+?)\s+Ergebnis", text, re.MULTILINE)
         if m2:
-            header["heim"] = m2.group(1).strip()
-            header["gast"] = m2.group(2).strip()
-            header["ergebnis_heim"] = None
-            header["ergebnis_gast"] = None
-    return header
+            h["heim"] = m2.group(1).strip()
+            h["gast"] = m2.group(2).strip()
+        h["ergebnis_heim"] = None
+        h["ergebnis_gast"] = None
+
+    return h
 
 
 def parse_singles(text: str) -> list:
-    """Parst alle Einzel-Matches."""
     singles = []
-    # Suche Zeilen mit Spielernamen und Satzergebnissen
+    m = re.search(r"Einzel.*?[\r\n](.*?)Doppel", text, re.DOTALL | re.IGNORECASE)
+    if not m:
+        return singles
+    block = m.group(1)
+
     pattern = re.compile(
-        r"(\d+)\s+"                          # Platznr
-        r"\d+\s+\d+\s+"                      # Meldelistennr + Lizenznr (Heim)
-        r"(.+?)\s+ITN\s+([\d,]+)\s+"         # Spieler Heim + ITN
-        r"\d+\s+\d+\s+"                      # Meldelistennr + Lizenznr (Gast)
-        r"(.+?)\s+(?:\(ret\.\)\s+)?ITN\s+([\d,]+)\s+"  # Spieler Gast + ITN
-        r"(\d+):(\d+)\s+"                    # Satz 1
-        r"(\d+):(\d+)\s+"                    # Satz 2
-        r"(\d+):(\d+)"                       # Satz 3
+        r"^(\d+)\s+"
+        r"\d+\s+\d+\s+"
+        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+)?ITN\s+([\d,]+)\s+"
+        r"\d+\s+\d+\s+"
+        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+)?(?:\(ret\.\)\s+)?ITN\s+([\d,]+)\s+"
+        r"(\d+):(\d+)\s+"
+        r"(\d+):(\d+)\s+"
+        r"(\d+):(\d+)",
+        re.MULTILINE
     )
-    for m in pattern.finditer(text):
-        s1h, s1g = int(m.group(6)), int(m.group(7))
-        s2h, s2g = int(m.group(8)), int(m.group(9))
-        s3h, s3g = int(m.group(10)), int(m.group(11))
-        winner = "heim" if s3h > s3g or (s3h == 0 and s3g == 0 and s1h > s1g) else "gast"
+
+    for match in pattern.finditer(block):
+        s1h, s1g = int(match.group(6)),  int(match.group(7))
+        s2h, s2g = int(match.group(8)),  int(match.group(9))
+        s3h, s3g = int(match.group(10)), int(match.group(11))
+
+        sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if s3h > s3g else 0)
+        winner = "heim" if sets_heim >= 2 else "gast"
+
         singles.append({
-            "nr": int(m.group(1)),
-            "heim": m.group(2).strip(),
-            "heim_itn": m.group(3),
-            "gast": m.group(4).strip(),
-            "gast_itn": m.group(5),
+            "nr":       int(match.group(1)),
+            "heim":     match.group(2).strip().rstrip(","),
+            "heim_itn": match.group(3).replace(",", "."),
+            "gast":     match.group(4).strip().rstrip(","),
+            "gast_itn": match.group(5).replace(",", "."),
+            "satz1":    f"{s1h}:{s1g}",
+            "satz2":    f"{s2h}:{s2g}",
+            "satz3":    f"{s3h}:{s3g}" if not (s3h == 0 and s3g == 0) else "",
+            "winner":   winner,
+        })
+
+    return singles
+
+
+def parse_doubles(text: str) -> list:
+    doubles = []
+    m = re.search(r"Doppel.*?erfasst.*?[\r\n](.*?)Doppel-Summe", text, re.DOTALL | re.IGNORECASE)
+    if not m:
+        return doubles
+    block = m.group(1)
+
+    name_pat = re.compile(
+        r"([A-ZÄÖÜ][a-zäöüß\-]+,\s[A-ZÄÖÜa-zäöüß\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+)?ITN"
+    )
+    all_names = [n.strip() for n in name_pat.findall(block)]
+
+    sat_pat = re.compile(r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)\s+(\d)\s+\d")
+    for i, sm in enumerate(sat_pat.finditer(block), 1):
+        s1h, s1g = int(sm.group(1)), int(sm.group(2))
+        s2h, s2g = int(sm.group(3)), int(sm.group(4))
+        s3h, s3g = int(sm.group(5)), int(sm.group(6))
+        winner   = "heim" if int(sm.group(7)) == 1 else "gast"
+
+        offset = (i - 1) * 4
+        heim = " / ".join(all_names[offset:offset+2])   if len(all_names) >= offset+2 else ""
+        gast = " / ".join(all_names[offset+2:offset+4]) if len(all_names) >= offset+4 else ""
+
+        doubles.append({
+            "nr": i, "heim": heim, "gast": gast,
             "satz1": f"{s1h}:{s1g}",
             "satz2": f"{s2h}:{s2g}",
             "satz3": f"{s3h}:{s3g}" if not (s3h == 0 and s3g == 0) else "",
             "winner": winner,
         })
-    return singles
 
-
-def parse_doubles(text: str) -> list:
-    """Parst Doppel-Matches (vereinfacht)."""
-    doubles = []
-    # Doppel-Abschnitt isolieren
-    m = re.search(r"Doppel(?:,.*?)?\n(.+?)Doppel-Summe", text, re.DOTALL)
-    if not m:
-        return doubles
-    block = m.group(1)
-    # Satzergebnisse suchen
-    sat_pattern = re.compile(r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)")
-    for i, sm in enumerate(sat_pattern.finditer(block), 1):
-        s1h, s1g = int(sm.group(1)), int(sm.group(2))
-        s2h, s2g = int(sm.group(3)), int(sm.group(4))
-        s3h, s3g = int(sm.group(5)), int(sm.group(6))
-        doubles.append({
-            "nr": i,
-            "satz1": f"{s1h}:{s1g}",
-            "satz2": f"{s2h}:{s2g}",
-            "satz3": f"{s3h}:{s3g}" if not (s3h == 0 and s3g == 0) else "",
-            "winner": "heim" if s1h > s1g else "gast",
-        })
     return doubles
 
 
-def process_match(match: dict) -> dict:
-    """Verarbeitet ein einzelnes Spiel komplett."""
+def determine_status(header: dict, singles: list, doubles: list) -> str:
+    if header.get("erfasst_datum"):
+        return "finished"
+    if singles or doubles:
+        return "live"
+    return "upcoming"
+
+
+def process_match(meeting_id: str) -> dict:
     result = {
-        "id": match["id"],
-        "label": match["label"],
-        "url": match["url"],
-        "status": "error",
+        "meeting_id":   meeting_id,
+        "url":          BASE_URL.format(meeting_id=meeting_id),
+        "status":       "error",
         "last_updated": datetime.now(timezone.utc).isoformat(),
-        "header": {},
-        "singles": [],
-        "doubles": [],
+        "header":  {}, "singles": [], "doubles": [],
     }
     try:
-        text = fetch_pdf_text(match["url"])
-        result["header"] = parse_header(text)
+        text = fetch_text(meeting_id)
+        result["header"]  = parse_header(text)
         result["singles"] = parse_singles(text)
         result["doubles"] = parse_doubles(text)
-        if result["header"].get("ergebnis_heim") is not None:
-            result["status"] = "finished"
-        elif result["singles"]:
-            result["status"] = "live"
-        else:
-            result["status"] = "upcoming"
+        result["status"]  = determine_status(result["header"], result["singles"], result["doubles"])
     except Exception as e:
         result["error"] = str(e)
     return result
@@ -170,17 +192,25 @@ def main():
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "matches": []
     }
-    for match in MATCHES:
-        print(f"Verarbeite: {match['label']} ...")
-        data = process_match(match)
+    seen = set()
+    for m in MATCHES:
+        mid = m["meeting_id"]
+        if mid in seen:
+            continue
+        seen.add(mid)
+        print(f"  Lade meeting={mid} ...", end=" ", flush=True)
+        data = process_match(mid)
+        h = data.get("header", {})
+        print(f"{data['status']} | {h.get('datum','')} | {h.get('heim','')} vs {h.get('gast','')}")
         output["matches"].append(data)
-        print(f"  Status: {data['status']}")
+
+    # Nach Datum sortieren
+    output["matches"].sort(key=lambda x: x.get("header", {}).get("datum_iso", "9999"))
 
     with open("results.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print("results.json gespeichert.")
+    print(f"\nresults.json gespeichert – {len(output['matches'])} Spiele ✓")
 
 
 if __name__ == "__main__":
     main()
-
