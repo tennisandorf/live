@@ -198,8 +198,8 @@ def get_matches_to_fetch():
         datum_str = m.get("datum_override") or cached_matches.get(mid, {}).get("header", {}).get("datum")
         status = cached_matches.get(mid, {}).get("status")
 
-        # Datum unbekannt → immer abrufen
-        if not datum_str:
+        # Datum unbekannt oder noch nie abgerufen → immer abrufen
+        if not datum_str or mid not in cached_matches:
             to_fetch.append(m)
             continue
 
