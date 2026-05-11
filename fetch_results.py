@@ -32,10 +32,30 @@ def fetch_text(meeting_id: str) -> str:
     url = BASE_URL.format(meeting_id=meeting_id)
     req = urllib.request.Request(url, headers={
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "de-AT,de;q=0.9",
     })
     with urllib.request.urlopen(req, timeout=15) as resp:
+        content_type = resp.headers.get("Content-Type", "")
         raw = resp.read()
+
+    print(f"    Content-Type: {content_type}, Size: {len(raw)} bytes")
+
+    # PDF → Text via pdfminer
+    if b"%PDF" in raw[:10] or "pdf" in content_type.lower():
+        try:
+            from pdfminer.high_level import extract_text_to_fp
+            from pdfminer.layout import LAParams
+            import io
+            out = io.StringIO()
+            extract_text_to_fp(io.BytesIO(raw), out, laparams=LAParams(), output_type="text", codec="utf-8")
+            text = out.getvalue()
+            print(f"    PDF extrahiert: {len(text)} Zeichen")
+            return text
+        except Exception as e:
+            print(f"    PDF-Fehler: {e}")
+
+    # Plain text / HTML fallback
     try:
         return raw.decode("utf-8")
     except UnicodeDecodeError:
@@ -207,9 +227,11 @@ def main():
     # Nach Datum sortieren
     output["matches"].sort(key=lambda x: x.get("header", {}).get("datum_iso", "9999"))
 
-    with open("results.json", "w", encoding="utf-8") as f:
+    import os
+    os.makedirs("live", exist_ok=True)
+    with open("live/results.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
-    print(f"\nresults.json gespeichert – {len(output['matches'])} Spiele ✓")
+    print(f"\nlive/results.json gespeichert – {len(output['matches'])} Spiele ✓")
 
 
 if __name__ == "__main__":
