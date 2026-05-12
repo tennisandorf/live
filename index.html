@@ -39,14 +39,14 @@
       font-size: var(--fs-base);
     }
     body::before {
-      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      content: ''; position: fixed; top:0; right:0; bottom:0; left:0; z-index: 0; pointer-events: none;
       background-image:
         linear-gradient(rgba(89,114,142,.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(89,114,142,.03) 1px, transparent 1px);
       background-size: 60px 60px;
     }
     body::after {
-      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      content: ''; position: fixed; top:0; right:0; bottom:0; left:0; z-index: 0; pointer-events: none;
       background:
         radial-gradient(ellipse at 5% 0%, rgba(89,114,142,.15) 0%, transparent 45%),
         radial-gradient(ellipse at 95% 100%, rgba(15,19,24,.8) 0%, transparent 45%);
@@ -68,7 +68,7 @@
       margin-bottom: 24px; flex-shrink: 0;
     }
     .logo-wrap {
-      flex-shrink: 0; width: 240px; height: 110px;
+      flex-shrink: 0; width: 240px; height: 120px;
       background: #fff; border-radius: 14px;
       display: grid; place-items: center; padding: 10px;
       box-shadow: 0 6px 30px rgba(0,0,0,.5), 0 0 0 1px rgba(89,114,142,.3);
@@ -333,183 +333,217 @@
 </div>
 
 <script>
-const RESULTS_URL = 'results.json';
-let allMatches = [], currentTab = 'today', countdownSec = 60, countdownTimer;
+var RESULTS_URL = 'results.json';
+var allMatches = [], currentTab = 'today', countdownSec = 60, countdownTimer;
 
 function todayISO() { return new Date().toLocaleDateString('sv-SE'); }
 function fmtTime(iso) { if (!iso) return '–'; return new Date(iso).toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
-function isAndorf(name) { return name && name.toLowerCase().includes('andorf'); }
-function statusLabel(s) { return {upcoming:'Ausstehend',live:'● Live',finished:'Beendet',error:'Fehler'}[s]||s; }
+function isAndorf(name) { return name && name.toLowerCase().indexOf('andorf') >= 0; }
+function statusLabel(s) { var map = {upcoming:'Ausstehend',live:'● Live',finished:'Beendet',error:'Fehler'}; return map[s] || s; }
+function getHeader(m) { return m.header || {}; }
+function getSingles(m) { return m.singles || []; }
+function getDoubles(m) { return m.doubles || []; }
 
 // Live-Uhr
 function updateClock() {
-  document.getElementById('clock').textContent =
-    new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
+  var el = document.getElementById('clock');
+  if (el) el.textContent = new Date().toLocaleTimeString('de-AT', {hour:'2-digit', minute:'2-digit'});
 }
 updateClock();
 setInterval(updateClock, 1000);
 
 function switchTab(tab) {
   currentTab = tab;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  var tabs = document.querySelectorAll('.tab');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
   document.getElementById('tab-'+tab).classList.add('active');
   renderMatches();
 }
 
 function filterMatches(matches) {
-  const today = todayISO();
-  if (currentTab === 'today')    return matches.filter(m => m.header?.datum_iso === today || m.status === 'live');
-  if (currentTab === 'upcoming') return matches.filter(m => m.status === 'upcoming' && m.header?.datum_iso > today);
-  if (currentTab === 'finished') return matches.filter(m => m.status === 'finished');
+  var today = todayISO();
+  if (currentTab === 'today')    return matches.filter(function(m) { var h = getHeader(m); return h.datum_iso === today || m.status === 'live'; });
+  if (currentTab === 'upcoming') return matches.filter(function(m) { var h = getHeader(m); return m.status === 'upcoming' && h.datum_iso && h.datum_iso > today; });
+  if (currentTab === 'finished') return matches.filter(function(m) { return m.status === 'finished'; });
   return matches;
 }
 
 function updateCounts(matches) {
-  const today = todayISO();
-  document.getElementById('cnt-today').textContent    = matches.filter(m => m.header?.datum_iso === today || m.status === 'live').length;
-  document.getElementById('cnt-upcoming').textContent = matches.filter(m => m.status === 'upcoming' && m.header?.datum_iso > today).length;
-  document.getElementById('cnt-finished').textContent = matches.filter(m => m.status === 'finished').length;
+  var today = todayISO();
+  document.getElementById('cnt-today').textContent    = matches.filter(function(m) { var h = getHeader(m); return h.datum_iso === today || m.status === 'live'; }).length;
+  document.getElementById('cnt-upcoming').textContent = matches.filter(function(m) { var h = getHeader(m); return m.status === 'upcoming' && h.datum_iso && h.datum_iso > today; }).length;
+  document.getElementById('cnt-finished').textContent = matches.filter(function(m) { return m.status === 'finished'; }).length;
   document.getElementById('cnt-all').textContent      = matches.length;
 }
 
 function renderSet(val, isWin) {
-  if (!val) return `<span class="set" style="color:var(--border)">–</span>`;
-  return `<span class="set ${isWin?'w':'l'}">${val}</span>`;
+  if (!val) return '<span class="set" style="color:#2e3d5c">–</span>';
+  return '<span class="set ' + (isWin ? 'w' : 'l') + '">' + val + '</span>';
 }
 
 function renderSingles(singles) {
-  if (!singles?.length) return `<div class="no-data">Keine Einzel-Daten</div>`;
-  return `<table><thead><tr><th>#</th><th>Heim</th><th>Gast</th><th class="c">Sätze</th></tr></thead><tbody>` +
-    singles.map(s => {
-      const hw = s.winner==='heim';
-      return `<tr>
-        <td style="width:36px;color:var(--muted);font-family:'DM Mono',monospace">${s.nr}</td>
-        <td class="player">${s.heim}<span class="itn">${s.heim_itn}</span>${hw?'<span class="dot-w"></span>':''}</td>
-        <td class="player">${s.gast}<span class="itn">${s.gast_itn}</span>${!hw?'<span class="dot-w"></span>':''}</td>
-        <td class="sets">${renderSet(s.satz1,hw)} ${renderSet(s.satz2,hw)} ${s.satz3?renderSet(s.satz3,hw):''}</td>
-      </tr>`;
-    }).join('') + `</tbody></table>`;
+  if (!singles || !singles.length) return '<div class="no-data">Keine Einzel-Daten</div>';
+  var rows = '';
+  for (var i = 0; i < singles.length; i++) {
+    var s = singles[i];
+    var hw = s.winner === 'heim';
+    rows += '<tr>' +
+      '<td style="width:36px;color:#7a90aa;font-family:monospace">' + s.nr + '</td>' +
+      '<td class="player">' + s.heim + '<span class="itn">' + s.heim_itn + '</span>' + (hw ? '<span class="dot-w"></span>' : '') + '</td>' +
+      '<td class="player">' + s.gast + '<span class="itn">' + s.gast_itn + '</span>' + (!hw ? '<span class="dot-w"></span>' : '') + '</td>' +
+      '<td class="sets">' + renderSet(s.satz1, hw) + ' ' + renderSet(s.satz2, hw) + ' ' + (s.satz3 ? renderSet(s.satz3, hw) : '') + '</td>' +
+      '</tr>';
+  }
+  return '<table><thead><tr><th>#</th><th>Heim</th><th>Gast</th><th class="c">Sätze</th></tr></thead><tbody>' + rows + '</tbody></table>';
 }
 
 function renderDoubles(doubles) {
-  if (!doubles?.length) return `<div class="no-data">Keine Doppel-Daten</div>`;
-  return `<table><thead><tr><th>#</th><th>Heim</th><th>Gast</th><th class="c">Sätze</th></tr></thead><tbody>` +
-    doubles.map(d => {
-      const hw = d.winner==='heim';
-      return `<tr>
-        <td style="width:36px;color:var(--muted);font-family:'DM Mono',monospace">${d.nr}</td>
-        <td class="player">${d.heim||'–'}${hw?'<span class="dot-w"></span>':''}</td>
-        <td class="player">${d.gast||'–'}${!hw?'<span class="dot-w"></span>':''}</td>
-        <td class="sets">${renderSet(d.satz1,hw)} ${renderSet(d.satz2,hw)} ${d.satz3?renderSet(d.satz3,hw):''}</td>
-      </tr>`;
-    }).join('') + `</tbody></table>`;
+  if (!doubles || !doubles.length) return '<div class="no-data">Keine Doppel-Daten</div>';
+  var rows = '';
+  for (var i = 0; i < doubles.length; i++) {
+    var d = doubles[i];
+    var hw = d.winner === 'heim';
+    rows += '<tr>' +
+      '<td style="width:36px;color:#7a90aa;font-family:monospace">' + d.nr + '</td>' +
+      '<td class="player">' + (d.heim || '–') + (hw ? '<span class="dot-w"></span>' : '') + '</td>' +
+      '<td class="player">' + (d.gast || '–') + (!hw ? '<span class="dot-w"></span>' : '') + '</td>' +
+      '<td class="sets">' + renderSet(d.satz1, hw) + ' ' + renderSet(d.satz2, hw) + ' ' + (d.satz3 ? renderSet(d.satz3, hw) : '') + '</td>' +
+      '</tr>';
+  }
+  return '<table><thead><tr><th>#</th><th>Heim</th><th>Gast</th><th class="c">Sätze</th></tr></thead><tbody>' + rows + '</tbody></table>';
 }
 
 function renderCard(m, featured) {
-  const h = m.header || {};
-  const feat = featured || h.datum_iso === todayISO();
-  const hS = h.ergebnis_heim ?? '–', gS = h.ergebnis_gast ?? '–';
-  const scoreHtml = (m.status==='finished'||m.status==='live')
-    ? `<div class="score-big">${hS}<span class="score-sep">:</span>${gS}</div>`
-    : `<div class="score-big pending">${h.datum||'?'} · ${h.uhrzeit||''} Uhr</div>`;
-  const hasDetails = m.singles?.length || m.doubles?.length;
-  const did = `d-${m.meeting_id}`, bid = `b-${m.meeting_id}`;
-  const bannerClass = m.status==='live' ? 'live-banner' : m.status==='finished' ? 'finished-banner' : '';
-  return `<div class="match-card ${feat?'featured':''}">
-    <div class="card-banner ${bannerClass}">
-      <div class="banner-liga">${h.gruppe || h.bewerb || 'Tennis'}</div>
-      <div class="banner-meta">
-        ${h.datum   ? `<span class="banner-chip datum">📅 ${h.datum}</span>` : ''}
-        ${h.uhrzeit ? `<span class="banner-chip runde">🕐 ${h.uhrzeit} Uhr</span>` : ''}
-        ${h.runde   ? `<span class="banner-chip runde">${h.runde}</span>` : ''}
-        <span class="status-pill ${m.status}">${statusLabel(m.status)}</span>
-      </div>
-    </div>
-    <div class="scoreboard">
-      <div class="team home">
-        <div class="team-name ${isAndorf(h.heim)?'andorf':''}">${h.heim||'–'}</div>
-        ${isAndorf(h.heim)?'<div class="team-meta">Heimmannschaft</div>':''}
-      </div>
-      <div class="score-center">${scoreHtml}</div>
-      <div class="team away">
-        <div class="team-name ${isAndorf(h.gast)?'andorf':''}">${h.gast||'–'}</div>
-        ${isAndorf(h.gast)?'<div class="team-meta">Gastmannschaft</div>':''}
-      </div>
-    </div>
-    ${m.status==='error'?`<div class="error-bar">⚠ ${m.error||'Fehler'}</div>`:''}
-    ${hasDetails?`
-      <button class="details-toggle" id="${bid}" onclick="toggleDetails('${did}','${bid}')">Details anzeigen ▾</button>
-      <div class="details-panel ${feat?'open':''}" id="${did}">
-        <div class="details-cols">
-          <div class="details-col">
-            <div class="sub-section">Einzel</div>${renderSingles(m.singles)}
-          </div>
-          <div class="details-col">
-            <div class="sub-section">Doppel</div>${renderDoubles(m.doubles)}
-          </div>
-        </div>
-      </div>`:''}
-  </div>`;
+  var h = getHeader(m);
+  var today = todayISO();
+  var feat = featured || h.datum_iso === today;
+  var hS = (h.ergebnis_heim !== null && h.ergebnis_heim !== undefined) ? h.ergebnis_heim : '–';
+  var gS = (h.ergebnis_gast !== null && h.ergebnis_gast !== undefined) ? h.ergebnis_gast : '–';
+  var scoreHtml = (m.status === 'finished' || m.status === 'live')
+    ? '<div class="score-big">' + hS + '<span class="score-sep">:</span>' + gS + '</div>'
+    : '<div class="score-big pending">' + (h.datum || '?') + ' &middot; ' + (h.uhrzeit || '') + ' Uhr</div>';
+  var singles = getSingles(m);
+  var doubles = getDoubles(m);
+  var hasDetails = singles.length > 0 || doubles.length > 0;
+  var did = 'd-' + m.meeting_id;
+  var bid = 'b-' + m.meeting_id;
+  var bannerClass = m.status === 'live' ? 'live-banner' : m.status === 'finished' ? 'finished-banner' : '';
+  var detailsOpen = feat ? 'open' : '';
+
+  var html = '<div class="match-card ' + (feat ? 'featured' : '') + '">';
+  html += '<div class="card-banner ' + bannerClass + '">';
+  html += '<div class="banner-liga">' + (h.gruppe || h.bewerb || 'Tennis') + '</div>';
+  html += '<div class="banner-meta">';
+  if (h.datum)   html += '<span class="banner-chip datum">&#128197; ' + h.datum + '</span>';
+  if (h.uhrzeit) html += '<span class="banner-chip runde">&#128336; ' + h.uhrzeit + ' Uhr</span>';
+  if (h.runde)   html += '<span class="banner-chip runde">' + h.runde + '</span>';
+  html += '<span class="status-pill ' + m.status + '">' + statusLabel(m.status) + '</span>';
+  html += '</div></div>';
+
+  html += '<div class="scoreboard">';
+  html += '<div class="team home"><div class="team-name ' + (isAndorf(h.heim) ? 'andorf' : '') + '">' + (h.heim || '–') + '</div>';
+  if (isAndorf(h.heim)) html += '<div class="team-meta">Heimmannschaft</div>';
+  html += '</div>';
+  html += '<div class="score-center">' + scoreHtml + '</div>';
+  html += '<div class="team away"><div class="team-name ' + (isAndorf(h.gast) ? 'andorf' : '') + '">' + (h.gast || '–') + '</div>';
+  if (isAndorf(h.gast)) html += '<div class="team-meta">Gastmannschaft</div>';
+  html += '</div></div>';
+
+  if (m.status === 'error') html += '<div class="error-bar">&#9888; ' + (m.error || 'Fehler') + '</div>';
+
+  if (hasDetails) {
+    html += '<button class="details-toggle" id="' + bid + '" onclick="toggleDetails(\'' + did + '\',\'' + bid + '\')">Details anzeigen &#9662;</button>';
+    html += '<div class="details-panel ' + detailsOpen + '" id="' + did + '">';
+    html += '<div class="details-cols">';
+    html += '<div class="details-col"><div class="sub-section">Einzel</div>' + renderSingles(singles) + '</div>';
+    html += '<div class="details-col"><div class="sub-section">Doppel</div>' + renderDoubles(doubles) + '</div>';
+    html += '</div></div>';
+  }
+  html += '</div>';
+  return html;
 }
 
 function toggleDetails(did, bid) {
-  const panel = document.getElementById(did);
-  const open = panel.classList.toggle('open');
-  document.getElementById(bid).innerHTML = `${open?'Details ausblenden':'Details anzeigen'} ${open?'▴':'▾'}`;
+  var panel = document.getElementById(did);
+  var open = panel.classList.toggle('open');
+  document.getElementById(bid).innerHTML = (open ? 'Details ausblenden &#9652;' : 'Details anzeigen &#9662;');
 }
 
 function renderMatches() {
-  const container = document.getElementById('container');
-  const filtered = filterMatches(allMatches);
-  const today = todayISO();
+  var container = document.getElementById('container');
+  var filtered = filterMatches(allMatches);
+  var today = todayISO();
+  var msgs = {today:'Heute keine Spiele geplant.',upcoming:'Keine ausstehenden Spiele.',finished:'Noch keine abgeschlossenen Spiele.',all:'Keine Spiele geladen.'};
+
   if (!filtered.length) {
-    const msgs = {today:'Heute keine Spiele geplant.',upcoming:'Keine ausstehenden Spiele.',finished:'Noch keine abgeschlossenen Spiele.',all:'Keine Spiele geladen.'};
     container.className = 'cards-grid';
-    container.innerHTML = `<div class="empty-state">${msgs[currentTab]||'Keine Daten.'}</div>`;
+    container.innerHTML = '<div class="empty-state">' + (msgs[currentTab] || 'Keine Daten.') + '</div>';
     return;
   }
-  container.className = filtered.length === 1 ? 'cards-grid' : filtered.length === 2 ? 'cards-grid two-up' : 'cards-grid';
-  if (currentTab !== 'today') container.className = 'cards-grid single';
+
   if (currentTab === 'today') {
-    container.innerHTML = filtered.map(m => renderCard(m, true)).join('');
+    container.className = filtered.length === 2 ? 'cards-grid two-up' : 'cards-grid';
+    var html = '';
+    for (var i = 0; i < filtered.length; i++) html += renderCard(filtered[i], true);
+    container.innerHTML = html;
   } else {
-    const groups = {};
-    filtered.forEach(m => { const k = m.header?.datum_iso||'9999'; if(!groups[k]) groups[k]=[]; groups[k].push(m); });
-    let html = '';
-    Object.keys(groups).sort().forEach(k => {
-      const label = k===today ? 'Heute' : new Date(k).toLocaleDateString('de-AT',{weekday:'long',day:'2-digit',month:'long'});
-      html += `<div class="section-label" style="grid-column:1/-1">${label}</div>`;
-      groups[k].forEach(m => html += renderCard(m, false));
-    });
+    container.className = 'cards-grid single';
+    var groups = {};
+    for (var i = 0; i < filtered.length; i++) {
+      var m = filtered[i];
+      var k = (m.header && m.header.datum_iso) ? m.header.datum_iso : '9999';
+      if (!groups[k]) groups[k] = [];
+      groups[k].push(m);
+    }
+    var keys = Object.keys(groups).sort();
+    var html = '';
+    for (var ki = 0; ki < keys.length; ki++) {
+      var k = keys[ki];
+      var label = k === today ? 'Heute' : new Date(k).toLocaleDateString('de-AT', {weekday:'long', day:'2-digit', month:'long'});
+      html += '<div class="section-label" style="grid-column:1/-1">' + label + '</div>';
+      for (var mi = 0; mi < groups[k].length; mi++) html += renderCard(groups[k][mi], false);
+    }
     container.innerHTML = html;
   }
 }
 
-async function loadData() {
-  try {
-    const res = await fetch(RESULTS_URL + '?t=' + Date.now());
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    allMatches = data.matches || [];
-    updateCounts(allMatches);
-    renderMatches();
-    document.getElementById('last-refresh').textContent = fmtTime(data.generated_at);
-    document.getElementById('footer-ts').textContent = `Stand: ${fmtTime(data.generated_at)}`;
-  } catch(e) {
-    document.getElementById('container').innerHTML = `<div class="empty-state">Fehler: ${e.message}</div>`;
-  }
+function loadData() {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', RESULTS_URL + '?t=' + Date.now(), true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState !== 4) return;
+    if (xhr.status === 200) {
+      try {
+        var data = JSON.parse(xhr.responseText);
+        allMatches = data.matches || [];
+        updateCounts(allMatches);
+        renderMatches();
+        document.getElementById('last-refresh').textContent = fmtTime(data.generated_at);
+        document.getElementById('footer-ts').textContent = 'Stand: ' + fmtTime(data.generated_at);
+      } catch(e) {
+        document.getElementById('container').innerHTML = '<div class="empty-state">Fehler beim Parsen der Daten</div>';
+      }
+    } else {
+      document.getElementById('container').innerHTML = '<div class="empty-state">Fehler: HTTP ' + xhr.status + '</div>';
+    }
+    startCountdown();
+  };
+  xhr.send();
 }
 
 function startCountdown() {
   countdownSec = 60;
   clearInterval(countdownTimer);
-  countdownTimer = setInterval(() => {
+  countdownTimer = setInterval(function() {
     document.getElementById('countdown').textContent = (--countdownSec) + 's';
-    if (countdownSec <= 0) { clearInterval(countdownTimer); loadData().then(startCountdown); }
+    if (countdownSec <= 0) {
+      clearInterval(countdownTimer);
+      loadData();
+    }
   }, 1000);
 }
 
-loadData().then(startCountdown);
+loadData();
 </script>
 </body>
 </html>
