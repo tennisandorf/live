@@ -375,6 +375,11 @@ def main():
             # Aus Cache nehmen
             if mid in cached_matches:
                 data = cached_matches[mid]
+                # datum_override auch auf Cache anwenden
+                if m.get("datum_override"):
+                    d = m["datum_override"].split(".")
+                    data["header"]["datum"] = m["datum_override"]
+                    data["header"]["datum_iso"] = f"{d[2]}-{d[1]}-{d[0]}"
                 print(f"  Cache   meeting={mid} | {data.get('header', {}).get('datum', '')} | {data.get('status', '')}")
             else:
                 # Noch nie abgerufen → trotzdem holen
