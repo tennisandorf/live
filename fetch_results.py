@@ -241,6 +241,9 @@ def get_matches_to_fetch():
             pass
 
     return to_fetch
+
+
+def process_match(meeting_id, datum_override=None):
     result = {
         "meeting_id": meeting_id,
         "url": BASE_URL.format(meeting_id=meeting_id),
