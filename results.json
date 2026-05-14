@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T13:44:19.448119+00:00",
+  "generated_at": "2026-05-14T13:50:48.596743+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -49,7 +49,7 @@
       "meeting_id": "1863373",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863373",
       "status": "finished",
-      "last_updated": "2026-05-14T13:44:19.448157+00:00",
+      "last_updated": "2026-05-14T13:50:48.596777+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren Einstiegsliga West A",
@@ -64,8 +64,72 @@
         "ergebnis_heim": 6,
         "ergebnis_gast": 0
       },
-      "singles": [],
-      "doubles": []
+      "singles": [
+        {
+          "nr": 1,
+          "heim": "Jank, Elias",
+          "heim_itn": "6.900",
+          "gast": "Leitner, Christian",
+          "gast_itn": "8.700",
+          "satz1": "6:4",
+          "satz2": "6:2",
+          "satz3": "6:4",
+          "winner": "heim"
+        },
+        {
+          "nr": 2,
+          "heim": "Wohlmuth, Stefan",
+          "heim_itn": "7.700",
+          "gast": "Schwendinger, Florian",
+          "gast_itn": "9.000",
+          "satz1": "6:1",
+          "satz2": "6:4",
+          "satz3": "6:2",
+          "winner": "heim"
+        },
+        {
+          "nr": 3,
+          "heim": "Zelenin, Dmytro",
+          "heim_itn": "8.900",
+          "gast": "Denk, David",
+          "gast_itn": "9.100",
+          "satz1": "6:4",
+          "satz2": "6:4",
+          "satz3": "",
+          "winner": "heim"
+        },
+        {
+          "nr": 4,
+          "heim": "Hoffmann, Thorsten",
+          "heim_itn": "9.500",
+          "gast": "Kasbauer, Josef",
+          "gast_itn": "9.200",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Jank, Elias / Zelenin, Dmytro",
+          "gast": "Leitner, Christian / Eggertsberger, Gabriel",
+          "satz1": "6:1",
+          "satz2": "6:4",
+          "satz3": "",
+          "winner": "heim"
+        },
+        {
+          "nr": 2,
+          "heim": "Wohlmuth, Stefan / Hoffmann, Thorsten",
+          "gast": "Osterkorn, Gerhard / Karl, Jürgen",
+          "satz1": "6:4",
+          "satz2": "6:1",
+          "satz3": "",
+          "winner": "heim"
+        }
+      ]
     },
     {
       "meeting_id": "1866859",
