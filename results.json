@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T21:55:50.004258+00:00",
+  "generated_at": "2026-05-14T13:35:39.845814+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -48,19 +48,21 @@
     {
       "meeting_id": "1863373",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863373",
-      "status": "upcoming",
-      "last_updated": "2026-05-11T11:34:29.100007+00:00",
+      "status": "finished",
+      "last_updated": "2026-05-14T13:35:39.845849+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren Einstiegsliga West A",
         "datum": "14.05.2026",
         "uhrzeit": "09:30",
-        "runde": "2. Runde",
+        "runde": "2. Runde (abgeschlossen am 14.05.2026)",
         "datum_iso": "2026-05-14",
+        "erfasst_datum": "14.05.2026",
+        "erfasst_uhrzeit": "14:08",
         "heim": "TV McDonald's Andorf 4",
         "gast": "UTC Schardenberg 2",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 6,
+        "ergebnis_gast": 0
       },
       "singles": [],
       "doubles": []
