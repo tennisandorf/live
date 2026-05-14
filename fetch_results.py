@@ -111,11 +111,11 @@ def parse_singles(text):
         return singles
     block = m.group(1)
     pattern = re.compile(
-        r"^(\d+)\s+\d+\s+\d+\s+"
-        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+)?ITN\s+([\d,]+)\s+"
-        r"\d+\s+\d+\s+"
-        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+)?(?:\(ret\.\)\s+)?ITN\s+([\d,]+)\s+"
-        r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)",
+        r"^(\d+)\s+\d+\s+\d+\s+"                                          # Platznr + ML + Liz Heim
+        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?ITN\s+([\d,]+)\s+"  # Spieler Heim + ITN
+        r"\d+\s+\d+\s+"                                                    # ML + Liz Gast
+        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?(?:\(ret\.\)\s+)?ITN\s+([\d,]+)\s+"  # Spieler Gast + ITN
+        r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)",                       # Sätze
         re.MULTILINE
     )
     for match in pattern.finditer(block):
@@ -143,7 +143,7 @@ def parse_doubles(text):
     if not m:
         return doubles
     block = m.group(1)
-    name_pat = re.compile(r"([A-ZÄÖÜ][a-zäöüß\-]+,\s[A-ZÄÖÜa-zäöüß\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+)?ITN")
+    name_pat = re.compile(r"([A-ZÄÖÜ][a-zäöüß\-]+,\s[A-ZÄÖÜa-zäöüß\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?ITN")
     all_names = [n.strip() for n in name_pat.findall(block)]
     sat_pat = re.compile(r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)\s+(\d)\s+\d")
     for i, sm in enumerate(sat_pat.finditer(block), 1):
