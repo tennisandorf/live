@@ -85,8 +85,14 @@ def parse_header(text):
         d = m.group(1).split(".")
         h["datum_iso"] = f"{d[2]}-{d[1]}-{d[0]}"
     m = re.search(r"vollständig erfasst am\s+(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})", text)
-    if m:
-        h["erfasst_datum"] = m.group(1)
+    if not m:
+        # Alternative: "abgeschlossen am" im Termin-Header
+        m = re.search(r"abgeschlossen am\s+(\d{2}\.\d{2}\.\d{4})", text)
+        if m:
+            h["erfasst_datum"] = m.group(1)
+            h["erfasst_uhrzeit"] = ""
+    if m and len(m.groups()) >= 2:
+        h["erfasst_datum"]   = m.group(1)
         h["erfasst_uhrzeit"] = m.group(2)
     m = re.search(r"^(.+?)\s+:\s+(.+?)\s+(\d+)\s*:\s*(\d+)\s*$", text, re.MULTILINE)
     if m:
@@ -106,23 +112,28 @@ def parse_header(text):
 
 def parse_singles(text):
     singles = []
-    m = re.search(r"Einzel.*?[\r\n](.*?)Doppel", text, re.DOTALL | re.IGNORECASE)
+    # Text normalisieren: mehrfache Leerzeichen/Zeilenumbrüche zusammenfassen
+    normalized = re.sub(r'[ \t]+', ' ', text)
+    normalized = re.sub(r'\n+', '\n', normalized)
+
+    m = re.search(r"Einzel.*?[\r\n](.*?)Doppel", normalized, re.DOTALL | re.IGNORECASE)
     if not m:
         return singles
     block = m.group(1)
     pattern = re.compile(
-        r"^(\d+)\s+\d+\s+\d+\s+"                                          # Platznr + ML + Liz Heim
-        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?ITN\s+([\d,]+)\s+"  # Spieler Heim + ITN
-        r"\d+\s+\d+\s+"                                                    # ML + Liz Gast
-        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?(?:\(ret\.\)\s+)?ITN\s+([\d,]+)\s+"  # Spieler Gast + ITN
-        r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)",                       # Sätze
+        r"^(\d+)\s+\d+\s+\d+\s+"
+        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?ITN\s+([\d,]+)\s+"
+        r"\d+\s+\d+\s+"
+        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?(?:\(ret\.\)\s+)?ITN\s+([\d,]+)\s+"
+        r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)",
         re.MULTILINE
     )
     for match in pattern.finditer(block):
         s1h, s1g = int(match.group(6)),  int(match.group(7))
         s2h, s2g = int(match.group(8)),  int(match.group(9))
         s3h, s3g = int(match.group(10)), int(match.group(11))
-        sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if s3h > s3g else 0)
+        has_s3 = not (s3h == 0 and s3g == 0)
+        sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if has_s3 and s3h > s3g else 0)
         singles.append({
             "nr": int(match.group(1)),
             "heim": match.group(2).strip().rstrip(","),
@@ -131,7 +142,7 @@ def parse_singles(text):
             "gast_itn": match.group(5).replace(",", "."),
             "satz1": f"{s1h}:{s1g}",
             "satz2": f"{s2h}:{s2g}",
-            "satz3": f"{s3h}:{s3g}" if not (s3h == 0 and s3g == 0) else "",
+            "satz3": f"{s3h}:{s3g}" if has_s3 else "",
             "winner": "heim" if sets_heim >= 2 else "gast",
         })
     return singles
@@ -139,7 +150,9 @@ def parse_singles(text):
 
 def parse_doubles(text):
     doubles = []
-    m = re.search(r"Doppel.*?erfasst.*?[\r\n](.*?)Doppel-Summe", text, re.DOTALL | re.IGNORECASE)
+    normalized = re.sub(r'[ \t]+', ' ', text)
+    normalized = re.sub(r'\n+', '\n', normalized)
+    m = re.search(r"Doppel.*?erfasst.*?[\r\n](.*?)Doppel-Summe", normalized, re.DOTALL | re.IGNORECASE)
     if not m:
         return doubles
     block = m.group(1)
@@ -256,6 +269,7 @@ def process_match(meeting_id, datum_override=None):
         result["header"] = parse_header(text)
         result["singles"] = parse_singles(text)
         result["doubles"] = parse_doubles(text)
+        print(f"    → erfasst={result['header'].get('erfasst_datum','–')} singles={len(result['singles'])} doubles={len(result['doubles'])}")
         if datum_override:
             d = datum_override.split(".")
             result["header"]["datum"] = datum_override
