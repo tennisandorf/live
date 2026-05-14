@@ -136,13 +136,15 @@ def parse_singles(text):
     heim_names = name_itn[:n_singles]
     gast_names = name_itn[n_singles:]
 
+    # Sätze kommen spaltenweise: erst alle 1. Sätze, dann alle 2. Sätze, dann alle 3. Sätze
+    # Für n Spiele: satz_scores[0..n-1] = 1. Sätze, [n..2n-1] = 2. Sätze, [2n..3n-1] = 3. Sätze
     for i in range(n_singles):
         try:
             heim_name, heim_itn = heim_names[i]
             gast_name, gast_itn = gast_names[i]
-            s1h, s1g = satz_scores[i * 3]
-            s2h, s2g = satz_scores[i * 3 + 1]
-            s3h, s3g = satz_scores[i * 3 + 2]
+            s1h, s1g = satz_scores[i]                  # 1. Satz
+            s2h, s2g = satz_scores[n_singles + i]      # 2. Satz
+            s3h, s3g = satz_scores[n_singles * 2 + i]  # 3. Satz
             has_s3 = not (s3h == 0 and s3g == 0)
             sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if has_s3 and s3h > s3g else 0)
             singles.append({
@@ -195,9 +197,10 @@ def parse_doubles(text):
             heim2 = heim_names[i * 2 + 1][0].strip().rstrip(",")
             gast1 = gast_names[i * 2][0].strip().rstrip(",")
             gast2 = gast_names[i * 2 + 1][0].strip().rstrip(",")
-            s1h, s1g = satz_scores[i * 3]
-            s2h, s2g = satz_scores[i * 3 + 1]
-            s3h, s3g = satz_scores[i * 3 + 2]
+            # Sätze spaltenweise: erst alle 1. Sätze, dann alle 2., dann alle 3.
+            s1h, s1g = satz_scores[i]
+            s2h, s2g = satz_scores[n_doubles + i]
+            s3h, s3g = satz_scores[n_doubles * 2 + i]
             has_s3 = not (s3h == 0 and s3g == 0)
             sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if has_s3 and s3h > s3g else 0)
             doubles.append({
@@ -455,4 +458,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
