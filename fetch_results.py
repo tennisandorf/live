@@ -112,39 +112,52 @@ def parse_header(text):
 
 def parse_singles(text):
     singles = []
-    # Text normalisieren: mehrfache Leerzeichen/Zeilenumbrüche zusammenfassen
-    normalized = re.sub(r'[ \t]+', ' ', text)
-    normalized = re.sub(r'\n+', '\n', normalized)
-
-    m = re.search(r"Einzel.*?[\r\n](.*?)Doppel", normalized, re.DOTALL | re.IGNORECASE)
+    m = re.search(r"Einzel.*?[\r\n](.*?)Doppel", text, re.DOTALL | re.IGNORECASE)
     if not m:
         return singles
     block = m.group(1)
-    pattern = re.compile(
-        r"^(\d+)\s+\d+\s+\d+\s+"
-        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?ITN\s+([\d,]+)\s+"
-        r"\d+\s+\d+\s+"
-        r"([A-ZÄÖÜa-zäöüß,\.\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?(?:\(ret\.\)\s+)?ITN\s+([\d,]+)\s+"
-        r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)",
-        re.MULTILINE
-    )
-    for match in pattern.finditer(block):
-        s1h, s1g = int(match.group(6)),  int(match.group(7))
-        s2h, s2g = int(match.group(8)),  int(match.group(9))
-        s3h, s3g = int(match.group(10)), int(match.group(11))
-        has_s3 = not (s3h == 0 and s3g == 0)
-        sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if has_s3 and s3h > s3g else 0)
-        singles.append({
-            "nr": int(match.group(1)),
-            "heim": match.group(2).strip().rstrip(","),
-            "heim_itn": match.group(3).replace(",", "."),
-            "gast": match.group(4).strip().rstrip(","),
-            "gast_itn": match.group(5).replace(",", "."),
-            "satz1": f"{s1h}:{s1g}",
-            "satz2": f"{s2h}:{s2g}",
-            "satz3": f"{s3h}:{s3g}" if has_s3 else "",
-            "winner": "heim" if sets_heim >= 2 else "gast",
-        })
+
+    # Alle Spielernamen mit ITN finden
+    name_itn = re.findall(r"([A-ZÄÖÜ][a-zäöüß\-]+,\s[A-ZÄÖÜa-zäöüß\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?ITN\s+([\d,]+)", block)
+    n_singles = len(name_itn) // 2
+
+    # Sätze erst NACH dem letzten Spieler-ITN extrahieren (Teamsummen > 30 ignorieren)
+    last_itn_pos = 0
+    for nm in re.finditer(r"ITN\s+([\d,]+)", block):
+        try:
+            if float(nm.group(1).replace(",", ".")) < 30:
+                last_itn_pos = nm.end()
+        except ValueError:
+            pass
+    score_block = block[last_itn_pos:]
+    satz_scores = [(int(a), int(b)) for a, b in re.findall(r"(\d+):(\d+)", score_block)]
+
+    # Namen kommen im PDF gruppiert: erst alle Heim, dann alle Gast
+    heim_names = name_itn[:n_singles]
+    gast_names = name_itn[n_singles:]
+
+    for i in range(n_singles):
+        try:
+            heim_name, heim_itn = heim_names[i]
+            gast_name, gast_itn = gast_names[i]
+            s1h, s1g = satz_scores[i * 3]
+            s2h, s2g = satz_scores[i * 3 + 1]
+            s3h, s3g = satz_scores[i * 3 + 2]
+            has_s3 = not (s3h == 0 and s3g == 0)
+            sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if has_s3 and s3h > s3g else 0)
+            singles.append({
+                "nr": i + 1,
+                "heim": heim_name.strip().rstrip(","),
+                "heim_itn": heim_itn.replace(",", "."),
+                "gast": gast_name.strip().rstrip(","),
+                "gast_itn": gast_itn.replace(",", "."),
+                "satz1": f"{s1h}:{s1g}",
+                "satz2": f"{s2h}:{s2g}",
+                "satz3": f"{s3h}:{s3g}" if has_s3 else "",
+                "winner": "heim" if sets_heim >= 2 else "gast",
+            })
+        except IndexError:
+            break
     return singles
 
 
@@ -156,23 +169,48 @@ def parse_doubles(text):
     if not m:
         return doubles
     block = m.group(1)
-    name_pat = re.compile(r"([A-ZÄÖÜ][a-zäöüß\-]+,\s[A-ZÄÖÜa-zäöüß\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?ITN")
-    all_names = [n.strip() for n in name_pat.findall(block)]
-    sat_pat = re.compile(r"(\d+):(\d+)\s+(\d+):(\d+)\s+(\d+):(\d+)\s+(\d)\s+\d")
-    for i, sm in enumerate(sat_pat.finditer(block), 1):
-        s1h, s1g = int(sm.group(1)), int(sm.group(2))
-        s2h, s2g = int(sm.group(3)), int(sm.group(4))
-        s3h, s3g = int(sm.group(5)), int(sm.group(6))
-        winner = "heim" if int(sm.group(7)) == 1 else "gast"
-        offset = (i - 1) * 4
-        heim = " / ".join(all_names[offset:offset+2])   if len(all_names) >= offset+2 else ""
-        gast = " / ".join(all_names[offset+2:offset+4]) if len(all_names) >= offset+4 else ""
-        doubles.append({
-            "nr": i, "heim": heim, "gast": gast,
-            "satz1": f"{s1h}:{s1g}", "satz2": f"{s2h}:{s2g}",
-            "satz3": f"{s3h}:{s3g}" if not (s3h == 0 and s3g == 0) else "",
-            "winner": winner,
-        })
+
+    # Alle Namen + ITN aus Doppel-Block
+    name_itn = re.findall(r"([A-ZÄÖÜ][a-zäöüß\-]+,\s[A-ZÄÖÜa-zäöüß\s\-]+?)\s+(?:UKR\s+|GER\s+|CZE\s+|SVK\s+|HUN\s+|AUT\s+)?ITN\s+([\d,\.]+)", block)
+
+    # Sätze erst NACH dem letzten Spieler-ITN extrahieren (Teamsummen > 30 ignorieren)
+    last_itn_pos = 0
+    for nm in re.finditer(r"ITN\s+([\d,\.]+)", block):
+        try:
+            if float(nm.group(1).replace(",", ".")) < 30:
+                last_itn_pos = nm.end()
+        except ValueError:
+            pass
+    score_block = block[last_itn_pos:]
+    satz_scores = [(int(a), int(b)) for a, b in re.findall(r"(\d+):(\d+)", score_block)]
+
+    # Namen kommen gruppiert: erst alle Heim-Paare, dann alle Gast-Paare
+    n_doubles = len(name_itn) // 4
+    heim_names = name_itn[:n_doubles * 2]
+    gast_names = name_itn[n_doubles * 2:]
+
+    for i in range(n_doubles):
+        try:
+            heim1 = heim_names[i * 2][0].strip().rstrip(",")
+            heim2 = heim_names[i * 2 + 1][0].strip().rstrip(",")
+            gast1 = gast_names[i * 2][0].strip().rstrip(",")
+            gast2 = gast_names[i * 2 + 1][0].strip().rstrip(",")
+            s1h, s1g = satz_scores[i * 3]
+            s2h, s2g = satz_scores[i * 3 + 1]
+            s3h, s3g = satz_scores[i * 3 + 2]
+            has_s3 = not (s3h == 0 and s3g == 0)
+            sets_heim = (1 if s1h > s1g else 0) + (1 if s2h > s2g else 0) + (1 if has_s3 and s3h > s3g else 0)
+            doubles.append({
+                "nr": i + 1,
+                "heim": f"{heim1} / {heim2}",
+                "gast": f"{gast1} / {gast2}",
+                "satz1": f"{s1h}:{s1g}",
+                "satz2": f"{s2h}:{s2g}",
+                "satz3": f"{s3h}:{s3g}" if has_s3 else "",
+                "winner": "heim" if sets_heim >= 2 else "gast",
+            })
+        except IndexError:
+            break
     return doubles
 
 
@@ -417,3 +455,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
