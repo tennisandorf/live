@@ -428,8 +428,8 @@ function renderCard(m, featured) {
   var did = 'd-' + m.meeting_id;
   var bid = 'b-' + m.meeting_id;
   var bannerClass = m.status === 'live' ? 'live-banner' : m.status === 'finished' ? 'finished-banner' : '';
-  var detailsOpen = (currentTab === 'today' || currentTab === 'finished') && hasDetails ? 'open' : '';
-  var toggleLabel = detailsOpen ? 'Details ausblenden &#9652;' : 'Details anzeigen &#9662;';
+  var isToday = currentTab === 'today';
+  var detailsOpen = isToday ? 'open' : '';
 
   var html = '<div class="match-card ' + (feat ? 'featured' : '') + '">';
   html += '<div class="card-banner ' + bannerClass + '">';
@@ -453,7 +453,9 @@ function renderCard(m, featured) {
   if (m.status === 'error') html += '<div class="error-bar">&#9888; ' + (m.error || 'Fehler') + '</div>';
 
   if (hasDetails) {
-    html += '<button class="details-toggle" id="' + bid + '" onclick="toggleDetails(\'' + did + '\',\'' + bid + '\')">' + toggleLabel + '</button>';
+    if (!isToday) {
+      html += '<button class="details-toggle" id="' + bid + '" onclick="toggleDetails(\'' + did + '\',\'' + bid + '\')">Details anzeigen &#9662;</button>';
+    }
     html += '<div class="details-panel ' + detailsOpen + '" id="' + did + '">';
     html += '<div class="details-cols">';
     html += '<div class="details-col"><div class="sub-section">Einzel</div>' + renderSingles(singles) + '</div>';
