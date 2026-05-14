@@ -266,6 +266,9 @@ def process_match(meeting_id, datum_override=None):
     }
     try:
         text = fetch_text(meeting_id)
+        if meeting_id == "1863373":
+            print("RAW TEXT:")
+            print(repr(text[:3000]))
         result["header"] = parse_header(text)
         result["singles"] = parse_singles(text)
         result["doubles"] = parse_doubles(text)
