@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T00:13:56.077128+00:00",
+  "generated_at": "2026-05-15T10:02:47.146901+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -152,50 +152,10 @@
       "doubles": []
     },
     {
-      "meeting_id": "1860681",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860681",
-      "status": "upcoming",
-      "last_updated": "2026-05-11T11:34:31.773216+00:00",
-      "header": {
-        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
-        "gruppe": "Herren Landesliga West",
-        "datum": "16.05.2026",
-        "uhrzeit": "11:00",
-        "runde": "2. Runde",
-        "datum_iso": "2026-05-16",
-        "heim": "TV McDonald's Andorf 1",
-        "gast": "SPG Micheldorf / Klaus 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
-      },
-      "singles": [],
-      "doubles": []
-    },
-    {
-      "meeting_id": "1863909",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863909",
-      "status": "upcoming",
-      "last_updated": "2026-05-11T11:34:33.174817+00:00",
-      "header": {
-        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
-        "gruppe": "Damen Bezirksklasse West A",
-        "datum": "17.05.2026",
-        "uhrzeit": "09:30",
-        "runde": "2. Runde",
-        "datum_iso": "2026-05-17",
-        "heim": "TV McDonald's Andorf 1",
-        "gast": "USV Neuhofen 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
-      },
-      "singles": [],
-      "doubles": []
-    },
-    {
       "meeting_id": "1867090",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867090",
       "status": "upcoming",
-      "last_updated": "2026-05-11T11:34:34.548673+00:00",
+      "last_updated": "2026-05-15T10:02:48.945167+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren55 Regionalklasse West",
@@ -710,6 +670,26 @@
       },
       "singles": [],
       "doubles": []
+    },
+    {
+      "meeting_id": "1860681",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860681",
+      "status": "error",
+      "last_updated": "2026-05-15T10:02:47.146935+00:00",
+      "header": {},
+      "singles": [],
+      "doubles": [],
+      "error": "HTTP Error 500: Apple WebObjects"
+    },
+    {
+      "meeting_id": "1863909",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863909",
+      "status": "error",
+      "last_updated": "2026-05-15T10:02:48.059215+00:00",
+      "header": {},
+      "singles": [],
+      "doubles": [],
+      "error": "HTTP Error 500: Apple WebObjects"
     }
   ]
 }
