@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-15T10:02:47.146901+00:00",
+  "generated_at": "2026-05-15T16:30:08.276703+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -134,8 +134,8 @@
     {
       "meeting_id": "1866859",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866859",
-      "status": "upcoming",
-      "last_updated": "2026-05-11T11:34:30.446512+00:00",
+      "status": "finished",
+      "last_updated": "2026-05-15T16:30:08.276738+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren45 1. Klasse West A",
@@ -143,8 +143,69 @@
         "uhrzeit": "15:00",
         "runde": "2. Runde",
         "datum_iso": "2026-05-15",
+        "erfasst_datum": "15.05.2026",
+        "erfasst_uhrzeit": "18:14",
         "heim": "TV McDonald's Andorf 2",
         "gast": "ESV Wels 4",
+        "ergebnis_heim": 4,
+        "ergebnis_gast": 2
+      },
+      "singles": [],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Aigner, Gerhard / Tumeltshammer, Gerhard",
+          "gast": "Fadljevic, Günther / Wiesenecker, Gerald",
+          "satz1": "6:3",
+          "satz2": "0:0",
+          "satz3": "2:6",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Wimmer, Alfred / Illibauer, Ernst",
+          "gast": "Böhm, Robert / Ajdovec, Sebastian",
+          "satz1": "6:0",
+          "satz2": "5:7",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ]
+    },
+    {
+      "meeting_id": "1860681",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860681",
+      "status": "upcoming",
+      "last_updated": "2026-05-15T16:30:11.720863+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren Landesliga West",
+        "datum": "16.05.2026",
+        "uhrzeit": "11:00",
+        "runde": "2. Runde",
+        "datum_iso": "2026-05-16",
+        "heim": "TV McDonald's Andorf 1",
+        "gast": "SPG Micheldorf / Klaus 1",
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
+      "singles": [],
+      "doubles": []
+    },
+    {
+      "meeting_id": "1863909",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863909",
+      "status": "upcoming",
+      "last_updated": "2026-05-15T16:30:13.494435+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Damen Bezirksklasse West A",
+        "datum": "17.05.2026",
+        "uhrzeit": "09:30",
+        "runde": "2. Runde",
+        "datum_iso": "2026-05-17",
+        "heim": "TV McDonald's Andorf 1",
+        "gast": "USV Neuhofen 1",
         "ergebnis_heim": null,
         "ergebnis_gast": null
       },
@@ -670,26 +731,6 @@
       },
       "singles": [],
       "doubles": []
-    },
-    {
-      "meeting_id": "1860681",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860681",
-      "status": "error",
-      "last_updated": "2026-05-15T10:02:47.146935+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "HTTP Error 500: Apple WebObjects"
-    },
-    {
-      "meeting_id": "1863909",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863909",
-      "status": "error",
-      "last_updated": "2026-05-15T10:02:48.059215+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "HTTP Error 500: Apple WebObjects"
     }
   ]
 }
