@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-20T10:35:34.890951+00:00",
+  "generated_at": "2026-05-20T19:33:19.648942+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -322,8 +322,8 @@
     {
       "meeting_id": "1867090",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867090",
-      "status": "upcoming",
-      "last_updated": "2026-05-15T10:02:48.945167+00:00",
+      "status": "finished",
+      "last_updated": "2026-05-20T19:33:19.648987+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren55 Regionalklasse West",
@@ -331,13 +331,34 @@
         "uhrzeit": "16:00",
         "runde": "2. Runde",
         "datum_iso": "2026-05-20",
+        "erfasst_datum": "20.05.2026",
+        "erfasst_uhrzeit": "19:59",
         "heim": "TV McDonald's Andorf 1",
         "gast": "SPG Oberndorfer Gunskirchen 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 4,
+        "ergebnis_gast": 2
       },
       "singles": [],
-      "doubles": []
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Aigner, Gerhard / Wimmer, Alfred",
+          "gast": "Kellermair, Heinz / Hofmann, Roland",
+          "satz1": "6:2",
+          "satz2": "10:7",
+          "satz3": "2:6",
+          "winner": "heim"
+        },
+        {
+          "nr": 2,
+          "heim": "Sonnleitner, Paul / Schwarz, Markus",
+          "gast": "Meyer, Frank / Tulic, Aladin",
+          "satz1": "4:6",
+          "satz2": "6:4",
+          "satz3": "8:10",
+          "winner": "gast"
+        }
+      ]
     },
     {
       "meeting_id": "1866167",
