@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Tennis Live – Eingabe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Syne+Mono&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:      #0a0c0f;
+      --surface: #13171e;
+      --card:    #1a1f29;
+      --border:  #252d3d;
+      --blue:    #3b7dd8;
+      --blue-lt: #6da0f0;
+      --green:   #2ecc71;
+      --yellow:  #f1c40f;
+      --red:     #e74c3c;
+      --text:    #e8eef8;
+      --muted:   #6b7a96;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    /* ── Header ── */
+    .header {
+      padding: 20px 20px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .header-icon {
+      width: 36px; height: 36px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: grid; place-items: center;
+      font-size: 18px;
+    }
+    .header h1 {
+      font-size: 1.1rem; font-weight: 800;
+      letter-spacing: -.01em;
+    }
+    .header h1 span { color: var(--blue-lt); }
+
+    /* ── Setup screen ── */
+    .screen { display: none; padding: 20px; }
+    .screen.active { display: block; }
+
+    .label {
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    input[type=text], input[type=password], select {
+      width: 100%; padding: 14px 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      outline: none;
+      margin-bottom: 20px;
+      -webkit-appearance: none;
+    }
+    input:focus, select:focus { border-color: var(--blue); }
+
+    .btn {
+      width: 100%; padding: 16px;
+      background: var(--blue);
+      color: #fff;
+      border: none; border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: opacity .15s, transform .1s;
+      -webkit-appearance: none;
+    }
+    .btn:active { opacity: .8; transform: scale(.98); }
+    .btn.secondary {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    .btn.green  { background: var(--green); }
+    .btn.yellow { background: var(--yellow); color: #000; }
+    .btn.danger { background: var(--red); }
+
+    /* ── Camera screen ── */
+    .platz-info {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .platz-badge {
+      background: var(--blue);
+      border-radius: 8px;
+      width: 44px; height: 44px;
+      display: grid; place-items: center;
+      font-family: 'Syne Mono', monospace;
+      font-size: 1.2rem; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .platz-names { font-size: .95rem; font-weight: 600; line-height: 1.4; }
+    .platz-names small { font-size: .75rem; color: var(--muted); font-weight: 400; }
+
+    /* Camera preview */
+    .camera-area {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: #000;
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 16px;
+      border: 2px solid var(--border);
+    }
+    #video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    #canvas { display: none; }
+    .camera-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .camera-hint {
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: .75rem;
+      color: rgba(255,255,255,.8);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    /* Capture button */
+    .capture-btn {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: #fff;
+      border: 4px solid var(--border);
+      margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: transform .1s;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+    }
+    .capture-btn:active { transform: scale(.92); }
+    .capture-inner {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    /* File input fallback */
+    .file-label {
+      display: block; text-align: center;
+      font-size: .75rem; color: var(--muted);
+      text-decoration: underline;
+      cursor: pointer; margin-bottom: 20px;
+    }
+    #file-input { display: none; }
+
+    /* Preview */
+    #preview-img {
+      width: 100%; border-radius: 12px;
+      margin-bottom: 16px;
+      border: 2px solid var(--border);
+      display: none;
+    }
+
+    /* ── Result screen ── */
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .result-header {
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--blue-lt); margin-bottom: 14px;
+    }
+
+    /* Score grid */
+    .score-grid {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 8px;
+      align-items: center;
+    }
+    .score-grid .col-header {
+      font-size: .65rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--muted); text-align: center;
+    }
+    .score-grid .team-name {
+      font-size: .9rem; font-weight: 700;
+      padding: 4px 0;
+    }
+    .score-grid .team-name.andorf { color: var(--blue-lt); }
+
+    .score-input {
+      width: 52px; height: 52px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Syne Mono', monospace;
+      font-size: 1.4rem; font-weight: 700;
+      text-align: center;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .score-input:focus { border-color: var(--blue); background: var(--card); }
+    .score-input.highlight { border-color: var(--green); background: rgba(46,204,113,.08); }
+
+    /* Status */
+    .status-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 8px;
+    }
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--muted);
+    }
+    .status-dot.analyzing { background: var(--yellow); animation: pulse 1s infinite; }
+    .status-dot.done      { background: var(--green); }
+    .status-dot.error     { background: var(--red); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .status-text { font-size: .8rem; color: var(--muted); }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--green); color: #fff;
+      padding: 12px 24px; border-radius: 24px;
+      font-size: .85rem; font-weight: 700;
+      opacity: 0; transition: opacity .3s;
+      pointer-events: none; white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+      z-index: 100;
+    }
+    .toast.error { background: var(--red); }
+    .toast.show { opacity: 1; }
+
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
+    .small { font-size: .75rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-icon">🎾</div>
+  <h1>Tennis <span>Live</span> Eingabe</h1>
+</div>
+
+<!-- ── SCREEN 1: Setup ── -->
+<div class="screen active" id="screen-setup">
+  <br>
+  <div class="label">GitHub Repository</div>
+  <input type="text" id="gh-repo" placeholder="tennisandorf/live" value="tennisandorf/live" />
+
+  <div class="label">GitHub Token (Personal Access Token)</div>
+  <input type="password" id="gh-token" placeholder="github_pat_..." />
+  <p class="small">Erstelle unter github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens. Benötigt: "Contents" Read & Write für das Repo.</p>
+
+  <div class="label">Anthropic API Key</div>
+  <input type="password" id="api-key" placeholder="sk-ant-api03-..." />
+  <p class="small">Für die automatische Bilderkennung der Spielstandtafel.</p>
+
+  <div class="label">Platz auswählen</div>
+  <select id="platz-select">
+    <option value="1">Platz 1</option>
+    <option value="2">Platz 2</option>
+    <option value="3">Platz 3</option>
+    <option value="4">Platz 4</option>
+    <option value="5">Platz 5</option>
+    <option value="6">Platz 6</option>
+  </select>
+
+  <button class="btn" onclick="setupDone()">Weiter →</button>
+</div>
+
+<!-- ── SCREEN 2: Kamera ── -->
+<div class="screen" id="screen-camera">
+  <div class="platz-info">
+    <div class="platz-badge" id="badge-platz">1</div>
+    <div class="platz-names">
+      <div id="info-platz">Platz 1</div>
+      <small>Foto der Spielstandtafel aufnehmen</small>
+    </div>
+  </div>
+
+  <div class="camera-area" id="camera-area">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="canvas"></canvas>
+    <div class="camera-overlay">
+      <div class="camera-hint">Tafel zentrieren & fotografieren</div>
+    </div>
+  </div>
+
+  <div style="display:flex;justify-content:center">
+    <div class="capture-btn" onclick="capturePhoto()" id="capture-btn">
+      <div class="capture-inner"></div>
+    </div>
+  </div>
+
+  <input type="file" id="file-input" accept="image/*" capture="environment" onchange="fileSelected(event)" />
+  <label class="file-label" for="file-input">oder Foto aus Galerie wählen</label>
+
+  <img id="preview-img" alt="Vorschau" />
+
+  <div class="status-row" id="status-row" style="display:none">
+    <div class="status-dot analyzing" id="status-dot"></div>
+    <span class="status-text" id="status-text">Analysiere Bild...</span>
+  </div>
+
+  <button class="btn secondary" onclick="goSetup()">← Einstellungen</button>
+</div>
+
+<!-- ── SCREEN 3: Ergebnis / Korrektur ── -->
+<div class="screen" id="screen-result">
+  <div class="result-card">
+    <div class="result-header">📊 Erkannter Spielstand – Platz <span id="res-platz">1</span></div>
+
+    <div class="score-grid">
+      <div></div>
+      <div class="col-header">S1</div>
+      <div class="col-header">S2</div>
+      <div class="col-header">S3</div>
+
+      <div class="team-name" id="res-heim">Heim</div>
+      <input class="score-input" id="s1h" type="number" min="0" max="9" />
+      <input class="score-input" id="s2h" type="number" min="0" max="9" />
+      <input class="score-input" id="s3h" type="number" min="0" max="9" />
+
+      <div class="team-name" id="res-gast">Gast</div>
+      <input class="score-input" id="s1g" type="number" min="0" max="9" />
+      <input class="score-input" id="s2g" type="number" min="0" max="9" />
+      <input class="score-input" id="s3g" type="number" min="0" max="9" />
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="label">Aktueller Game-Stand (laufender Satz)</div>
+    <div class="score-grid" style="grid-template-columns:1fr auto">
+      <div class="team-name" id="res-heim2">Heim</div>
+      <input class="score-input" id="gh" type="number" min="0" max="9" style="width:52px" />
+      <div class="team-name" id="res-gast2">Gast</div>
+      <input class="score-input" id="gg" type="number" min="0" max="9" style="width:52px" />
+    </div>
+  </div>
+
+  <button class="btn green" onclick="publishScore()">✓ Veröffentlichen</button>
+  <button class="btn secondary" onclick="goCamera()">↩ Nochmal fotografieren</button>
+  <button class="btn secondary" onclick="goSetup()">← Einstellungen</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var config = {};
+var currentPlatz = 1;
+var stream = null;
+
+// ── Utils ────────────────────────────────────────────────────────────────────
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg, isError) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '') + ' show';
+  setTimeout(function() { t.className = 'toast' + (isError ? ' error' : ''); }, 3000);
+}
+
+function setStatus(state, text) {
+  var row = document.getElementById('status-row');
+  var dot = document.getElementById('status-dot');
+  var txt = document.getElementById('status-text');
+  row.style.display = 'flex';
+  dot.className = 'status-dot ' + state;
+  txt.textContent = text;
+}
+
+// ── Setup ────────────────────────────────────────────────────────────────────
+
+function setupDone() {
+  var repo   = document.getElementById('gh-repo').value.trim();
+  var token  = document.getElementById('gh-token').value.trim();
+  var apiKey = document.getElementById('api-key').value.trim();
+  var platz  = parseInt(document.getElementById('platz-select').value);
+
+  if (!token)  { showToast('GitHub Token fehlt!', true); return; }
+  if (!apiKey) { showToast('API Key fehlt!', true); return; }
+
+  // Lokal speichern (nur im Browser des Handys)
+  localStorage.setItem('tennis_token',  token);
+  localStorage.setItem('tennis_apikey', apiKey);
+  localStorage.setItem('tennis_repo',   repo);
+
+  config = { repo: repo, token: token, apiKey: apiKey };
+  currentPlatz = platz;
+
+  document.getElementById('badge-platz').textContent = platz;
+  document.getElementById('info-platz').textContent  = 'Platz ' + platz;
+
+  showScreen('screen-camera');
+  startCamera();
+}
+
+// Gespeicherte Werte laden
+window.addEventListener('load', function() {
+  var t  = localStorage.getItem('tennis_token');
+  var ak = localStorage.getItem('tennis_apikey');
+  var r  = localStorage.getItem('tennis_repo');
+  if (t)  document.getElementById('gh-token').value  = t;
+  if (ak) document.getElementById('api-key').value   = ak;
+  if (r)  document.getElementById('gh-repo').value   = r;
+});
+
+// ── Camera ───────────────────────────────────────────────────────────────────
+
+function startCamera() {
+  if (!navigator.mediaDevices) return;
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+    .then(function(s) {
+      stream = s;
+      document.getElementById('video').srcObject = s;
+    })
+    .catch(function() {
+      document.getElementById('camera-area').style.display = 'none';
+    });
+}
+
+function stopCamera() {
+  if (stream) { stream.getTracks().forEach(function(t) { t.stop(); }); stream = null; }
+}
+
+function capturePhoto() {
+  var video  = document.getElementById('video');
+  var canvas = document.getElementById('canvas');
+  canvas.width  = video.videoWidth  || 640;
+  canvas.height = video.videoHeight || 480;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+  processImage(dataUrl);
+}
+
+function fileSelected(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) { processImage(ev.target.result); };
+  reader.readAsDataURL(file);
+}
+
+// ── Image Analysis ────────────────────────────────────────────────────────────
+
+function processImage(dataUrl) {
+  // Vorschau zeigen
+  var preview = document.getElementById('preview-img');
+  preview.src = dataUrl;
+  preview.style.display = 'block';
+
+  stopCamera();
+  setStatus('analyzing', 'Bild wird analysiert...');
+
+  var base64 = dataUrl.split(',')[1];
+  var apiKey = config.apiKey || localStorage.getItem('tennis_apikey');
+
+  var prompt = "Du siehst eine Tennisspieltafel. Extrahiere die Spielstände als JSON.\n" +
+    "Antworte NUR mit diesem JSON-Format, nichts anderes:\n" +
+    '{"s1h":X,"s1g":X,"s2h":X,"s2g":X,"s3h":X,"s3g":X,"gh":X,"gg":X}\n' +
+    "s1h/s1g = 1.Satz Heim/Gast, s2h/s2g = 2.Satz, s3h/s3g = 3.Satz (0 wenn nicht gespielt), " +
+    "gh/gg = aktuelle Games im laufenden Satz. " +
+    "Wenn ein Satz nicht gespielt wurde, setze beide Werte auf 0.";
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 200,
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: base64 } },
+          { type: 'text', text: prompt }
+        ]
+      }]
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    var text = data.content && data.content[0] ? data.content[0].text : '';
+    var clean = text.replace(/```json|```/g, '').trim();
+    var scores;
+    try { scores = JSON.parse(clean); } catch(e) {
+      // Fallback: leere Felder
+      scores = {s1h:0,s1g:0,s2h:0,s2g:0,s3h:0,s3g:0,gh:0,gg:0};
+      setStatus('error', 'Erkennung unvollständig – bitte manuell korrigieren');
+      showResultScreen(scores);
+      return;
+    }
+    setStatus('done', 'Erkennung erfolgreich!');
+    showResultScreen(scores);
+  })
+  .catch(function(err) {
+    setStatus('error', 'Fehler: ' + err.message);
+    showResultScreen({s1h:0,s1g:0,s2h:0,s2g:0,s3h:0,s3g:0,gh:0,gg:0});
+  });
+}
+
+// ── Result Screen ─────────────────────────────────────────────────────────────
+
+function showResultScreen(scores) {
+  document.getElementById('res-platz').textContent  = currentPlatz;
+  document.getElementById('res-heim').textContent   = 'Heim';
+  document.getElementById('res-heim2').textContent  = 'Heim';
+  document.getElementById('res-gast').textContent   = 'Gast';
+  document.getElementById('res-gast2').textContent  = 'Gast';
+
+  document.getElementById('s1h').value = scores.s1h || 0;
+  document.getElementById('s1g').value = scores.s1g || 0;
+  document.getElementById('s2h').value = scores.s2h || 0;
+  document.getElementById('s2g').value = scores.s2g || 0;
+  document.getElementById('s3h').value = scores.s3h || 0;
+  document.getElementById('s3g').value = scores.s3g || 0;
+  document.getElementById('gh').value  = scores.gh  || 0;
+  document.getElementById('gg').value  = scores.gg  || 0;
+
+  showScreen('screen-result');
+}
+
+// ── Publish to GitHub ─────────────────────────────────────────────────────────
+
+function publishScore() {
+  var token = config.token || localStorage.getItem('tennis_token');
+  var repo  = config.repo  || localStorage.getItem('tennis_repo') || 'tennisandorf/live';
+  var path  = 'live_scores_platz' + currentPlatz + '.json';
+  var url   = 'https://api.github.com/repos/' + repo + '/contents/' + path;
+
+  var payload = {
+    platz:     currentPlatz,
+    updated:   new Date().toISOString(),
+    s1h: parseInt(document.getElementById('s1h').value) || 0,
+    s1g: parseInt(document.getElementById('s1g').value) || 0,
+    s2h: parseInt(document.getElementById('s2h').value) || 0,
+    s2g: parseInt(document.getElementById('s2g').value) || 0,
+    s3h: parseInt(document.getElementById('s3h').value) || 0,
+    s3g: parseInt(document.getElementById('s3g').value) || 0,
+    gh:  parseInt(document.getElementById('gh').value)  || 0,
+    gg:  parseInt(document.getElementById('gg').value)  || 0
+  };
+
+  var content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+
+  // Erst aktuelle SHA holen (für Update)
+  fetch(url, { headers: { 'Authorization': 'token ' + token } })
+  .then(function(r) { return r.ok ? r.json() : null; })
+  .then(function(existing) {
+    var body = { message: 'live: platz ' + currentPlatz + ' ' + new Date().toLocaleTimeString('de-AT'), content: content };
+    if (existing && existing.sha) body.sha = existing.sha;
+
+    return fetch(url, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  })
+  .then(function(r) {
+    if (r.ok) {
+      showToast('✓ Gespeichert! Platz ' + currentPlatz);
+      setTimeout(function() { goCamera(); }, 1500);
+    } else {
+      r.text().then(function(t) { showToast('Fehler: ' + t, true); });
+    }
+  })
+  .catch(function(e) { showToast('Fehler: ' + e.message, true); });
+}
+
+// ── Navigation ────────────────────────────────────────────────────────────────
+
+function goCamera() {
+  document.getElementById('preview-img').style.display = 'none';
+  document.getElementById('status-row').style.display  = 'none';
+  showScreen('screen-camera');
+  startCamera();
+}
+
+function goSetup() {
+  stopCamera();
+  showScreen('screen-setup');
+}
+</script>
+</body>
+</html>
