@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T10:54:46.710442+00:00",
+  "generated_at": "2026-05-29T19:54:30.655249+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -363,8 +363,8 @@
     {
       "meeting_id": "1866167",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866167",
-      "status": "upcoming",
-      "last_updated": "2026-05-11T11:34:35.924655+00:00",
+      "status": "finished",
+      "last_updated": "2026-05-29T19:54:30.655297+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren45 Bezirksklasse Mitte B",
@@ -372,13 +372,34 @@
         "uhrzeit": "15:00",
         "runde": "3. Runde",
         "datum_iso": "2026-05-29",
+        "erfasst_datum": "29.05.2026",
+        "erfasst_uhrzeit": "17:30",
         "heim": "TV McDonald's Andorf 1",
         "gast": "URTC Eferding 2",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 6,
+        "ergebnis_gast": 0
       },
       "singles": [],
-      "doubles": []
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Mittermayr, Martin / Bauer, Manuel",
+          "gast": "Krenn, Wolfgang / Voglsam, Thomas",
+          "satz1": "6:1",
+          "satz2": "0:0",
+          "satz3": "6:1",
+          "winner": "heim"
+        },
+        {
+          "nr": 2,
+          "heim": "Hörmaier, Gernot / Gruber, Stefan",
+          "gast": "Eschlböck, Gerald / Huemer, Ewald",
+          "satz1": "6:4",
+          "satz2": "6:0",
+          "satz3": "",
+          "winner": "heim"
+        }
+      ]
     },
     {
       "meeting_id": "1861028",
