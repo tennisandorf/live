@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-30T12:53:07.913730+00:00",
+  "generated_at": "2026-05-30T16:36:22.756141+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -404,8 +404,8 @@
     {
       "meeting_id": "1861028",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861028",
-      "status": "upcoming",
-      "last_updated": "2026-05-30T12:53:07.913771+00:00",
+      "status": "finished",
+      "last_updated": "2026-05-30T16:36:22.756184+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren Bezirksklasse West A",
@@ -413,13 +413,43 @@
         "uhrzeit": "13:00",
         "runde": "3. Runde",
         "datum_iso": "2026-05-30",
+        "erfasst_datum": "30.05.2026",
+        "erfasst_uhrzeit": "17:48",
         "heim": "TV McDonald's Andorf 2",
         "gast": "UTC Wels 1",
         "ergebnis_heim": null,
         "ergebnis_gast": null
       },
       "singles": [],
-      "doubles": []
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Mittermayr, Jonas / Jank, Bastian",
+          "gast": "Ganster, Jürgen / Kuenz, Markus",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Schneiderbauer, Tobias / Gasser, Simon",
+          "gast": "Holzleitner, Paul / Bruckner, Jürgen",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 3,
+          "heim": "Hainzl, Thomas / Hajek, Christoph",
+          "gast": "Greindl, Markus / Niedersüß, Laurenz",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ]
     },
     {
       "meeting_id": "1867134",
