@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-05T18:26:25.803387+00:00",
+  "generated_at": "2026-06-05T20:26:40.899045+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -472,6 +472,47 @@
       "doubles": []
     },
     {
+      "meeting_id": "1866988",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866988",
+      "status": "finished",
+      "last_updated": "2026-06-05T20:26:40.899084+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren45 1. Klasse West A",
+        "datum": "05.06.2026",
+        "uhrzeit": "15:00",
+        "runde": "4. Runde",
+        "datum_iso": "2026-06-05",
+        "erfasst_datum": "05.06.2026",
+        "erfasst_uhrzeit": "14:59",
+        "heim": "TV McDonald's Andorf 2",
+        "gast": "UTC Hamedinger Kopfing 1",
+        "ergebnis_heim": 6,
+        "ergebnis_gast": 0
+      },
+      "singles": [],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Puttinger, Gerald / Aigner, Gerhard",
+          "gast": "Hatzmann, Herbert / Schmiedbauer, Oliver",
+          "satz1": "6:2",
+          "satz2": "0:0",
+          "satz3": "6:1",
+          "winner": "heim"
+        },
+        {
+          "nr": 2,
+          "heim": "Tumeltshammer, Gerhard / Sonnleitner, Paul",
+          "gast": "Scheuringer, Günter / Sautner, Wilhelm",
+          "satz1": "6:1",
+          "satz2": "6:1",
+          "satz3": "",
+          "winner": "heim"
+        }
+      ]
+    },
+    {
       "meeting_id": "1860465",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860465",
       "status": "upcoming",
@@ -890,16 +931,6 @@
       },
       "singles": [],
       "doubles": []
-    },
-    {
-      "meeting_id": "1866988",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866988",
-      "status": "error",
-      "last_updated": "2026-06-05T18:26:25.803425+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
     }
   ]
 }
