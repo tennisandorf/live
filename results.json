@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-06T10:17:04.387643+00:00",
+  "generated_at": "2026-06-06T11:48:53.715253+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -513,6 +513,26 @@
       ]
     },
     {
+      "meeting_id": "1860465",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860465",
+      "status": "upcoming",
+      "last_updated": "2026-06-06T11:48:53.715309+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren Landesliga West",
+        "datum": "06.06.2026",
+        "uhrzeit": "11:00",
+        "runde": "4. Runde",
+        "datum_iso": "2026-06-06",
+        "heim": "TV McDonald's Andorf 1",
+        "gast": "TC Gmunden 1903 1",
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
+      "singles": [],
+      "doubles": []
+    },
+    {
       "meeting_id": "1861454",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454",
       "status": "upcoming",
@@ -911,16 +931,6 @@
       },
       "singles": [],
       "doubles": []
-    },
-    {
-      "meeting_id": "1860465",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860465",
-      "status": "error",
-      "last_updated": "2026-06-06T10:17:04.387685+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
     }
   ]
 }
