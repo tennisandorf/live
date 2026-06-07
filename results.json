@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-07T12:58:36.192416+00:00",
+  "generated_at": "2026-06-07T14:56:23.221728+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -563,67 +563,6 @@
       ]
     },
     {
-      "meeting_id": "1861454",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454",
-      "status": "upcoming",
-      "last_updated": "2026-06-07T12:58:36.192461+00:00",
-      "header": {
-        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
-        "gruppe": "Herren 1. Klasse West A",
-        "datum": "07.06.2026",
-        "uhrzeit": "09:30",
-        "runde": "4. Runde",
-        "datum_iso": "2026-06-07",
-        "heim": "TV McDonald's Andorf 3",
-        "gast": "UTC Raab 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
-      },
-      "singles": [],
-      "doubles": []
-    },
-    {
-      "meeting_id": "1864022",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1864022",
-      "status": "finished",
-      "last_updated": "2026-06-07T12:58:38.484808+00:00",
-      "header": {
-        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
-        "gruppe": "Damen Bezirksklasse West A",
-        "datum": "07.06.2026",
-        "uhrzeit": "09:30",
-        "runde": "4. Runde",
-        "datum_iso": "2026-06-07",
-        "erfasst_datum": "07.06.2026",
-        "erfasst_uhrzeit": "13:23",
-        "heim": "TV McDonald's Andorf 1",
-        "gast": "UTC Eggerding 1",
-        "ergebnis_heim": 4,
-        "ergebnis_gast": 3
-      },
-      "singles": [],
-      "doubles": [
-        {
-          "nr": 1,
-          "heim": "Berger, Lena / Friedl, Johanna",
-          "gast": "Aigner, Anna / Puttinger, Tamara",
-          "satz1": "6:3",
-          "satz2": "0:0",
-          "satz3": "2:6",
-          "winner": "gast"
-        },
-        {
-          "nr": 2,
-          "heim": "Mittermayr, Gabriele / Dokudowicz, Maja",
-          "gast": "Ableidinger, Saskia / Tomandl, Aline",
-          "satz1": "6:2",
-          "satz2": "6:4",
-          "satz3": "3:10",
-          "winner": "heim"
-        }
-      ]
-    },
-    {
       "meeting_id": "1860786",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860786",
       "status": "upcoming",
@@ -982,6 +921,26 @@
       },
       "singles": [],
       "doubles": []
+    },
+    {
+      "meeting_id": "1861454",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454",
+      "status": "error",
+      "last_updated": "2026-06-07T14:56:23.221773+00:00",
+      "header": {},
+      "singles": [],
+      "doubles": [],
+      "error": "<urlopen error timed out>"
+    },
+    {
+      "meeting_id": "1864022",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1864022",
+      "status": "error",
+      "last_updated": "2026-06-07T14:56:38.326915+00:00",
+      "header": {},
+      "singles": [],
+      "doubles": [],
+      "error": "<urlopen error timed out>"
     }
   ]
 }
