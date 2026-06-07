@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-07T06:08:02.250093+00:00",
+  "generated_at": "2026-06-07T09:34:18.015599+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -563,46 +563,6 @@
       ]
     },
     {
-      "meeting_id": "1861454",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454",
-      "status": "upcoming",
-      "last_updated": "2026-05-11T11:34:42.760057+00:00",
-      "header": {
-        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
-        "gruppe": "Herren 1. Klasse West A",
-        "datum": "07.06.2026",
-        "uhrzeit": "09:30",
-        "runde": "4. Runde",
-        "datum_iso": "2026-06-07",
-        "heim": "TV McDonald's Andorf 3",
-        "gast": "UTC Raab 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
-      },
-      "singles": [],
-      "doubles": []
-    },
-    {
-      "meeting_id": "1864022",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1864022",
-      "status": "upcoming",
-      "last_updated": "2026-05-11T11:34:44.163860+00:00",
-      "header": {
-        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
-        "gruppe": "Damen Bezirksklasse West A",
-        "datum": "07.06.2026",
-        "uhrzeit": "09:30",
-        "runde": "4. Runde",
-        "datum_iso": "2026-06-07",
-        "heim": "TV McDonald's Andorf 1",
-        "gast": "UTC Eggerding 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
-      },
-      "singles": [],
-      "doubles": []
-    },
-    {
       "meeting_id": "1860786",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860786",
       "status": "upcoming",
@@ -961,6 +921,26 @@
       },
       "singles": [],
       "doubles": []
+    },
+    {
+      "meeting_id": "1861454",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454",
+      "status": "error",
+      "last_updated": "2026-06-07T09:34:18.015641+00:00",
+      "header": {},
+      "singles": [],
+      "doubles": [],
+      "error": "<urlopen error timed out>"
+    },
+    {
+      "meeting_id": "1864022",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1864022",
+      "status": "error",
+      "last_updated": "2026-06-07T09:34:33.262362+00:00",
+      "header": {},
+      "singles": [],
+      "doubles": [],
+      "error": "<urlopen error timed out>"
     }
   ]
 }
