@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-07T17:43:46.040125+00:00",
+  "generated_at": "2026-06-07T18:58:48.045835+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -563,6 +563,164 @@
       ]
     },
     {
+      "meeting_id": "1861454",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454",
+      "status": "finished",
+      "last_updated": "2026-06-07T18:58:48.045878+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren 1. Klasse West A",
+        "datum": "07.06.2026",
+        "uhrzeit": "09:30",
+        "runde": "4. Runde",
+        "datum_iso": "2026-06-07",
+        "erfasst_datum": "07.06.2026",
+        "erfasst_uhrzeit": "16:33",
+        "heim": "TV McDonald's Andorf 3",
+        "gast": "UTC Raab 1",
+        "ergebnis_heim": 2,
+        "ergebnis_gast": 7
+      },
+      "singles": [
+        {
+          "nr": 1,
+          "heim": "Aspöck, Simon",
+          "heim_itn": "5.100",
+          "gast": "Haderer, Ingo",
+          "gast_itn": "4.500",
+          "satz1": "4:6",
+          "satz2": "6:2",
+          "satz3": "6:7",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Heinzl, Günther",
+          "heim_itn": "5.400",
+          "gast": "Haderer, Daniel",
+          "gast_itn": "5.400",
+          "satz1": "2:6",
+          "satz2": "1:6",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 3,
+          "heim": "Heinzl, Timo",
+          "heim_itn": "6.900",
+          "gast": "Jakowiak, Michael",
+          "gast_itn": "6.200",
+          "satz1": "3:6",
+          "satz2": "1:6",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 4,
+          "heim": "Jank, Elias",
+          "heim_itn": "6.900",
+          "gast": "Eder, Mathias",
+          "gast_itn": "6.500",
+          "satz1": "6:1",
+          "satz2": "6:2",
+          "satz3": "",
+          "winner": "heim"
+        },
+        {
+          "nr": 5,
+          "heim": "Zelenin, Dmytro",
+          "heim_itn": "8.900",
+          "gast": "Bruckner, Jan",
+          "gast_itn": "6.700",
+          "satz1": "3:6",
+          "satz2": "3:6",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 6,
+          "heim": "Gasser, Jakob",
+          "heim_itn": "9.500",
+          "gast": "Schauer, Markus",
+          "gast_itn": "6.800",
+          "satz1": "1:6",
+          "satz2": "0:6",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Aspöck, Simon / Jank, Elias",
+          "gast": "Haderer, Ingo / Schauer, Markus",
+          "satz1": "1:6",
+          "satz2": "6:1",
+          "satz3": "0:6",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Heinzl, Günther / Heinzl, Timo",
+          "gast": "Haderer, Daniel / Jakowiak, Michael",
+          "satz1": "2:6",
+          "satz2": "6:4",
+          "satz3": "3:6",
+          "winner": "gast"
+        },
+        {
+          "nr": 3,
+          "heim": "Zelenin, Dmytro / Gasser, Jakob",
+          "gast": "Eder, Mathias / Bruckner, Jan",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ]
+    },
+    {
+      "meeting_id": "1864022",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1864022",
+      "status": "finished",
+      "last_updated": "2026-06-07T18:58:50.444179+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Damen Bezirksklasse West A",
+        "datum": "07.06.2026",
+        "uhrzeit": "09:30",
+        "runde": "4. Runde",
+        "datum_iso": "2026-06-07",
+        "erfasst_datum": "07.06.2026",
+        "erfasst_uhrzeit": "13:23",
+        "heim": "TV McDonald's Andorf 1",
+        "gast": "UTC Eggerding 1",
+        "ergebnis_heim": 4,
+        "ergebnis_gast": 3
+      },
+      "singles": [],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Berger, Lena / Friedl, Johanna",
+          "gast": "Aigner, Anna / Puttinger, Tamara",
+          "satz1": "6:3",
+          "satz2": "0:0",
+          "satz3": "2:6",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Mittermayr, Gabriele / Dokudowicz, Maja",
+          "gast": "Ableidinger, Saskia / Tomandl, Aline",
+          "satz1": "6:2",
+          "satz2": "6:4",
+          "satz3": "3:10",
+          "winner": "heim"
+        }
+      ]
+    },
+    {
       "meeting_id": "1860786",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860786",
       "status": "upcoming",
@@ -921,26 +1079,6 @@
       },
       "singles": [],
       "doubles": []
-    },
-    {
-      "meeting_id": "1861454",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861454",
-      "status": "error",
-      "last_updated": "2026-06-07T17:43:46.040165+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
-    },
-    {
-      "meeting_id": "1864022",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1864022",
-      "status": "error",
-      "last_updated": "2026-06-07T17:44:01.145561+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
     }
   ]
 }
