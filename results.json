@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-13T15:09:50.921020+00:00",
+  "generated_at": "2026-06-13T16:45:48.314585+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -721,6 +721,140 @@
       ]
     },
     {
+      "meeting_id": "1860786",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860786",
+      "status": "live",
+      "last_updated": "2026-06-13T16:45:48.314628+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren Bezirksklasse West A",
+        "datum": "13.06.2026",
+        "uhrzeit": "13:00",
+        "runde": "5. Runde",
+        "datum_iso": "2026-06-13",
+        "heim": "TV McDonald's Andorf 2",
+        "gast": "UTC Pram-Wendling 1",
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
+      "singles": [],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Hörmaier, Gernot / Jank, Bastian",
+          "gast": "Florakis, Julian / Hörandner, Johann",
+          "satz1": "4:5",
+          "satz2": "5:4",
+          "satz3": "6:2",
+          "winner": "heim"
+        },
+        {
+          "nr": 2,
+          "heim": "Schneiderbauer, Tobias / Aspöck, Simon",
+          "gast": "Aspetsberger, Clemens / Höbarth, Johannes",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "1:0",
+          "winner": "gast"
+        },
+        {
+          "nr": 3,
+          "heim": "Mittermayr, Jonas / Jank, Elias",
+          "gast": "Denk, Tobias / Lanz, Tobias",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ]
+    },
+    {
+      "meeting_id": "1863290",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863290",
+      "status": "finished",
+      "last_updated": "2026-06-13T16:45:50.165880+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren Einstiegsliga West A",
+        "datum": "13.06.2026",
+        "uhrzeit": "13:00",
+        "runde": "5. Runde",
+        "datum_iso": "2026-06-13",
+        "erfasst_datum": "13.06.2026",
+        "erfasst_uhrzeit": "14:37",
+        "heim": "TV McDonald's Andorf 4",
+        "gast": "UTC Polzinger Taiskirchen 3",
+        "ergebnis_heim": 2,
+        "ergebnis_gast": 4
+      },
+      "singles": [
+        {
+          "nr": 1,
+          "heim": "Hanslmayr, Moritz",
+          "heim_itn": "5.500",
+          "gast": "Steindl, David",
+          "gast_itn": "7.800",
+          "satz1": "6:1",
+          "satz2": "6:4",
+          "satz3": "",
+          "winner": "heim"
+        },
+        {
+          "nr": 2,
+          "heim": "Lautner, Josef",
+          "heim_itn": "8.700",
+          "gast": "Zarbl, Jürgen",
+          "gast_itn": "9.200",
+          "satz1": "6:3",
+          "satz2": "3:6",
+          "satz3": "7:10",
+          "winner": "gast"
+        },
+        {
+          "nr": 3,
+          "heim": "Hoffmann, Thorsten",
+          "heim_itn": "9.300",
+          "gast": "Schmidbauer, Dominik",
+          "gast_itn": "9.200",
+          "satz1": "6:4",
+          "satz2": "6:2",
+          "satz3": "",
+          "winner": "heim"
+        },
+        {
+          "nr": 4,
+          "heim": "Ornetsmüller, Laurin",
+          "heim_itn": "9.600",
+          "gast": "Augustin, Laurenz",
+          "gast_itn": "9.900",
+          "satz1": "1:6",
+          "satz2": "1:6",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Mittermayr, Josef / Ornetsmüller, Laurin",
+          "gast": "Steindl, David / Schmidbauer, Dominik",
+          "satz1": "0:6",
+          "satz2": "0:0",
+          "satz3": "2:6",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Lautner, Josef / Hoffmann, Thorsten",
+          "gast": "Floss, Elias / Hörmanseder, Philipp",
+          "satz1": "0:6",
+          "satz2": "2:6",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ]
+    },
+    {
       "meeting_id": "1866146",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866146",
       "status": "upcoming",
@@ -1039,26 +1173,6 @@
       },
       "singles": [],
       "doubles": []
-    },
-    {
-      "meeting_id": "1860786",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860786",
-      "status": "error",
-      "last_updated": "2026-06-13T15:09:50.921064+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
-    },
-    {
-      "meeting_id": "1863290",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863290",
-      "status": "error",
-      "last_updated": "2026-06-13T15:10:06.197612+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
     }
   ]
 }
