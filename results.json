@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-20T16:05:08.557528+00:00",
+  "generated_at": "2026-06-20T17:44:15.050184+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -900,8 +900,8 @@
     {
       "meeting_id": "1860453",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860453",
-      "status": "live",
-      "last_updated": "2026-06-20T16:05:08.557573+00:00",
+      "status": "finished",
+      "last_updated": "2026-06-20T17:44:15.050255+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren Landesliga West",
@@ -909,10 +909,12 @@
         "uhrzeit": "11:00",
         "runde": "6. Runde",
         "datum_iso": "2026-06-20",
+        "erfasst_datum": "20.06.2026",
+        "erfasst_uhrzeit": "19:11",
         "heim": "TV McDonald's Andorf 1",
         "gast": "UTC Linz DSG 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 7,
+        "ergebnis_gast": 2
       },
       "singles": [],
       "doubles": [
@@ -920,26 +922,26 @@
           "nr": 1,
           "heim": "Stuhr, Ben / Mittermayr, Jakob",
           "gast": "Majda, Marek / Badinger, Philip",
-          "satz1": "0:0",
-          "satz2": "0:0",
-          "satz3": "",
-          "winner": "gast"
+          "satz1": "6:2",
+          "satz2": "6:7",
+          "satz3": "6:1",
+          "winner": "heim"
         },
         {
           "nr": 2,
           "heim": "Slaby, Michael / Unfried, Jonas",
           "gast": "Pansi, Marco / Birngruber, Lorenz",
-          "satz1": "0:0",
-          "satz2": "0:0",
-          "satz3": "",
-          "winner": "gast"
+          "satz1": "6:1",
+          "satz2": "7:5",
+          "satz3": "6:1",
+          "winner": "heim"
         },
         {
           "nr": 3,
           "heim": "Mittermayr, Martin / Stockinger, Simon",
           "gast": "Etmajer, Adam / Spehar, Filip",
           "satz1": "0:0",
-          "satz2": "0:0",
+          "satz2": "10:12",
           "satz3": "",
           "winner": "gast"
         }
