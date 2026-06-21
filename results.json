@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T13:29:40.863441+00:00",
+  "generated_at": "2026-06-21T15:28:53.613233+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -950,8 +950,8 @@
     {
       "meeting_id": "1861626",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861626",
-      "status": "live",
-      "last_updated": "2026-06-21T13:29:40.863493+00:00",
+      "status": "finished",
+      "last_updated": "2026-06-21T15:28:53.613274+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren 1. Klasse West A",
@@ -959,10 +959,12 @@
         "uhrzeit": "09:30",
         "runde": "6. Runde",
         "datum_iso": "2026-06-21",
+        "erfasst_datum": "21.06.2026",
+        "erfasst_uhrzeit": "16:38",
         "heim": "TV McDonald's Andorf 3",
         "gast": "TV Taufkirchen/Pram 2",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 3,
+        "ergebnis_gast": 6
       },
       "singles": [
         {
@@ -1026,17 +1028,17 @@
           "nr": 1,
           "heim": "Heinzl, Günther / Jank, Elias",
           "gast": "Zelenin, Dmytro / Gasser, Jakob",
-          "satz1": "0:0",
-          "satz2": "0:0",
-          "satz3": "",
+          "satz1": "3:6",
+          "satz2": "9:11",
+          "satz3": "4:6",
           "winner": "gast"
         },
         {
           "nr": 2,
           "heim": "Hanslmayr, Moritz / Wimmer, Alfred",
           "gast": "Fuchs, Stefan / Leithner, Patrick",
-          "satz1": "0:0",
-          "satz2": "0:0",
+          "satz1": "6:2",
+          "satz2": "3:6",
           "satz3": "",
           "winner": "gast"
         }
@@ -1046,7 +1048,7 @@
       "meeting_id": "1863914",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863914",
       "status": "finished",
-      "last_updated": "2026-06-21T13:29:42.732549+00:00",
+      "last_updated": "2026-06-21T15:28:55.862611+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Damen Bezirksklasse West A",
