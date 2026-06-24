@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24T17:53:58.067586+00:00",
+  "generated_at": "2026-06-24T19:41:34.309780+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -1144,8 +1144,8 @@
     {
       "meeting_id": "1867129",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867129",
-      "status": "live",
-      "last_updated": "2026-06-24T17:53:58.067632+00:00",
+      "status": "finished",
+      "last_updated": "2026-06-24T19:41:34.309829+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren55 Regionalklasse West",
@@ -1153,28 +1153,21 @@
         "uhrzeit": "16:00",
         "runde": "7. Runde",
         "datum_iso": "2026-06-24",
+        "erfasst_datum": "24.06.2026",
+        "erfasst_uhrzeit": "20:07",
         "heim": "TV McDonald's Andorf 1",
         "gast": "UTC Pram-Wendling 1",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 3,
+        "ergebnis_gast": 3
       },
       "singles": [],
       "doubles": [
         {
           "nr": 1,
           "heim": "Aigner, Gerhard / Illibauer, Ernst",
-          "gast": "Hörandner, Johann / Gerhart, Markus",
-          "satz1": "0:0",
-          "satz2": "0:0",
-          "satz3": "",
-          "winner": "gast"
-        },
-        {
-          "nr": 2,
-          "heim": "Wimmer, Alfred / Schwarz, Markus",
-          "gast": "Stelzhammer, Rudolf / Dipolt, Herbert",
-          "satz1": "0:0",
-          "satz2": "0:0",
+          "gast": "Wimmer, Alfred / Schwarz, Markus",
+          "satz1": "2:6",
+          "satz2": "5:7",
           "satz3": "",
           "winner": "gast"
         }
