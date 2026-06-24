@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24T19:41:34.309780+00:00",
+  "generated_at": "2026-06-24T21:12:53.482199+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -1145,7 +1145,7 @@
       "meeting_id": "1867129",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867129",
       "status": "finished",
-      "last_updated": "2026-06-24T19:41:34.309829+00:00",
+      "last_updated": "2026-06-24T21:12:53.482257+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren55 Regionalklasse West",
@@ -1165,9 +1165,18 @@
         {
           "nr": 1,
           "heim": "Aigner, Gerhard / Illibauer, Ernst",
-          "gast": "Wimmer, Alfred / Schwarz, Markus",
+          "gast": "Hörandner, Johann / Gerhart, Markus",
           "satz1": "2:6",
-          "satz2": "5:7",
+          "satz2": "0:0",
+          "satz3": "6:1",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Wimmer, Alfred / Schwarz, Markus",
+          "gast": "Stelzhammer, Rudolf / Dipolt, Herbert",
+          "satz1": "5:7",
+          "satz2": "6:0",
           "satz3": "",
           "winner": "gast"
         }
