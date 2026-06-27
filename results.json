@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T14:58:34.762960+00:00",
+  "generated_at": "2026-06-27T16:14:30.903676+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -1226,8 +1226,8 @@
     {
       "meeting_id": "1860973",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1860973",
-      "status": "live",
-      "last_updated": "2026-06-27T14:58:34.763016+00:00",
+      "status": "finished",
+      "last_updated": "2026-06-27T16:14:30.903724+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren Bezirksklasse West A",
@@ -1235,10 +1235,12 @@
         "uhrzeit": "13:00",
         "runde": "7. Runde",
         "datum_iso": "2026-06-27",
+        "erfasst_datum": "27.06.2026",
+        "erfasst_uhrzeit": "17:24",
         "heim": "TV McDonald's Andorf 2",
         "gast": "ESV Wels 2",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 6,
+        "ergebnis_gast": 3
       },
       "singles": [],
       "doubles": [
@@ -1246,19 +1248,19 @@
           "nr": 1,
           "heim": "Roßmayer, Vinzenz / Hajek, Christoph",
           "gast": "Hinterberger, Matthias / Spreitzer, Bernhard",
-          "satz1": "0:0",
-          "satz2": "0:0",
-          "satz3": "",
-          "winner": "gast"
+          "satz1": "6:2",
+          "satz2": "6:4",
+          "satz3": "6:2",
+          "winner": "heim"
         },
         {
           "nr": 2,
           "heim": "Jank, Bastian / Aspöck, Simon",
           "gast": "Klotz, Alexander / Gassenbauer, Florian",
-          "satz1": "0:0",
-          "satz2": "0:0",
-          "satz3": "",
-          "winner": "gast"
+          "satz1": "6:1",
+          "satz2": "6:0",
+          "satz3": "4:6",
+          "winner": "heim"
         },
         {
           "nr": 3,
@@ -1266,7 +1268,7 @@
           "gast": "Schöngruber, Wolfgang / Martl, Andreas",
           "satz1": "0:0",
           "satz2": "0:0",
-          "satz3": "",
+          "satz3": "20:18",
           "winner": "gast"
         }
       ]
@@ -1275,7 +1277,7 @@
       "meeting_id": "1863177",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863177",
       "status": "finished",
-      "last_updated": "2026-06-27T14:58:36.817401+00:00",
+      "last_updated": "2026-06-27T16:14:33.207359+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren Einstiegsliga West A",
