@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-05T11:38:56.285328+00:00",
+  "generated_at": "2026-07-05T12:52:54.772247+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -1444,8 +1444,8 @@
     {
       "meeting_id": "1861580",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861580",
-      "status": "live",
-      "last_updated": "2026-07-05T11:38:56.285410+00:00",
+      "status": "finished",
+      "last_updated": "2026-07-05T12:52:54.772305+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Herren 1. Klasse West A",
@@ -1453,10 +1453,12 @@
         "uhrzeit": "09:30",
         "runde": "8. Runde",
         "datum_iso": "2026-07-05",
+        "erfasst_datum": "05.07.2026",
+        "erfasst_uhrzeit": "14:46",
         "heim": "TV McDonald's Andorf 3",
         "gast": "TV Alpenpower Schärding 2",
-        "ergebnis_heim": null,
-        "ergebnis_gast": null
+        "ergebnis_heim": 5,
+        "ergebnis_gast": 4
       },
       "singles": [
         {
@@ -1487,7 +1489,7 @@
           "heim_itn": "5.600",
           "gast": "Christl, Sebastian",
           "gast_itn": "6.000",
-          "satz1": "6:4",
+          "satz1": "6:3",
           "satz2": "6:3",
           "satz3": "",
           "winner": "heim"
@@ -1520,17 +1522,17 @@
           "nr": 1,
           "heim": "Hainzl, Thomas / Buschbeck, Sebastian",
           "gast": "Jank, Elias / Sonnleitner, Paul",
-          "satz1": "0:0",
+          "satz1": "2:6",
           "satz2": "0:0",
-          "satz3": "",
+          "satz3": "6:2",
           "winner": "gast"
         },
         {
           "nr": 2,
           "heim": "Heinzl, Günther / Heinzl, Timo",
           "gast": "Bohuminsky, Simon / Rockenschaub, Martin",
-          "satz1": "0:0",
-          "satz2": "0:0",
+          "satz1": "1:6",
+          "satz2": "6:4",
           "satz3": "",
           "winner": "gast"
         }
@@ -1540,7 +1542,7 @@
       "meeting_id": "1863861",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863861",
       "status": "live",
-      "last_updated": "2026-07-05T11:38:58.865632+00:00",
+      "last_updated": "2026-07-05T12:52:57.037945+00:00",
       "header": {
         "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
         "gruppe": "Damen Bezirksklasse West A",
