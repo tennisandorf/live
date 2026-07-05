@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-05T09:57:32.728715+00:00",
+  "generated_at": "2026-07-05T11:38:56.285328+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -1442,6 +1442,177 @@
       ]
     },
     {
+      "meeting_id": "1861580",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861580",
+      "status": "live",
+      "last_updated": "2026-07-05T11:38:56.285410+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren 1. Klasse West A",
+        "datum": "05.07.2026",
+        "uhrzeit": "09:30",
+        "runde": "8. Runde",
+        "datum_iso": "2026-07-05",
+        "heim": "TV McDonald's Andorf 3",
+        "gast": "TV Alpenpower Schärding 2",
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
+      "singles": [
+        {
+          "nr": 1,
+          "heim": "Hainzl, Thomas",
+          "heim_itn": "5.300",
+          "gast": "Sonnleitner, Paul",
+          "gast_itn": "7.300",
+          "satz1": "2:6",
+          "satz2": "6:3",
+          "satz3": "4:6",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Heinzl, Günther",
+          "heim_itn": "5.300",
+          "gast": "Bohuminsky, Simon",
+          "gast_itn": "3.900",
+          "satz1": "6:4",
+          "satz2": "0:6",
+          "satz3": "6:0",
+          "winner": "heim"
+        },
+        {
+          "nr": 3,
+          "heim": "Buschbeck, Sebastian",
+          "heim_itn": "5.600",
+          "gast": "Christl, Sebastian",
+          "gast_itn": "6.000",
+          "satz1": "6:4",
+          "satz2": "6:3",
+          "satz3": "",
+          "winner": "heim"
+        },
+        {
+          "nr": 4,
+          "heim": "Jank, Elias",
+          "heim_itn": "6.200",
+          "gast": "Rockenschaub, Martin",
+          "gast_itn": "6.400",
+          "satz1": "3:6",
+          "satz2": "7:5",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 5,
+          "heim": "Heinzl, Timo",
+          "heim_itn": "6.900",
+          "gast": "Michl, Andreas",
+          "gast_itn": "6.700",
+          "satz1": "2:6",
+          "satz2": "7:5",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Hainzl, Thomas / Buschbeck, Sebastian",
+          "gast": "Jank, Elias / Sonnleitner, Paul",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Heinzl, Günther / Heinzl, Timo",
+          "gast": "Bohuminsky, Simon / Rockenschaub, Martin",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ]
+    },
+    {
+      "meeting_id": "1863861",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863861",
+      "status": "live",
+      "last_updated": "2026-07-05T11:38:58.865632+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Damen Bezirksklasse West A",
+        "datum": "05.07.2026",
+        "uhrzeit": "09:30",
+        "runde": "8. Runde",
+        "datum_iso": "2026-07-05",
+        "heim": "TV McDonald's Andorf 1",
+        "gast": "UTC Pfaffstätt 1",
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
+      "singles": [
+        {
+          "nr": 1,
+          "heim": "Friedl, Johanna",
+          "heim_itn": "7.800",
+          "gast": "Probst, Andrea",
+          "gast_itn": "8.500",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Mittermayr, Gabriele",
+          "heim_itn": "8.300",
+          "gast": "Eisenmann, Barbara",
+          "gast_itn": "9.400",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 3,
+          "heim": "Heinzl, Anita",
+          "heim_itn": "9.400",
+          "gast": "Böckl, Carolina",
+          "gast_itn": "9.500",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 4,
+          "heim": "Jell, Silvia",
+          "heim_itn": "9.700",
+          "gast": "Lang, Karina",
+          "gast_itn": "10.000",
+          "satz1": "1:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 5,
+          "heim": "Mühlberger, Anna",
+          "heim_itn": "8.200",
+          "gast": "Feichtenschlager, Jessica",
+          "gast_itn": "10.000",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ],
+      "doubles": []
+    },
+    {
       "meeting_id": "1867264",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867264",
       "status": "upcoming",
@@ -1520,26 +1691,6 @@
       },
       "singles": [],
       "doubles": []
-    },
-    {
-      "meeting_id": "1861580",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861580",
-      "status": "error",
-      "last_updated": "2026-07-05T09:57:32.728772+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
-    },
-    {
-      "meeting_id": "1863861",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863861",
-      "status": "error",
-      "last_updated": "2026-07-05T09:57:47.986181+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
     }
   ]
 }
