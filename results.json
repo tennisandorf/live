@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-08T21:29:55.973041+00:00",
+  "generated_at": "2026-07-08T22:36:08.828851+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -1636,6 +1636,47 @@
       ]
     },
     {
+      "meeting_id": "1867264",
+      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867264",
+      "status": "finished",
+      "last_updated": "2026-07-08T22:36:08.828903+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren55 Regionalklasse West",
+        "datum": "08.07.2026",
+        "uhrzeit": "16:00",
+        "runde": "9. Runde",
+        "datum_iso": "2026-07-08",
+        "erfasst_datum": "08.07.2026",
+        "erfasst_uhrzeit": "20:42",
+        "heim": "TV McDonald's Andorf 1",
+        "gast": "Union Raika Atzbach 1",
+        "ergebnis_heim": 2,
+        "ergebnis_gast": 4
+      },
+      "singles": [],
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Aigner, Gerhard / Wimmer, Alfred",
+          "gast": "Sobotka, Richard / Stöcklöcker, Walter",
+          "satz1": "4:6",
+          "satz2": "10:12",
+          "satz3": "6:7",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Sonnleitner, Paul / Bachschweller, Manfred",
+          "gast": "Heißl, Bernd / Schablinger, Franz",
+          "satz1": "6:3",
+          "satz2": "6:1",
+          "satz3": "11:13",
+          "winner": "heim"
+        }
+      ]
+    },
+    {
       "meeting_id": "1866916",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1866916",
       "status": "upcoming",
@@ -1694,16 +1735,6 @@
       },
       "singles": [],
       "doubles": []
-    },
-    {
-      "meeting_id": "1867264",
-      "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1867264",
-      "status": "error",
-      "last_updated": "2026-07-08T21:29:55.973100+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
     }
   ]
 }
