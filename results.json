@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-11T15:38:05.723181+00:00",
+  "generated_at": "2026-07-11T16:33:04.820728+00:00",
   "matches": [
     {
       "meeting_id": "1866397",
@@ -1720,22 +1720,117 @@
     {
       "meeting_id": "1861040",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1861040",
-      "status": "error",
-      "last_updated": "2026-07-11T15:38:05.723221+00:00",
-      "header": {},
+      "status": "finished",
+      "last_updated": "2026-07-11T16:33:04.820771+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren Bezirksklasse West A",
+        "datum": "11.07.2026",
+        "uhrzeit": "13:00",
+        "runde": "9. Runde",
+        "datum_iso": "2026-07-11",
+        "erfasst_datum": "11.07.2026",
+        "erfasst_uhrzeit": "18:01",
+        "heim": "TV McDonald's Andorf 2",
+        "gast": "Union Suben 1",
+        "ergebnis_heim": 8,
+        "ergebnis_gast": 1
+      },
       "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
+      "doubles": [
+        {
+          "nr": 1,
+          "heim": "Roßmayer, Vinzenz / Schneiderbauer, Tobias",
+          "gast": "Jachens, Sebastian / Breiter, Elias",
+          "satz1": "4:6",
+          "satz2": "2:6",
+          "satz3": "6:0",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Mittermayr, Jonas / Jank, Bastian",
+          "gast": "Bieringer, Felix / Schust, Alexander",
+          "satz1": "1:6",
+          "satz2": "6:2",
+          "satz3": "6:0",
+          "winner": "heim"
+        },
+        {
+          "nr": 3,
+          "heim": "Mittermayr, Jakob / Gasser, Simon",
+          "gast": "Reinprecht, Fabian / Seitz, Reinhard",
+          "satz1": "0:0",
+          "satz2": "10:6",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ]
     },
     {
       "meeting_id": "1863275",
       "url": "https://oetv-austria.liga.nu/cgi-bin/WebObjects/nuLigaDokumentTENAT.woa/wa/nuDokument?dokument=MeetingReportFOP&meeting=1863275",
-      "status": "error",
-      "last_updated": "2026-07-11T15:38:20.823769+00:00",
-      "header": {},
-      "singles": [],
-      "doubles": [],
-      "error": "<urlopen error timed out>"
+      "status": "live",
+      "last_updated": "2026-07-11T16:33:07.040399+00:00",
+      "header": {
+        "bewerb": "OÖ. Mannschaftsmeisterschaft 2026",
+        "gruppe": "Herren Einstiegsliga West A",
+        "datum": "11.07.2026",
+        "uhrzeit": "13:00",
+        "runde": "9. Runde",
+        "datum_iso": "2026-07-11",
+        "heim": "TV McDonald's Andorf 4",
+        "gast": "UTC Raab 3",
+        "ergebnis_heim": null,
+        "ergebnis_gast": null
+      },
+      "singles": [
+        {
+          "nr": 1,
+          "heim": "Hoffmann, Thorsten",
+          "heim_itn": "9.200",
+          "gast": "Maier, Tobias",
+          "gast_itn": "8.700",
+          "satz1": "1:2",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 2,
+          "heim": "Wohlmuth, Jonathan",
+          "heim_itn": "9.500",
+          "gast": "Reitinger, Patrick",
+          "gast_itn": "9.700",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 3,
+          "heim": "Nitz, Patrick",
+          "heim_itn": "9.500",
+          "gast": "Lauber, Wolfgang",
+          "gast_itn": "9.800",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        },
+        {
+          "nr": 4,
+          "heim": "Ornetsmüller, Laurin",
+          "heim_itn": "9.900",
+          "gast": "Salletmaier, Martin",
+          "gast_itn": "9.900",
+          "satz1": "0:0",
+          "satz2": "0:0",
+          "satz3": "",
+          "winner": "gast"
+        }
+      ],
+      "doubles": []
     }
   ]
 }
